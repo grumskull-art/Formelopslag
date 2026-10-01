@@ -31,7 +31,7 @@ node test_browser.cjs
 
 `docs/index.html` kan åbnes direkte uden server eller internet. De 30 originale
 kildefiler er bevaret i `sources/`, og deres SHA256 kontrolleres ved validering.
-Katalogerne i `catalogs/` indeholder 90 numerisk kontrollerede eksempler.
+Katalogerne i `catalogs/` indeholder 94 numerisk kontrollerede eksempler.
 De 51 TM-eksempler bruger illustrative værdier og er ikke måledata.
 
 ## Mapper

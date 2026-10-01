@@ -406,6 +406,7 @@ summary {
 #other-givens { margin-top:14px; border-top:1px solid var(--border); padding-top:12px; }
 #other-givens summary { font-size:13px; }
 #other-givens[open] summary { margin-bottom:12px; }
+.helper.given-example { border-top:1px solid var(--border); padding-top:16px; }
 fieldset {
   margin:22px 0 14px;
   border:1px solid var(--border);

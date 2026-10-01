@@ -3484,8 +3484,11 @@
       "source_locations": [
         "EL18:7,9"
       ],
-      "example": "",
-      "example_check": null,
+      "example": "Illustrativt eksempel: R=220 Ω og C=100 µF. Omregn først kapacitansen: $C=100\\cdot10^{-6}\\,\\mathrm{F}=0{,}0001\\,\\mathrm{F}$ Tidskonstanten bliver $\\tau=220\\cdot0{,}0001=0{,}022\\,\\mathrm{s}=22\\,\\mathrm{ms}$ Efter 22 ms er én tidskonstant gået; fem tidskonstanter er 110 ms.",
+      "example_check": {
+        "expr": "220*100e-6",
+        "expected": 0.022
+      },
       "lookup": {
         "group": "capacitors",
         "seek_key": "tau",
@@ -3517,8 +3520,11 @@
       "source_locations": [
         "EL18:6-7"
       ],
-      "example": "",
-      "example_check": null,
+      "example": "Illustrativt eksempel: En uopladet kondensator tilsluttes 440 V DC gennem 220 Ω. C=100 µF og t=22 ms. Vælg Uₛ=440 V, u₀=0 V, R=220 Ω, C=100 µF og t=0,022 s. $RC=220\\cdot0{,}0001=0{,}022\\,\\mathrm{s}$ Efter én tidskonstant er kondensatorspændingen $u_C=440(1-e^{-1})\\approx278{,}13\\,\\mathrm{V}$ Forsyningen er stadig 440 V; kondensatoren har endnu ikke nået den spænding.",
+      "example_check": {
+        "expr": "440*(1-exp(-0.022/(220*100e-6)))",
+        "expected": 278.1330458845654
+      },
       "lookup": {
         "group": "capacitors",
         "seek_key": "u_t",
@@ -3552,8 +3558,11 @@
       "source_locations": [
         "EL18:3-4,6-7"
       ],
-      "example": "",
-      "example_check": null,
+      "example": "Illustrativt eksempel: En uopladet kondensator tilsluttes 440 V DC gennem 220 Ω. C=100 µF, og strømmen ønskes efter 22 ms. Vælg Uₛ=440 V, u₀=0 V, R=220 Ω, C=100 µF og t=0,022 s. Startstrøm: $i(0)=\\dfrac{440-0}{220}=2\\,\\mathrm{A}$ Tidskonstant: $\\tau=220\\cdot100\\cdot10^{-6}=0{,}022\\,\\mathrm{s}$ Efter én tidskonstant: $i(0{,}022)=2e^{-0{,}022/0{,}022}\\approx0{,}736\\,\\mathrm{A}$ Ved indkoblingen er strømmen altså 2 A; efter 22 ms er den cirka 0,736 A. Startspændingen er sat til nul, fordi kondensatoren i eksemplet er uopladet.",
+      "example_check": {
+        "expr": "440/220*exp(-0.022/(220*100e-6))",
+        "expected": 0.7357588823428847
+      },
       "lookup": {
         "group": "capacitors",
         "seek_key": "i_t",
@@ -3729,8 +3738,11 @@
       "source_locations": [
         "EL18:3-4,8-9"
       ],
-      "example": "",
-      "example_check": null,
+      "example": "Illustrativt eksempel: En kondensator med startspænding 440 V aflades gennem 220 Ω. C=100 µF, og strømmen ønskes efter 22 ms. Vælg u₀=440 V, R=220 Ω, C=100 µF og t=0,022 s. Strøm ud ved start: $i_{\\mathrm{ud}}(0)=\\dfrac{440}{220}=2\\,\\mathrm{A}$ Efter én tidskonstant: $i_{\\mathrm{ud}}(0{,}022)=2e^{-1}\\approx0{,}736\\,\\mathrm{A}$ Her er forsyningen frakoblet, og 440 V er kondensatorens startspænding.",
+      "example_check": {
+        "expr": "440/220*exp(-0.022/(220*100e-6))",
+        "expected": 0.7357588823428847
+      },
       "lookup": {
         "group": "capacitors",
         "seek_key": "i_t",

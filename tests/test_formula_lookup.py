@@ -52,7 +52,7 @@ def test_loader_rejects_missing_or_changed_original_documents(tmp_path, changed)
 
 def test_reference_has_valid_sources_and_all_tm_examples():
     catalogs, _ = load_catalogs(CONFIG)
-    assert validate_catalogs(catalogs) == {"catalogs": 3, "entries": 176, "checked_examples": 90}
+    assert validate_catalogs(catalogs) == {"catalogs": 3, "entries": 176, "checked_examples": 94}
     for catalog in catalogs[1:]:
         for entry in catalog["entries"]:
             assert all(entry.get(field) for field in ("conversion", "pitfall", "example", "example_check"))
@@ -81,6 +81,11 @@ def test_rc_start_current_requires_only_initial_voltage_difference_and_resistanc
     # After one time constant, the remaining current is 1/e of its start value.
     assert 2 * math.exp(-.022 / (220 * .0001)) == pytest.approx(2 / math.e)
     assert entries["C42"]["example_check"]["expected"] == 440 / 220
+    tau = 220 * .0001
+    assert entries["C19"]["example_check"]["expected"] == pytest.approx(tau)
+    assert entries["C21"]["example_check"]["expected"] == pytest.approx(2 / math.e)
+    assert entries["C26"]["example_check"]["expected"] == pytest.approx(2 / math.e)
+    assert entries["C20"]["example_check"]["expected"] == pytest.approx(440 - 220 * (2 / math.e))
 
 
 @pytest.mark.parametrize("explanation", ["", " ", None, "Uafsluttet $i(0)"])

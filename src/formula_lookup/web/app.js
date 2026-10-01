@@ -180,6 +180,10 @@ function renderGivens(c,chosen,available){
  $('given-context').textContent=(chosen?'Oplysninger til '+chosen.entry.id+' · '+chosen.entry.seek:$('seek').value?'Relevante oplysninger til '+selectedOptionText('seek'):'Vælg dine oplysninger, så finder vi formlerne.')+` · ${selected} valgt`;
  $('givens').innerHTML=`<div id="relevant-givens">${layout(relevant)}</div>`+(other.length?`<details id="other-givens" ${expanded?'open':''}><summary>Andre oplysninger i emnet (${other.length}${other.some(k=>state().known.has(k))?' · '+other.filter(k=>state().known.has(k)).length+' valgt':''})</summary>${layout(other)}</details>`:'');
  $('givens').dataset.scope=scope;
+ const example=chosen?.entry||(scoped.length===1?scoped[0]:null);
+ const exampleText=example?.lookup.given_sets.length===1?example.example:'';
+ $('given-example').hidden=!exampleText;
+ $('given-example').innerHTML=exampleText?richField('Eksempel med tal',exampleText,'given-example'):'';
  if(focused){const input=[...$('givens').querySelectorAll('input')].find(i=>i.value===focused);if(input){const details=input.closest('details');if(details)details.open=true;input.focus({preventScroll:true});}}
 }
 function render(){

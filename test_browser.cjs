@@ -61,6 +61,11 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert(await page.locator('#other-givens input[value="epsilon"]').isHidden());
   assert.match(await page.locator('#given-help-u0').innerText(),/Uopladet betyder 0 V/);
   assert.match(await page.locator('#given-help-Us').innerText(),/tilsluttede forsyning/);
+  assert(await page.locator('#given-example').isVisible());
+  assert.match(await page.locator('#given-example').innerText(),/440 V DC.*220 Ω/s);
+  assert.match(await page.locator('#given-example').innerText(),/0,736 A/);
+  assert.equal(await page.locator('#given-example img').count(),3);
+  assert.equal(await page.locator('#givens input:checked').count(),0);
   await page.locator('#other-givens summary').click();
   await given('epsilon');assert(await page.locator('#other-givens').evaluate(el=>el.open));
   await page.locator('#givens input[value="epsilon"]').uncheck();
