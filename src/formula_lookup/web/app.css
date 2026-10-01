@@ -354,6 +354,18 @@ summary {
   color:var(--accent);
   font-weight:650;
 }
+.seek-combobox { position:relative; min-width:0; }
+#seek { width:100%; margin-top:6px; padding:10px 12px; text-align:left; }
+#seek::after { content:'▾'; float:right; margin-left:8px; }
+#seek-list {
+  position:absolute; top:100%; left:0; right:0; z-index:20;
+  overflow-y:auto; overscroll-behavior:contain;
+  border:1px solid var(--border); border-radius:9px;
+  background:var(--panel); color:var(--ink); box-shadow:0 8px 24px #0003;
+}
+#seek-list [role=option] { padding:10px 12px; cursor:pointer; overflow-wrap:anywhere; }
+#seek-list [role=option]:hover,#seek-list .active { background:var(--accent); color:var(--panel); }
+#seek-list [aria-selected=true] { font-weight:700; }
 .links {
   display:flex;
   flex-wrap:wrap;
