@@ -44,6 +44,13 @@ def validate_catalog(db):
         if len(set(ids)) != len(ids):
             raise ValueError("Dublerede " + label + ".")
     groups = {g["id"] for g in db["navigation_groups"]}
+    for group, guide in db.get("given_guides", {}).items():
+        keys = [k for section in guide["groups"] for k in section["keys"]]
+        if (group not in groups or len(keys) != len(set(keys))
+                or set(keys) != set(guide["quantities"]) or not set(keys) <= db["quantities"].keys()
+                or any(not isinstance(info.get(f), str) or not info[f].strip()
+                       for info in guide["quantities"].values() for f in ("label", "help"))):
+            raise ValueError("Ugyldig vejledning til oplysninger: " + group)
     for entry in entries:
         code, meta = entry["id"], entry["lookup"]
         origin = entry.get("derived_from")

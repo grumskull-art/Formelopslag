@@ -7116,5 +7116,143 @@
     "temperature": "20 °C",
     "source": "EL07:4 / EL10:4"
   },
-  "math_notation": "X[enhed] angiver størrelsens talværdi i den angivne enhed, fx I[A] og I[mA]."
+  "math_notation": "X[enhed] angiver størrelsens talværdi i den angivne enhed, fx I[A] og I[mA].",
+  "given_guides": {
+    "capacitors": {
+      "quantities": {
+        "Us": {
+          "label": "Forsyningsspænding Uₛ [V]",
+          "help": "Spændingen fra den tilsluttede forsyning."
+        },
+        "u0": {
+          "label": "Startspænding u₀ [V]",
+          "help": "Spændingen over kondensatoren før start. Uopladet betyder 0 V."
+        },
+        "targetU": {
+          "label": "Målspænding uₘ [V]",
+          "help": "Den kondensatorspænding, du ønsker at nå."
+        },
+        "U": {
+          "label": "Kondensatorspænding U [V]",
+          "help": "Spændingen over kondensatoren i den tilstand, opgaven beskriver."
+        },
+        "u_t": {
+          "label": "Kondensatorspænding uC(t) [V]",
+          "help": "Spændingen over kondensatoren efter tiden t."
+        },
+        "Q": {
+          "label": "Pladeladning Q [C]",
+          "help": "Ladningens størrelse på én plade; C i enheden betyder coulomb."
+        },
+        "q0": {
+          "label": "Startladning q₀ [C]",
+          "help": "Ladningen ved start. En uopladet kondensator har q₀=0."
+        },
+        "R": {
+          "label": "Modstand R [Ω]",
+          "help": "Modstanden i opladnings- eller afladevejen."
+        },
+        "C": {
+          "label": "Kapacitans C [F]",
+          "help": "Kondensatorens kapacitans. Bruges til tidsforløbet, men ikke til RC-startstrømmen."
+        },
+        "t": {
+          "label": "Tid t [s]",
+          "help": "Tiden siden indkobling eller starten af afladningen. Ved start er t=0."
+        },
+        "tau": {
+          "label": "Tidskonstant τ [s]",
+          "help": "τ=RC beskriver forløbets hastighed; det er ikke den fulde opladningstid."
+        },
+        "I": {
+          "label": "Konstant strøm I [A]",
+          "help": "Oplyst, konstant opladningsstrøm. RC-strømmen gennem R er ikke konstant."
+        },
+        "I_d": {
+          "label": "Konstant afladningsstrøm Iₐ [A]",
+          "help": "Positiv strøm ud af kondensatoren, som holdes konstant; en anden model end RC-afladning."
+        },
+        "A": {
+          "label": "Overlapareal A [m²]",
+          "help": "Pladernes fælles overlapareal pr. pladepar, ikke hele overfladen."
+        },
+        "a": {
+          "label": "Pladeafstand a [m]",
+          "help": "Afstanden mellem nabopladerne, angivet i meter."
+        },
+        "nplates": {
+          "label": "Antal plader n [1]",
+          "help": "Antal ens, skiftevis forbundne plader. Der er n−1 mellemrum."
+        },
+        "epsilon": {
+          "label": "Permittivitet ε [F/m]",
+          "help": "Materialets absolutte permittivitet: ε=ε₀εᵣ."
+        },
+        "epsilon0": {
+          "label": "Vakuumpermittivitet ε₀ [F/m]",
+          "help": "Vakuums permittivitet; en konstant, som kan findes under Konstanter."
+        },
+        "epsilonr": {
+          "label": "Relativ permittivitet εᵣ [1]",
+          "help": "Materialets forhold til vakuum. Tallet har ingen enhed."
+        },
+        "D": {
+          "label": "Elektrisk fluxtæthed D [C/m²]",
+          "help": "Ladning pr. pladeareal; ikke det samme som elektrisk feltstyrke E."
+        },
+        "Ef": {
+          "label": "Elektrisk feltstyrke E [V/m]",
+          "help": "Feltstyrken mellem pladerne; ikke det samme som fluxtæthed D."
+        },
+        "Wc": {
+          "label": "Lagret energi W [J]",
+          "help": "Energi i kondensatoren, ikke hele forsyningens leverede energi."
+        }
+      },
+      "groups": [
+        {
+          "label": "Spænding og ladning",
+          "keys": [
+            "Us",
+            "u0",
+            "targetU",
+            "U",
+            "u_t",
+            "Q",
+            "q0"
+          ]
+        },
+        {
+          "label": "Kreds, strøm og tid",
+          "keys": [
+            "R",
+            "C",
+            "t",
+            "tau",
+            "I",
+            "I_d"
+          ]
+        },
+        {
+          "label": "Plader, materiale og felt",
+          "keys": [
+            "A",
+            "a",
+            "nplates",
+            "epsilon",
+            "epsilon0",
+            "epsilonr",
+            "D",
+            "Ef"
+          ]
+        },
+        {
+          "label": "Energi",
+          "keys": [
+            "Wc"
+          ]
+        }
+      ]
+    }
+  }
 }

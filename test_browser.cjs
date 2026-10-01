@@ -26,7 +26,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    await page.fill('#search','');await page.locator('#incomplete').check();await page.locator('#groups button[data-group=""]').click();await seek(page,entry.lookup.seek_key);
    if(await page.locator('#situation').isVisible())await page.selectOption('#situation',entry.lookup.situations[0]);
    await selectMethod(`${id}:${index}`,`${id} · ${entry.seek}${entry.lookup.given_sets.length>1?' · kræver '+entry.lookup.given_sets[index].map(k=>entry.quantities[k]).join(', '):''}`);await selectSituation(entry.lookup.situations[0],await page.evaluate(s=>activeCatalog().situations[s],entry.lookup.situations[0]));
-   assert.deepEqual(await page.locator('#givens input').evaluateAll(els=>els.map(x=>x.value)),await page.evaluate(()=>[...new Set(activeCatalog().entries.flatMap(e=>e.lookup.given_sets.flat()))]));
+   assert.deepEqual(await page.locator('#givens input').evaluateAll(els=>els.map(x=>x.value).sort()),await page.evaluate(()=>[...new Set(activeCatalog().entries.flatMap(e=>e.lookup.given_sets.flat()))].sort()));
   }
   async function given(...keys){for(const key of keys)await page.locator(`#givens input[value="${key}"]`).check();}
   async function only(id){assert.deepEqual(await page.locator('article').evaluateAll(els=>els.map(x=>x.dataset.entry)),[id]);}
@@ -56,6 +56,16 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   await page.selectOption('#situation','rc_charge');assert.equal(await page.locator('article').count(),0);
   await given('u0');await only('C41');
   await page.locator('#reset').click();await route('C21');
+  assert.deepEqual(await page.locator('#relevant-givens input').evaluateAll(els=>els.map(x=>x.value)),['Us','u0','R','C','t']);
+  assert.equal(await page.locator('#other-givens').evaluate(el=>el.open),false);
+  assert(await page.locator('#other-givens input[value="epsilon"]').isHidden());
+  assert.match(await page.locator('#given-help-u0').innerText(),/Uopladet betyder 0 V/);
+  assert.match(await page.locator('#given-help-Us').innerText(),/tilsluttede forsyning/);
+  await page.locator('#other-givens summary').click();
+  await given('epsilon');assert(await page.locator('#other-givens').evaluate(el=>el.open));
+  await page.locator('#givens input[value="epsilon"]').uncheck();
+  await page.locator('#other-givens summary').click();
+  await page.locator('#known').screenshot({path:path.join(screenshots,'givens-rc-desktop.png')});
   const explanation=page.locator('article .explanation');
   assert.equal(await explanation.locator('.math-image').count(),3);
   assert.match(await explanation.innerText(),/hverken C eller en tid t/);
@@ -63,6 +73,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert(await explanation.locator('img').evaluateAll(imgs=>imgs.every(i=>i.complete&&i.naturalWidth>0)));
   await page.screenshot({path:path.join(screenshots,'rc-explanation-desktop.png'),fullPage:true});
   await page.setViewportSize({width:390,height:844});
+  await page.locator('#known').screenshot({path:path.join(screenshots,'givens-rc-mobile.png')});
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await explanation.screenshot({path:path.join(screenshots,'rc-explanation-mobile.png')});
   await page.setViewportSize({width:1280,height:950});

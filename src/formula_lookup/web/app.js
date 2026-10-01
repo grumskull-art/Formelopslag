@@ -118,7 +118,7 @@ window.addEventListener('resize',closeSeek);
 window.addEventListener('scroll',()=>{
  if($('seek-list').hidden)return;
  const box=$('seek').getBoundingClientRect(),room=window.innerHeight-box.bottom-12;
- if(box.top<0||room<40)closeSeek();else $('seek-list').style.maxHeight=Math.min(300,room)+'px';
+ if(box.bottom<=0||room<40)closeSeek();else $('seek-list').style.maxHeight=Math.min(300,room)+'px';
 });
 function syncMethods(routes,value){
  const el=$('method'),field=$('method-field'),text=$('method-text');
@@ -154,15 +154,39 @@ function sourceText(ref,c=activeCatalog()){
  return source?`${(source.original_file||source.file).split('/').pop()} · ${source.unit||'slide'} ${pages}`:ref;
 }
 function sources(refs){return `<p class="subtle source"><strong>Kilder</strong>${refs.map(ref=>`<span>${esc(sourceText(ref))}</span>`).join('')}</p>`;}
+function renderGivens(c,chosen,available){
+ const all=[...new Set(available.flatMap(e=>e.lookup.given_sets.flat()))],scoped=scopedEntries();
+ const relevant=chosen?chosen.option:scoped.length?[...new Set(scoped.flatMap(e=>e.lookup.given_sets.flat()))]:all;
+ const other=all.filter(k=>!relevant.includes(k));
+ const group=chosen?.entry.lookup.group||activeGroup||(scoped.length&&scoped.every(e=>e.lookup.group===scoped[0].lookup.group)?scoped[0].lookup.group:'');
+ const guide=c?.given_guides?.[group],scope=[currentCatalogId,activeGroup,$('seek').value,chosen?.key||''].join(':');
+ const focused=document.activeElement?.closest('#givens input')?.value;
+ const expanded=$('givens').dataset.scope===scope&&$('other-givens')?.open;
+ const card=(k,guided=true)=>{
+  const info=guided?guide?.quantities[k]:null,help=info?.help;
+  return `<label class="given-option"><input type="checkbox" value="${esc(k)}" aria-labelledby="given-name-${esc(k)}" ${state().known.has(k)?'checked':''} ${help?`aria-describedby="given-help-${esc(k)}"`:''}><span><span class="given-name" id="given-name-${esc(k)}">${esc(info?.label||c.quantities[k])}</span>${help?`<small id="given-help-${esc(k)}">${esc(help)}</small>`:''}</span></label>`;
+ };
+ const grid=(keys,guided=true)=>`<div class="known">${keys.map(k=>card(k,guided)).join('')}</div>`;
+ const layout=keys=>{
+  if(keys===other&&activeGroup!==group)return grid(keys,false);
+  if(!guide||chosen)return grid(keys);
+  return guide.groups.map(g=>{
+   const items=g.keys.filter(k=>keys.includes(k));
+   return items.length?`<section class="given-group"><h3>${esc(g.label)}</h3>${grid(items)}</section>`:'';
+  }).join('')+grid(keys.filter(k=>!guide.groups.some(g=>g.keys.includes(k))));
+ };
+ $('known').hidden=!all.length;
+ const selected=all.filter(k=>state().known.has(k)).length;
+ $('given-context').textContent=(chosen?'Oplysninger til '+chosen.entry.id+' · '+chosen.entry.seek:$('seek').value?'Relevante oplysninger til '+selectedOptionText('seek'):'Vælg dine oplysninger, så finder vi formlerne.')+` · ${selected} valgt`;
+ $('givens').innerHTML=`<div id="relevant-givens">${layout(relevant)}</div>`+(other.length?`<details id="other-givens" ${expanded?'open':''}><summary>Andre oplysninger i emnet (${other.length}${other.some(k=>state().known.has(k))?' · '+other.filter(k=>state().known.has(k)).length+' valgt':''})</summary>${layout(other)}</details>`:'');
+ $('givens').dataset.scope=scope;
+ if(focused){const input=[...$('givens').querySelectorAll('input')].find(i=>i.value===focused);if(input){const details=input.closest('details');if(details)details.open=true;input.focus({preventScroll:true});}}
+}
 function render(){
   const c=activeCatalog(),known=[...state().known],situation=$('situation').value,query=$('search').value.trim(),selected=$('method').value;
  const chosen=routesForControls().find(r=>r.key===selected);
  const available=c?c.entries.filter(e=>!activeGroup||e.lookup.group===activeGroup):[];
- const givenKeys=[...new Set(available.flatMap(e=>e.lookup.given_sets.flat()))];
- $('known').hidden=!givenKeys.length;
- const focusedKnown=document.activeElement?.closest('#givens input')?.value;
- $('givens').innerHTML=givenKeys.map(k=>`<label><input type="checkbox" value="${esc(k)}" ${state().known.has(k)?'checked':''}> ${esc(c.quantities[k])}</label>`).join('');
- if(focusedKnown)[...$('givens').querySelectorAll('input')].find(input=>input.value===focusedKnown)?.focus({preventScroll:true});
+ renderGivens(c,chosen,available);
  const started=c&&($('seek').value||query||known.length),found=started&&!$('ac-other').checked?matchEntries($('seek').value,known,situation,query,$('incomplete').checked,activeGroup).filter(r=>!selected||r.method===selected):[];
  const gap=c?.unavailable_targets?.[$('seek').value];
  $('results').classList.toggle('single',found.length===1);
