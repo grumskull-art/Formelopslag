@@ -1,0 +1,1904 @@
+{
+  "format_version": "1.0",
+  "source_root": "sources/TM",
+  "catalogs": [
+    {
+      "id": "tm-heat",
+      "discipline": "TM",
+      "topic": "Varmelære",
+      "scope": "Kildegrundlag: de fire uploadede lektioner i varmelære. Arbejde på systemet er positivt i procesformlerne; kredsprocessens leverede nettoarbejde er positivt ud af systemet. Damptabelværdier og en beregningsformel for polytropisk varmekapacitet er ikke tilgængelige.",
+      "source_inventory": [
+        {
+          "id": "VH1",
+          "file": "sources/TM/VH1/Lektion 1 og 2 9.14, 9.16-9.19.pptx",
+          "pages": 25,
+          "unit": "slide",
+          "sha256": "eefd1b6ff6014f90a4e5f1136f9483afd49f9e5b1f622ee607a64acd32780a57"
+        },
+        {
+          "id": "VH2",
+          "file": "sources/TM/VH2/Lektion 3 og 4 9.20-9.21.pptx",
+          "pages": 15,
+          "unit": "slide",
+          "sha256": "88749e0060ea92721abc6e87ce33756b1e8688a319e6cab610d598593dc33753"
+        },
+        {
+          "id": "VH3",
+          "file": "sources/TM/VH3/Lektion 5 og 6 9.22-9.27.pptx",
+          "pages": 12,
+          "unit": "slide",
+          "sha256": "f4b2695127ff0523bcc74bc6f260dd191f07c85740a80e5d726db1f9dc490521"
+        },
+        {
+          "id": "VH4",
+          "file": "sources/TM/VH4/Lektion 7 og 8 9.27 og 9.31-9.33.pptx",
+          "pages": 14,
+          "unit": "slide",
+          "sha256": "5458d8f503392076159824158492076ddc52e6132cbce751cbbffc6435315044"
+        }
+      ],
+      "quantities": {
+        "p": "Absolut tryk p [Pa]",
+        "p_gauge": "Manometertryk p_man [Pa]",
+        "p_atm": "Atmosfæretryk p_atm [Pa]",
+        "V": "Volumen V [m³]",
+        "T": "Absolut temperatur T [K]",
+        "n": "Stofmængde n [mol]",
+        "m": "Masse m [kg]",
+        "M": "Molarmasse M [kg/mol]",
+        "rho": "Massefylde ρ [kg/m³]",
+        "p1": "Starttryk p₁ [Pa, absolut]",
+        "p2": "Sluttryk p₂ [Pa, absolut]",
+        "V1": "Startvolumen V₁ [m³]",
+        "V2": "Slutvolumen V₂ [m³]",
+        "T1": "Starttemperatur T₁ [K]",
+        "T2": "Sluttemperatur T₂ [K]",
+        "partials": "Partialtryk ved samme sluttilstand pᵢ [Pa]",
+        "dU": "Ændring i indre energi ΔU [J]",
+        "Q": "Tilført varme Q [J]",
+        "W": "Arbejde på systemet W [J]",
+        "dV": "Volumenændring ΔV [m³]",
+        "p_path": "Trykforløb p(V) [Pa]",
+        "cv": "Specifik varmekapacitet c_v [J/(kg·K)]",
+        "cp": "Specifik varmekapacitet c_p [J/(kg·K)]",
+        "dT": "Temperaturændring ΔT [K]",
+        "kappa": "Isentropisk eksponent κ [1]",
+        "poly_n": "Polytropisk eksponent n [1]",
+        "cn": "Polytropisk varmekapacitet c_n [J/(kg·K)]",
+        "h": "Specifik entalpi h [J/kg]",
+        "u": "Specifik indre energi u [J/kg]",
+        "v": "Specifikt volumen v [m³/kg]",
+        "dh": "Ændring i specifik entalpi Δh [J/kg]",
+        "S": "Entropi S [J/K]",
+        "s": "Specifik entropi s [J/(kg·K)]",
+        "dS": "Entropiændring ΔS [J/K]",
+        "Qrev_path": "Reversibel varmeoverførsel δQ_rev [J]",
+        "T_path": "Temperatur langs den reversible vej T [K]",
+        "Wout": "Leveret nettoarbejde W_net [J]",
+        "Qin": "Tilført varme pr. cyklus Q_ind [J]",
+        "eta": "Termisk virkningsgrad η [1]",
+        "TH": "Varmt reservoir T_H [K]",
+        "TL": "Koldt reservoir T_L [K]",
+        "steam_h": "Dampentalpi fra tabel h [kJ/kg]"
+      },
+      "situations": {
+        "ideal": "Idealgas; absolut tryk og Kelvin",
+        "pressure": "Manometertryk og absolut tryk",
+        "mass": "Masse og stofmængde",
+        "mixture": "Ikke-reagerende idealgasblanding",
+        "closed": "Lukket system; arbejde på systemet positivt",
+        "isobar": "Isobar proces; konstant tryk",
+        "isochor": "Isokor proces; konstant volumen",
+        "isotherm": "Isoterm idealgasproces",
+        "isentropic": "Reversibel adiabatisk idealgasproces",
+        "polytropic": "Polytropisk idealgasproces",
+        "reversible": "Reversibel varmeoverførsel",
+        "enthalpy": "Specifik entalpi",
+        "cycle": "Kredsproces; leveret arbejde positivt",
+        "carnot": "Reversibel Carnot-motor mellem to reservoirer"
+      },
+      "navigation_groups": [
+        {
+          "id": "gas",
+          "label": "Idealgasser"
+        },
+        {
+          "id": "energy",
+          "label": "Energi og arbejde"
+        },
+        {
+          "id": "process",
+          "label": "Tilstandsændringer"
+        },
+        {
+          "id": "entropy",
+          "label": "Entropi og entalpi"
+        },
+        {
+          "id": "cycle",
+          "label": "Kredsprocesser"
+        }
+      ],
+      "unavailable_targets": {
+        "cn": "Ingen kildeunderbygget beregningsformel for c_n i de uploadede lektioner. Lektion 5 og 6, slide 11, bruger c_n som en forudsat værdi. Den skal være oplyst, før Q_n kan bestemmes.",
+        "steam_h": "Komplette damptabeller mangler. Slå h op ved det aktuelle tryk og temperatur eller ved tryk og dampkvalitet. De viste diagrammer er ikke implementeret som numeriske tabeller. Se lektion 7 og 8, slide 11-13."
+      },
+      "entries": [
+        {
+          "id": "VH01",
+          "seek": "Absolut tryk fra manometer",
+          "given": "p_man, p_atm",
+          "condition": "Manometertryk er relativt til det angivne atmosfæretryk.",
+          "latex": "p_{abs}=p_{man}+p_{atm}",
+          "conversion": "Tryk i Pa; manometertryk kan være negativt.",
+          "pitfall": "Negativt manometertryk er ikke negativt absolut tryk.",
+          "source_locations": [
+            "VH1:3"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "p",
+            "given_sets": [
+              [
+                "p_gauge",
+                "p_atm"
+              ]
+            ],
+            "situations": [
+              "pressure"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_{abs}=-20000+101325=81325\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "-20000+101325",
+            "expected": 81325
+          }
+        },
+        {
+          "id": "VH02",
+          "seek": "Tryk fra idealgasligningen",
+          "given": "n, T, V",
+          "condition": "Idealgas med kendt stofmængde; molar gasform.",
+          "latex": "p=\\frac{nRT}{V}",
+          "conversion": "R er den molare gaskonstant: 8,314 J/(mol·K). Brug Pa, m³, mol og K.",
+          "pitfall": "Bland ikke molar R med den stofspecifikke gaskonstant. Celsius må ikke indsættes direkte.",
+          "source_locations": [
+            "VH1:6-8"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "p",
+            "given_sets": [
+              [
+                "n",
+                "T",
+                "V"
+              ]
+            ],
+            "situations": [
+              "ideal"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p=\\frac{2\\cdot8{,}314\\cdot300}{0{,}05}=99768\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "2*8.314*300/0.05",
+            "expected": 99768
+          }
+        },
+        {
+          "id": "VH03",
+          "seek": "Stofmængde fra masse",
+          "given": "m, M",
+          "condition": "Molarmassen skal gælde det aktuelle stof eller den kendte blanding.",
+          "latex": "n=\\frac{m}{M}",
+          "conversion": "Masse i kg og molarmasse i kg/mol giver mol.",
+          "source_locations": [
+            "VH1:8"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "n",
+            "given_sets": [
+              [
+                "m",
+                "M"
+              ]
+            ],
+            "situations": [
+              "mass"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $n=\\frac{0{,}028\\,\\mathrm{kg}}{0{,}028\\,\\mathrm{kg/mol}}=1\\,\\mathrm{mol}$",
+          "example_check": {
+            "expr": "0.028/0.028",
+            "expected": 1
+          },
+          "pitfall": "Molarmasse i g/mol skal divideres med 1000 før brug sammen med kg."
+        },
+        {
+          "id": "VH04",
+          "seek": "Massefylde fra masse og volumen",
+          "given": "m, V",
+          "condition": "Samme system og tilstand for masse og volumen.",
+          "latex": "\\rho=\\frac{m}{V}",
+          "conversion": "kg divideret med m³ giver kg/m³.",
+          "source_locations": [
+            "VH1:9"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "rho",
+            "given_sets": [
+              [
+                "m",
+                "V"
+              ]
+            ],
+            "situations": [
+              "mass"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\rho=\\frac{2}{0{,}5}=4\\,\\mathrm{kg/m^3}$",
+          "example_check": {
+            "expr": "2/0.5",
+            "expected": 4
+          },
+          "pitfall": "Massefylde og specifikt volumen er reciprokke; de har forskellige enheder."
+        },
+        {
+          "id": "VH05",
+          "seek": "Massefylde for idealgas",
+          "given": "M, p, T",
+          "condition": "Idealgas; molar gasform med R cirka 8,314 J/(mol·K).",
+          "latex": "\\rho=\\frac{Mp}{RT}",
+          "conversion": "M i kg/mol, p i Pa, T i K og molar R i J/(mol·K).",
+          "source_locations": [
+            "VH1:9"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "rho",
+            "given_sets": [
+              [
+                "M",
+                "p",
+                "T"
+              ]
+            ],
+            "situations": [
+              "ideal"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\rho=\\frac{0{,}028\\cdot100000}{8{,}314\\cdot300}\\approx1{,}123\\,\\mathrm{kg/m^3}$",
+          "example_check": {
+            "expr": "0.028*100000/(8.314*300)",
+            "expected": 1.122604442306
+          },
+          "pitfall": "Brug absolut tryk og den molarmasse, der gælder for gassen."
+        },
+        {
+          "id": "VH06",
+          "seek": "Sluttryk ved to idealgastilstande",
+          "given": "p₁, V₁, T₁, V₂, T₂",
+          "condition": "Samme konstante stofmængde af en idealgas.",
+          "latex": "p_2=\\frac{p_1V_1T_2}{T_1V_2}",
+          "conversion": "Begge tryk absolutte og i samme enhed; begge temperaturer i K.",
+          "source_locations": [
+            "VH1:10"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "p2",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "T1",
+                "V2",
+                "T2"
+              ]
+            ],
+            "situations": [
+              "ideal"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_2=\\frac{100000\\cdot0{,}1\\cdot600}{300\\cdot0{,}2}=100000\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "100000*0.1*600/(300*0.2)",
+            "expected": 100000
+          },
+          "pitfall": "Gasloven forudsætter konstant stofmængde; lækage eller reaktion bryder denne forudsætning."
+        },
+        {
+          "id": "VH07",
+          "seek": "Samlet tryk fra partialtryk",
+          "given": "Alle partialtryk ved blandingens sluttilstand",
+          "condition": "Ikke-reagerende idealgasser. Partialtrykkene skal svare til samme slutvolumen og temperatur.",
+          "latex": "p=\\sum_i p_i",
+          "pitfall": "Partialtryk før blanding gælder ikke automatisk ved den fælles sluttilstand.",
+          "source_locations": [
+            "VH1:14-16"
+          ],
+          "lookup": {
+            "group": "gas",
+            "seek_key": "p",
+            "given_sets": [
+              [
+                "partials"
+              ]
+            ],
+            "situations": [
+              "mixture"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p=80000+20000=100000\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "80000+20000",
+            "expected": 100000
+          },
+          "conversion": "Alle partialtryk i samme trykenhed; summen er totaltrykket."
+        },
+        {
+          "id": "VH08",
+          "seek": "Ændring i indre energi",
+          "given": "Q, W",
+          "condition": "Lukket system. Varme til systemet og arbejde på systemet regnes positive.",
+          "latex": "\\Delta U=Q+W",
+          "pitfall": "Leveret arbejde er negativt i denne konvention; undgå at blande den med kredsprocessens konvention.",
+          "source_locations": [
+            "VH1:20-23"
+          ],
+          "lookup": {
+            "group": "energy",
+            "seek_key": "dU",
+            "given_sets": [
+              [
+                "Q",
+                "W"
+              ]
+            ],
+            "situations": [
+              "closed"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\Delta U=1000+(-400)=600\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "1000-400",
+            "expected": 600
+          },
+          "conversion": "Q, W og ΔU i J; anvend samme fortegnskonvention."
+        },
+        {
+          "id": "VH09",
+          "seek": "Volumenarbejde langs et trykforløb",
+          "given": "p(V), V₁, V₂",
+          "condition": "Kvasistatisk volumenarbejde. Positivt arbejde på systemet.",
+          "latex": "W=-\\int_{V_1}^{V_2}p(V)\\,dV",
+          "conversion": "p i Pa og V i m³ giver J.",
+          "pitfall": "Trykforløbet og integrationsretningen skal være kendt; et sluttryk er ikke nok.",
+          "source_locations": [
+            "VH1:21-23"
+          ],
+          "lookup": {
+            "group": "energy",
+            "seek_key": "W",
+            "given_sets": [
+              [
+                "p_path",
+                "V1",
+                "V2"
+              ]
+            ],
+            "situations": [
+              "closed"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W=-\\int_{0{,}001}^{0{,}003}100000\\,dV=-200\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "-100000*(0.003-0.001)",
+            "expected": -200
+          }
+        },
+        {
+          "id": "VH10",
+          "seek": "Arbejde ved konstant tryk",
+          "given": "p, ΔV",
+          "condition": "Isobar, kvasistatisk proces; arbejde på systemet positivt.",
+          "latex": "W=-p\\Delta V",
+          "conversion": "Pa gange m³ giver J.",
+          "source_locations": [
+            "VH1:22",
+            "VH3:3"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "W",
+            "given_sets": [
+              [
+                "p",
+                "dV"
+              ]
+            ],
+            "situations": [
+              "isobar"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W=-100000\\cdot0{,}002=-200\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "-100000*0.002",
+            "expected": -200
+          },
+          "pitfall": "Ekspansion giver negativt arbejde på systemet."
+        },
+        {
+          "id": "VH11",
+          "seek": "Varme ved konstant volumen",
+          "given": "m, c_v, ΔT",
+          "condition": "Isokor proces; konstant c_v i temperaturintervallet. Intet volumenarbejde.",
+          "latex": "Q=mc_v\\Delta T",
+          "conversion": "m i kg, c_v i J/(kg·K) og temperaturforskel i K giver J.",
+          "source_locations": [
+            "VH2:11-12",
+            "VH3:5"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "Q",
+            "given_sets": [
+              [
+                "m",
+                "cv",
+                "dT"
+              ]
+            ],
+            "situations": [
+              "isochor"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $Q=2\\cdot718\\cdot10=14360\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "2*718*10",
+            "expected": 14360
+          },
+          "pitfall": "Isokor proces alene udelukker ikke andet arbejde; formlen forudsætter intet andet arbejde."
+        },
+        {
+          "id": "VH12",
+          "seek": "Varme ved konstant tryk",
+          "given": "m, c_p, ΔT",
+          "condition": "Isobar proces; konstant c_p i temperaturintervallet og alene volumenarbejde.",
+          "latex": "Q=mc_p\\Delta T",
+          "conversion": "m i kg, c_p i J/(kg·K) og temperaturforskel i K giver J.",
+          "source_locations": [
+            "VH2:11-12",
+            "VH3:3"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "Q",
+            "given_sets": [
+              [
+                "m",
+                "cp",
+                "dT"
+              ]
+            ],
+            "situations": [
+              "isobar"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $Q=2\\cdot1005\\cdot10=20100\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "2*1005*10",
+            "expected": 20100
+          },
+          "pitfall": "Brug c_p og ikke c_v til den angivne isobare model."
+        },
+        {
+          "id": "VH13",
+          "seek": "Sluttryk ved konstant volumen",
+          "given": "p₁, T₁, T₂",
+          "condition": "Isokor idealgasproces med konstant stofmængde.",
+          "latex": "p_2=p_1\\frac{T_2}{T_1}",
+          "conversion": "Absolut tryk og temperaturer i K.",
+          "source_locations": [
+            "VH1:12",
+            "VH3:4-5"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "p2",
+            "given_sets": [
+              [
+                "p1",
+                "T1",
+                "T2"
+              ]
+            ],
+            "situations": [
+              "isochor"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_2=100000\\frac{600}{300}=200000\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "100000*600/300",
+            "expected": 200000
+          },
+          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius."
+        },
+        {
+          "id": "VH14",
+          "seek": "Slutvolumen ved konstant tryk",
+          "given": "V₁, T₁, T₂",
+          "condition": "Isobar idealgasproces med konstant stofmængde.",
+          "latex": "V_2=V_1\\frac{T_2}{T_1}",
+          "conversion": "Volumener i samme enhed og temperaturer i K.",
+          "source_locations": [
+            "VH1:13",
+            "VH3:2"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "V2",
+            "given_sets": [
+              [
+                "V1",
+                "T1",
+                "T2"
+              ]
+            ],
+            "situations": [
+              "isobar"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $V_2=0{,}1\\frac{600}{300}=0{,}2\\,\\mathrm{m^3}$",
+          "example_check": {
+            "expr": "0.1*600/300",
+            "expected": 0.2
+          },
+          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius."
+        },
+        {
+          "id": "VH15",
+          "seek": "Sluttryk ved konstant temperatur",
+          "given": "p₁, V₁, V₂",
+          "condition": "Isoterm idealgasproces med konstant stofmængde.",
+          "latex": "p_2=p_1\\frac{V_1}{V_2}",
+          "conversion": "Absolutte tryk i samme enhed og volumener i samme enhed.",
+          "source_locations": [
+            "VH1:11",
+            "VH3:6"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "p2",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "V2"
+              ]
+            ],
+            "situations": [
+              "isotherm"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_2=100000\\frac{0{,}1}{0{,}2}=50000\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "100000*0.1/0.2",
+            "expected": 50000
+          },
+          "pitfall": "Konstant temperatur og stofmængde er nødvendige."
+        },
+        {
+          "id": "VH16",
+          "seek": "Isotermt arbejde",
+          "given": "p₁, V₁, V₂",
+          "condition": "Kvasistatisk isoterm idealgasproces. Arbejde på systemet positivt.",
+          "latex": "W=p_1V_1\\ln\\left(\\frac{V_1}{V_2}\\right)",
+          "conversion": "p₁ i Pa og V₁ i m³ giver J; logaritmens volumenforhold er dimensionsløst.",
+          "pitfall": "Brug naturlig logaritme; ved ekspansion er arbejdet på systemet negativt.",
+          "source_locations": [
+            "VH3:7"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "W",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "V2"
+              ]
+            ],
+            "situations": [
+              "isotherm"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W=100000\\cdot0{,}1\\ln(0{,}5)\\approx-6931{,}47\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "100000*0.1*ln(0.1/0.2)",
+            "expected": -6931.471805599
+          }
+        },
+        {
+          "id": "VH17",
+          "seek": "Isentropisk sluttryk",
+          "given": "p₁, V₁, V₂, κ",
+          "condition": "Reversibel adiabatisk idealgasproces; konstant κ.",
+          "latex": "p_2=p_1\\left(\\frac{V_1}{V_2}\\right)^\\kappa",
+          "pitfall": "Adiabatisk er ikke alene tilstrækkeligt; denne formel kræver reversibilitet.",
+          "source_locations": [
+            "VH3:8-9"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "p2",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "V2",
+                "kappa"
+              ]
+            ],
+            "situations": [
+              "isentropic"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_2=100000(0{,}5)^{1{,}4}\\approx37892{,}91\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "100000*(0.1/0.2)**1.4",
+            "expected": 37892.91416276
+          },
+          "conversion": "Absolutte tryk og ens volumenenheder; κ er dimensionsløs."
+        },
+        {
+          "id": "VH18",
+          "seek": "Isentropisk arbejde",
+          "given": "p₁, V₁, p₂, V₂, κ",
+          "condition": "Reversibel adiabatisk idealgasproces; konstant κ større end 1. Arbejde på systemet positivt.",
+          "latex": "W=\\frac{p_2V_2-p_1V_1}{\\kappa-1}",
+          "conversion": "Begge pV-led i J; κ er dimensionsløs.",
+          "source_locations": [
+            "VH3:9"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "W",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "p2",
+                "V2",
+                "kappa"
+              ]
+            ],
+            "situations": [
+              "isentropic"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W=\\frac{37892{,}91416\\cdot0{,}2-100000\\cdot0{,}1}{1{,}4-1}\\approx-6053{,}54\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "(100000*(0.1/0.2)**1.4*0.2-100000*0.1)/(1.4-1)",
+            "expected": -6053.54291862
+          },
+          "pitfall": "Tilstandene skal opfylde samme isentrope proces; brug ikke vilkårlige slutdata."
+        },
+        {
+          "id": "VH19",
+          "seek": "Polytropisk sluttryk",
+          "given": "p₁, V₁, V₂, n",
+          "condition": "Polytropisk idealgasproces med konstant eksponent n.",
+          "latex": "p_2=p_1\\left(\\frac{V_1}{V_2}\\right)^n",
+          "pitfall": "Den polytropiske eksponent er ikke stofmængden n.",
+          "source_locations": [
+            "VH3:10-11"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "p2",
+            "given_sets": [
+              [
+                "p1",
+                "V1",
+                "V2",
+                "poly_n"
+              ]
+            ],
+            "situations": [
+              "polytropic"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $p_2=100000(0{,}5)^{1{,}3}\\approx40612{,}62\\,\\mathrm{Pa}$",
+          "example_check": {
+            "expr": "100000*(0.1/0.2)**1.3",
+            "expected": 40612.619817812
+          },
+          "conversion": "Absolutte tryk og ens volumenenheder; eksponenten n er dimensionsløs."
+        },
+        {
+          "id": "VH20",
+          "seek": "Polytropisk arbejde",
+          "given": "m, M, T₁, T₂, n",
+          "condition": "Polytropisk idealgasproces med konstant n forskellig fra 1. Arbejde på systemet positivt.",
+          "latex": "W=\\frac{mR(T_2-T_1)}{M(n-1)}",
+          "conversion": "M i kg/mol og molar R i J/(mol·K); resultat i J.",
+          "pitfall": "Ved n lig 1 bruges den isotermiske logaritmeformel; tæt ved 1 bliver differensformen numerisk følsom.",
+          "source_locations": [
+            "VH3:11",
+            "VH1:7"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "W",
+            "given_sets": [
+              [
+                "m",
+                "M",
+                "T1",
+                "T2",
+                "poly_n"
+              ]
+            ],
+            "situations": [
+              "polytropic"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W=\\frac{1\\cdot8{,}314(240-300)}{0{,}028(1{,}3-1)}\\approx-59385{,}71\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "8.314*(240-300)/(0.028*(1.3-1))",
+            "expected": -59385.714285714
+          }
+        },
+        {
+          "id": "VH21",
+          "seek": "Polytropisk varme med oplyst c_n",
+          "given": "m, c_n, ΔT",
+          "condition": "Konstant c_n skal være udtrykkeligt oplyst. Kilderne giver ikke en komplet beregningsformel for c_n.",
+          "latex": "Q_n=mc_n\\Delta T",
+          "pitfall": "c_n er ikke automatisk lig c_p eller c_v; den skal være oplyst for processen.",
+          "source_locations": [
+            "VH3:11"
+          ],
+          "lookup": {
+            "group": "process",
+            "seek_key": "Q",
+            "given_sets": [
+              [
+                "m",
+                "cn",
+                "dT"
+              ]
+            ],
+            "situations": [
+              "polytropic"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $Q_n=2\\cdot500\\cdot20=20000\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "2*500*20",
+            "expected": 20000
+          },
+          "conversion": "m i kg, oplyst c_n i J/(kg·K) og temperaturforskel i K."
+        },
+        {
+          "id": "VH22",
+          "seek": "Entropiændring langs en reversibel vej",
+          "given": "Reversibel varmeoverførsel og temperaturforløb",
+          "condition": "Integralet følger en reversibel vej mellem de to tilstande.",
+          "latex": "\\Delta S=\\int_1^2\\frac{\\delta Q_{rev}}{T}",
+          "conversion": "Reversibel varme i J og absolut temperatur i K giver J/K.",
+          "pitfall": "Den virkelige irreversible varmevej kan ikke uden videre indsættes i det reversible integral.",
+          "source_locations": [
+            "VH2:3-4"
+          ],
+          "lookup": {
+            "group": "entropy",
+            "seek_key": "dS",
+            "given_sets": [
+              [
+                "Qrev_path",
+                "T_path"
+              ]
+            ],
+            "situations": [
+              "reversible"
+            ]
+          },
+          "example": "Illustrativt eksempel: reversibel varmeoverførsel 900 J ved konstant temperatur 300 K. $\\Delta S=\\frac{900\\,\\mathrm{J}}{300\\,\\mathrm{K}}=3\\,\\mathrm{J/K}$",
+          "example_check": {
+            "expr": "900/300",
+            "expected": 3
+          }
+        },
+        {
+          "id": "VH23",
+          "seek": "Specifik entropi",
+          "given": "S, m",
+          "condition": "Entropi og masse for samme system og tilstand.",
+          "latex": "s=\\frac{S}{m}",
+          "conversion": "S i J/K og m i kg giver J/(kg·K).",
+          "source_locations": [
+            "VH2:5-6"
+          ],
+          "lookup": {
+            "group": "entropy",
+            "seek_key": "s",
+            "given_sets": [
+              [
+                "S",
+                "m"
+              ]
+            ],
+            "situations": [
+              "enthalpy"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $s=\\frac{12}{3}=4\\,\\mathrm{J/(kg\\cdot K)}$",
+          "example_check": {
+            "expr": "12/3",
+            "expected": 4
+          },
+          "pitfall": "Specifik entropi og total entropi må ikke blandes."
+        },
+        {
+          "id": "VH24",
+          "seek": "Specifik entalpi",
+          "given": "u, p, v",
+          "condition": "Samme termodynamiske tilstand; v er specifikt volumen.",
+          "latex": "h=u+pv",
+          "conversion": "u og h i J/kg; p i Pa og v i m³/kg. Omregn kJ/kg til J/kg før summation.",
+          "pitfall": "Specifikt volumen v er ikke totalvolumen V.",
+          "source_locations": [
+            "VH2:13-14"
+          ],
+          "lookup": {
+            "group": "entropy",
+            "seek_key": "h",
+            "given_sets": [
+              [
+                "u",
+                "p",
+                "v"
+              ]
+            ],
+            "situations": [
+              "enthalpy"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $h=200000+100000\\cdot0{,}001=200100\\,\\mathrm{J/kg}$",
+          "example_check": {
+            "expr": "200000+100000*0.001",
+            "expected": 200100
+          }
+        },
+        {
+          "id": "VH25",
+          "seek": "Entalpiændring ved konstant tryk",
+          "given": "c_p, ΔT",
+          "condition": "Isobar proces med konstant c_p i temperaturintervallet.",
+          "latex": "\\Delta h=c_p\\Delta T",
+          "conversion": "c_p i J/(kg·K) giver Δh i J/kg; med kJ/(kg·K) fås kJ/kg.",
+          "source_locations": [
+            "VH2:14"
+          ],
+          "lookup": {
+            "group": "entropy",
+            "seek_key": "dh",
+            "given_sets": [
+              [
+                "cp",
+                "dT"
+              ]
+            ],
+            "situations": [
+              "isobar"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\Delta h=1005\\cdot20=20100\\,\\mathrm{J/kg}$",
+          "example_check": {
+            "expr": "1005*20",
+            "expected": 20100
+          },
+          "pitfall": "Temperaturafhængigt c_p kræver integration frem for et konstant produkt."
+        },
+        {
+          "id": "VH26",
+          "seek": "Kredsprocessens leverede nettoarbejde",
+          "given": "Lukket p(V)-proceskurve",
+          "condition": "Komplet kvasistatisk cyklus. Her regnes arbejde leveret af systemet positivt.",
+          "latex": "W_{net}=\\oint p\\,dV",
+          "pitfall": "I regneeksemplet bruges en rektangulær cyklus gennemløbet med uret; modsat retning giver negativt nettoarbejde.",
+          "source_locations": [
+            "VH4:2-4"
+          ],
+          "lookup": {
+            "group": "cycle",
+            "seek_key": "Wout",
+            "given_sets": [
+              [
+                "p_path"
+              ]
+            ],
+            "situations": [
+              "cycle"
+            ]
+          },
+          "example": "Illustrativt eksempel: rektangulær pV-cyklus med uret mellem 100/200 kPa og 0,001/0,003 m³. $W_{net}=(200000-100000)(0{,}003-0{,}001)=200\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "(200000-100000)*(0.003-0.001)",
+            "expected": 200
+          },
+          "conversion": "Pa gange m³ giver J pr. cyklus."
+        },
+        {
+          "id": "VH27",
+          "seek": "Termisk virkningsgrad for en kredsproces",
+          "given": "W_net, Q_ind",
+          "condition": "Varmemotor; leveret nyttigt nettoarbejde og tilført varme pr. komplet cyklus.",
+          "latex": "\\eta=\\frac{W_{net}}{Q_{ind}}",
+          "conversion": "Arbejde og varme i samme energienhed; brøken er dimensionsløs. Gang med 100 for procent.",
+          "source_locations": [
+            "VH4:6",
+            "VH2:7"
+          ],
+          "lookup": {
+            "group": "cycle",
+            "seek_key": "eta",
+            "given_sets": [
+              [
+                "Wout",
+                "Qin"
+              ]
+            ],
+            "situations": [
+              "cycle"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta=\\frac{200}{1000}=0{,}20=20\\%$",
+          "example_check": {
+            "expr": "200/1000",
+            "expected": 0.2
+          },
+          "pitfall": "Q_ind er tilført varme, ikke nettovarmen. Et varmemotor-eksempel kræver positiv varme og nyttigt nettoarbejde."
+        },
+        {
+          "id": "VH28",
+          "seek": "Carnot-virkningsgrad",
+          "given": "T_H, T_L",
+          "condition": "Reversibel varmemotor mellem to reservoirer; T_H større end T_L større end nul.",
+          "latex": "\\eta_C=1-\\frac{T_L}{T_H}",
+          "conversion": "Begge reservoirtemperaturer i K; gang virkningsgraden med 100 for procent.",
+          "pitfall": "Carnot er en øvre idealgrænse, ikke en virkelig motors virkningsgrad. Celsius giver forkert resultat.",
+          "source_locations": [
+            "VH4:7-9"
+          ],
+          "lookup": {
+            "group": "cycle",
+            "seek_key": "eta",
+            "given_sets": [
+              [
+                "TH",
+                "TL"
+              ]
+            ],
+            "situations": [
+              "carnot"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_C=1-\\frac{300}{600}=0{,}50=50\\%$",
+          "example_check": {
+            "expr": "1-300/600",
+            "expected": 0.5
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": "Fortegn for arbejde",
+          "text": "I de første lektioner er arbejde på systemet positivt. Kredsproceslektionen omtaler positivt leveret arbejde. Entropilektionens indledning viser begge skrivemåder. Hvert opslag angiver derfor sin egen konvention.",
+          "source_locations": [
+            "VH1:20-23",
+            "VH2:2",
+            "VH4:2-3"
+          ]
+        },
+        {
+          "title": "Damp, faseændringer og damptabeller",
+          "text": "Materialet viser diagrammer og entropieksempler, men giver ikke komplette damptabeller. Til et dampopslag skal tilstanden kendes: tryk og temperatur eller tryk og dampkvalitet. De nødvendige h- og s-værdier skal slås op; de er ikke standardværdier.",
+          "source_locations": [
+            "VH2:8-9",
+            "VH4:11-13"
+          ]
+        },
+        {
+          "title": "Polytropisk varmekapacitet c_n",
+          "text": "Lektionen anvender Q_n=m c_n ΔT, men giver ikke en fuldstændig relation til beregning af c_n. Kataloget tillader alene denne varmeformel med en udtrykkeligt oplyst c_n.",
+          "source_locations": [
+            "VH3:11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tm-engine",
+      "discipline": "TM",
+      "topic": "Motorlære",
+      "scope": "Kildegrundlag: de uploadede motorlektioner, opgaver, MAN-databladet og Noget om Dieselmotorer version 4. Indiceret effekt, bremseeffekt og tilført brændselseffekt holdes adskilt. Motorens leverede arbejde regnes positivt. Brændværdier og specifikke forbrug skal høre til den konkrete opgave og driftstilstand.",
+      "source_inventory": [
+        {
+          "id": "MO1",
+          "file": "sources/TM/MO1/Lektion 1 og 2 Opstart af fag - motorens funktion og konstruktion overordnet.pptx",
+          "pages": 28,
+          "unit": "slide",
+          "sha256": "aba0c4962fc6360e856fe7f47259dff5782658857273299747dcd3679cd54dd3"
+        },
+        {
+          "id": "MO2",
+          "file": "sources/TM/MO2/Lektion 3 Dieselmotorens hjælpesystemer.pptx",
+          "pages": 13,
+          "unit": "slide",
+          "sha256": "66c4c3fb3c8b1df1d2fa768104647f075ec0ce5600798289add250cd749ca9a2"
+        },
+        {
+          "id": "MO3",
+          "file": "sources/TM/MO3/Lektion 4 Dieselmotorens effekter og virkningsgrader.pptx",
+          "pages": 10,
+          "unit": "slide",
+          "sha256": "36a67d9b05849101efec23bc4ff4062e4fc2d4c07535bb263422c7e207998b2c"
+        },
+        {
+          "id": "MOB",
+          "file": "sources/TM/MOB/Noget om Dieselmotorer version 4.pdf",
+          "pages": 183,
+          "unit": "side",
+          "sha256": "dc1e4e24a4c65c0c686b8645a424ab541b5a5ef008f28c037c564b05bd8af7ca"
+        },
+        {
+          "id": "MAN",
+          "file": "sources/TM/MAN/man-l35-44df.pdf",
+          "pages": 2,
+          "unit": "side",
+          "sha256": "6191c4c63572cc8a25344273654c83537786e2bae74204bf39a0cfd1bebeedb2"
+        },
+        {
+          "id": "MOD1",
+          "file": "sources/TM/MOD1/Opgave hovedele for 2-takt diesel.docx",
+          "unit": "afsnit",
+          "sha256": "61e292714459a369d3844eb4ef9a79bce6ca106d55fcd3b462cef8d5d026453a"
+        },
+        {
+          "id": "MOD2",
+          "file": "sources/TM/MOD2/Spørgsmål til filmen How diesel engines work part 1.docx",
+          "unit": "afsnit",
+          "sha256": "5fe07fe745f76a5fa4a4d6674244daf57ca193a4d60cfdbbc14d16846f97e5e4"
+        },
+        {
+          "id": "MOD3",
+          "file": "sources/TM/MOD3/Opgave i motoreffekter og virkningsgrader (1).docx",
+          "unit": "afsnit",
+          "sha256": "c4bdd777d13aac8a422e371d570736e5e0c7492d1c3d2b75e2b5c14db996457c"
+        }
+      ],
+      "quantities": {
+        "Pfuel": "Tilført brændselseffekt P_tilf [kW]",
+        "mdot": "Brændselsmassestrøm ṁ_b [kg/s]",
+        "hi": "Nedre brændværdi h_i [kJ/kg]",
+        "Pi": "Indiceret effekt P_i [kW]",
+        "Pb": "Bremseeffekt P_b [kW]",
+        "pi": "Indiceret middeltryk p_i [kPa]",
+        "Vs": "Slagvolumen pr. cylinder V_s [m³]",
+        "c": "Antal cylindre c [1]",
+        "rpm": "Omdrejningstal n [rpm]",
+        "diameter": "Cylinderdiameter d [m]",
+        "stroke": "Slaglængde s [m]",
+        "torque": "Drejningsmoment M [kN·m]",
+        "eta_m": "Mekanisk virkningsgrad η_m [1]",
+        "eta_t": "Indiceret termisk virkningsgrad η_t [1]",
+        "eta_e": "Økonomisk virkningsgrad η_ø [1]",
+        "Ch": "Brændselsforbrug C_h [kg/h]",
+        "cb": "Specifikt bremseforbrug c_b [kg/kWh]",
+        "ci": "Specifikt indiceret forbrug c_i [kg/kWh]",
+        "Wi": "Indiceret arbejde pr. cyklus og cylinder W_i [kJ]",
+        "Wout": "Arbejde leveret af gassen A [J]",
+        "p": "Konstant gastryk p [Pa]",
+        "dV": "Volumenændring ΔV [m³]",
+        "Qin": "Tilført varme Q₁ [kJ]",
+        "Qloss": "Bortført varme Q₂ [kJ]",
+        "eta_ideal": "Ideel termisk virkningsgrad η₀ [1]",
+        "r": "Kompressionsforhold V₁/V₂ [1]",
+        "kappa": "Isentropeksponent κ [1]",
+        "cutoff": "Indsprøjtningsforhold φ=V₃/V₂ [1]",
+        "H_pct": "Brint h [masse-%]",
+        "C_pct": "Kulstof c [masse-%]",
+        "S_pct": "Svovl s [masse-%]",
+        "O_pct": "Ilt o [masse-%]",
+        "water_pct": "Vand f [masse-%]",
+        "Lmin": "Teoretisk luftbehov L_min [kg luft/kg brændsel]",
+        "airflow": "Luftmassestrøm ṁ_l [kg/s]",
+        "exhaustflow": "Røggasmassestrøm ṁ_RG [kg/s]",
+        "Ptl": "Turbineeffekt P_TL [kW]",
+        "cp_rg": "Røggassens c_p [kJ/(kg·K)]",
+        "dropT": "Temperaturfald gennem turbine ΔT [K]"
+      },
+      "situations": {
+        "fuel": "Brændselseffekt og nedre brændværdi",
+        "geometry": "Cylindergeometri",
+        "two_stroke": "Totaktsmotor",
+        "four_stroke": "Firetaktsmotor",
+        "shaft": "Aksel- og bremseeffekt ved samme driftspunkt",
+        "consumption": "Stationært brændselsforbrug",
+        "cycle": "Motorens komplette arbejdscyklus",
+        "ideal_otto": "Ideel Otto-proces; konstante varmekapaciteter",
+        "ideal_diesel": "Ideel Diesel-proces; konstante varmekapaciteter",
+        "composition": "Brændstof med kendt elementaranalyse",
+        "exhaust": "Stationær massebalance",
+        "turbine": "Adiabatisk udstødningsturbine"
+      },
+      "navigation_groups": [
+        {
+          "id": "power",
+          "label": "Effekter"
+        },
+        {
+          "id": "efficiency",
+          "label": "Virkningsgrader"
+        },
+        {
+          "id": "fuel",
+          "label": "Brændsel og forbrug"
+        },
+        {
+          "id": "engine",
+          "label": "Motor og cyklus"
+        }
+      ],
+      "entries": [
+        {
+          "id": "MO01",
+          "seek": "Tilført brændselseffekt",
+          "given": "ṁ_b, h_i",
+          "condition": "Massestrøm og nedre brændværdi for det aktuelle brændsel.",
+          "latex": "P_{tilf}=\\dot m_b h_i",
+          "conversion": "kg/s gange kJ/kg giver kW; kg/h divideres med 3600.",
+          "pitfall": "Brændværdien skal gælde det aktuelle brændsel; den er ikke en universel konstant.",
+          "source_locations": [
+            "MO3:2",
+            "MOB:163"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Pfuel",
+            "given_sets": [
+              [
+                "mdot",
+                "hi"
+              ]
+            ],
+            "situations": [
+              "fuel"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_{tilf}=0{,}01\\cdot42000=420\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "0.01*42000",
+            "expected": 420
+          }
+        },
+        {
+          "id": "MO02",
+          "seek": "Slagvolumen pr. cylinder",
+          "given": "d, s",
+          "condition": "Cylinder med cirkulært tværsnit. Slagvolumen er forskellen mellem nederste og øverste stempelstilling.",
+          "latex": "V_s=\\frac{\\pi}{4}d^2s",
+          "conversion": "Diameter og slaglængde i m giver m³ pr. cylinder; liter divideres med 1000.",
+          "source_locations": [
+            "MO3:4"
+          ],
+          "lookup": {
+            "group": "engine",
+            "seek_key": "Vs",
+            "given_sets": [
+              [
+                "diameter",
+                "stroke"
+              ]
+            ],
+            "situations": [
+              "geometry"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $V_s=\\frac{\\pi}{4}(0{,}35)^2\\cdot0{,}44\\approx0{,}04233\\,\\mathrm{m^3}$",
+          "example_check": {
+            "expr": "pi/4*0.35**2*0.44",
+            "expected": 0.04233296100712246
+          },
+          "pitfall": "Brug cylinderdiameter, ikke radius. Gang kun med antal cylindre ved beregning af samlet slagvolumen."
+        },
+        {
+          "id": "MO03",
+          "seek": "Indiceret effekt, totakt",
+          "given": "p_i, V_s, c, n",
+          "condition": "Totaktsmotor: ét arbejdsslag pr. omdrejning og cylinder. p_i er indiceret middeltryk.",
+          "latex": "P_i=p_iV_sc\\frac{n}{60}",
+          "conversion": "p_i i kPa, V_s i m³ og n i rpm giver kW; V_s er pr. cylinder.",
+          "pitfall": "Totakt har ét arbejdsslag pr. omdrejning. Brug ikke firetaktsfaktoren 120.",
+          "source_locations": [
+            "MO3:3-4",
+            "MOB:157"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Pi",
+            "given_sets": [
+              [
+                "pi",
+                "Vs",
+                "c",
+                "rpm"
+              ]
+            ],
+            "situations": [
+              "two_stroke"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_i=1000\\cdot0{,}02\\cdot6\\frac{600}{60}=1200\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "1000*0.02*6*600/60",
+            "expected": 1200
+          }
+        },
+        {
+          "id": "MO04",
+          "seek": "Indiceret effekt, firetakt",
+          "given": "p_i, V_s, c, n",
+          "condition": "Firetaktsmotor: ét arbejdsslag pr. to omdrejninger og cylinder.",
+          "latex": "P_i=p_iV_sc\\frac{n}{120}",
+          "conversion": "p_i i kPa, V_s i m³ og n i rpm giver kW; V_s er pr. cylinder.",
+          "pitfall": "Firetakt har ét arbejdsslag pr. to omdrejninger. Brug ikke totaktsfaktoren 60.",
+          "source_locations": [
+            "MO3:3-4",
+            "MOB:157"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Pi",
+            "given_sets": [
+              [
+                "pi",
+                "Vs",
+                "c",
+                "rpm"
+              ]
+            ],
+            "situations": [
+              "four_stroke"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_i=1000\\cdot0{,}02\\cdot6\\frac{600}{120}=600\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "1000*0.02*6*600/120",
+            "expected": 600
+          }
+        },
+        {
+          "id": "MO05",
+          "seek": "Bremseeffekt fra indiceret effekt",
+          "given": "P_i, η_m",
+          "condition": "Samme driftspunkt og samme afgrænsning af mekaniske tab.",
+          "latex": "P_b=P_i\\eta_m",
+          "conversion": "Begge effekter i samme enhed; η_m indsættes som brøk.",
+          "source_locations": [
+            "MO3:5-6"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Pb",
+            "given_sets": [
+              [
+                "Pi",
+                "eta_m"
+              ]
+            ],
+            "situations": [
+              "shaft"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_b=600\\cdot0{,}9=540\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "600*0.9",
+            "expected": 540
+          },
+          "pitfall": "Bremseeffekt er nyttig akseleffekt efter mekaniske tab."
+        },
+        {
+          "id": "MO06",
+          "seek": "Bremseeffekt fra moment",
+          "given": "M, n",
+          "condition": "Moment og omdrejningstal på samme aksel og ved samme driftspunkt.",
+          "latex": "P_b=M\\frac{2\\pi n}{60}",
+          "conversion": "Moment i kN·m og n i rpm giver kW. N·m giver W.",
+          "source_locations": [
+            "MO3:5",
+            "MOB:173"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Pb",
+            "given_sets": [
+              [
+                "torque",
+                "rpm"
+              ]
+            ],
+            "situations": [
+              "shaft"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_b=2\\frac{2\\pi\\cdot600}{60}\\approx125{,}66\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "2*2*pi*600/60",
+            "expected": 125.663706143592
+          },
+          "pitfall": "rpm er ikke rad/s; omregningsfaktoren indeholder både 2π og 60."
+        },
+        {
+          "id": "MO07",
+          "seek": "Moment fra bremseeffekt",
+          "given": "P_b, n",
+          "condition": "Samme aksel og driftspunkt; omdrejningstallet skal være positivt.",
+          "latex": "M=\\frac{60P_b}{2\\pi n}",
+          "conversion": "P_b i kW og n i rpm giver moment i kN·m. Gang med 1000 for N·m.",
+          "source_locations": [
+            "MO3:5"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "torque",
+            "given_sets": [
+              [
+                "Pb",
+                "rpm"
+              ]
+            ],
+            "situations": [
+              "shaft"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $M=\\frac{60\\cdot100}{2\\pi\\cdot600}\\approx1{,}592\\,\\mathrm{kN\\cdot m}$",
+          "example_check": {
+            "expr": "60*100/(2*pi*600)",
+            "expected": 1.591549430919
+          },
+          "pitfall": "Nul omdrejningstal kan ikke bruges; kontrollér om momentet ønskes i N·m eller kN·m."
+        },
+        {
+          "id": "MO08",
+          "seek": "Mekanisk virkningsgrad",
+          "given": "P_b, P_i",
+          "condition": "Samme motor og driftspunkt; P_i er positiv.",
+          "latex": "\\eta_m=\\frac{P_b}{P_i}",
+          "conversion": "Samme effektenhed i tæller og nævner; gang med 100 for procent.",
+          "source_locations": [
+            "MO3:6"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_m",
+            "given_sets": [
+              [
+                "Pb",
+                "Pi"
+              ]
+            ],
+            "situations": [
+              "shaft"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_m=\\frac{540}{600}=0{,}9=90\\%$",
+          "example_check": {
+            "expr": "540/600",
+            "expected": 0.9
+          },
+          "pitfall": "P_i skal være positiv. Bremseeffekt og indiceret effekt skal høre til samme driftspunkt."
+        },
+        {
+          "id": "MO09",
+          "seek": "Specifikt bremseforbrug",
+          "given": "C_h, P_b",
+          "condition": "Forbrug og bremseeffekt ved samme stationære driftspunkt.",
+          "latex": "c_b=\\frac{C_h}{P_b}",
+          "conversion": "kg/h divideret med kW giver kg/kWh; gang med 1000 for g/kWh.",
+          "pitfall": "Forbrug i g/kWh skal ikke læses som kg/kWh; bremseeffekten skal være positiv.",
+          "source_locations": [
+            "MO3:7",
+            "MOB:163-164"
+          ],
+          "lookup": {
+            "group": "fuel",
+            "seek_key": "cb",
+            "given_sets": [
+              [
+                "Ch",
+                "Pb"
+              ]
+            ],
+            "situations": [
+              "consumption"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $c_b=\\frac{120}{600}=0{,}2\\,\\mathrm{kg/kWh}$",
+          "example_check": {
+            "expr": "120/600",
+            "expected": 0.2
+          }
+        },
+        {
+          "id": "MO10",
+          "seek": "Specifikt indiceret forbrug",
+          "given": "C_h, P_i",
+          "condition": "Forbrug og indiceret effekt ved samme stationære driftspunkt.",
+          "latex": "c_i=\\frac{C_h}{P_i}",
+          "conversion": "kg/h divideret med kW giver kg/kWh; gang med 1000 for g/kWh.",
+          "source_locations": [
+            "MO3:7",
+            "MOB:163"
+          ],
+          "lookup": {
+            "group": "fuel",
+            "seek_key": "ci",
+            "given_sets": [
+              [
+                "Ch",
+                "Pi"
+              ]
+            ],
+            "situations": [
+              "consumption"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $c_i=\\frac{120}{750}=0{,}16\\,\\mathrm{kg/kWh}$",
+          "example_check": {
+            "expr": "120/750",
+            "expected": 0.16
+          },
+          "pitfall": "Brug indiceret effekt, ikke bremseeffekt; effekten skal være positiv."
+        },
+        {
+          "id": "MO11",
+          "seek": "Indiceret termisk virkningsgrad",
+          "given": "P_i, P_tilf",
+          "condition": "Forbrændingens tilførte effekt og indiceret effekt ved samme driftspunkt.",
+          "latex": "\\eta_t=\\frac{P_i}{P_{tilf}}",
+          "conversion": "Begge effekter i samme enhed; gang med 100 for procent.",
+          "source_locations": [
+            "MO3:8",
+            "MOB:158"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_t",
+            "given_sets": [
+              [
+                "Pi",
+                "Pfuel"
+              ]
+            ],
+            "situations": [
+              "fuel"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_t=\\frac{750}{1000}=0{,}75=75\\%$",
+          "example_check": {
+            "expr": "750/1000",
+            "expected": 0.75
+          },
+          "pitfall": "Brændselseffekt er ikke bremseeffekt; begge værdier skal høre til samme driftspunkt."
+        },
+        {
+          "id": "MO12",
+          "seek": "Økonomisk virkningsgrad fra deleffekter",
+          "given": "η_m, η_t",
+          "condition": "Mekanisk og indiceret termisk virkningsgrad for samme driftspunkt.",
+          "latex": "\\eta_{oe}=\\eta_m\\eta_t",
+          "conversion": "Begge virkningsgrader indsættes som brøker, fx 0,9 og 0,4.",
+          "source_locations": [
+            "MO3:9",
+            "MOB:161"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_e",
+            "given_sets": [
+              [
+                "eta_m",
+                "eta_t"
+              ]
+            ],
+            "situations": [
+              "fuel"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_{oe}=0{,}9\\cdot0{,}4=0{,}36=36\\%$",
+          "example_check": {
+            "expr": "0.9*0.4",
+            "expected": 0.36
+          },
+          "pitfall": "Procenttal må ikke multipliceres direkte; omregn først til brøker."
+        },
+        {
+          "id": "MO13",
+          "seek": "Økonomisk virkningsgrad fra forbrug",
+          "given": "c_b, h_i",
+          "condition": "Specifikt bremseforbrug og nedre brændværdi for samme brændsel og driftspunkt.",
+          "latex": "\\eta_{oe}=\\frac{3600}{c_bh_i}",
+          "conversion": "c_b i kg/kWh og h_i i kJ/kg; 3600 kJ svarer til 1 kWh. g/kWh divideres med 1000.",
+          "pitfall": "Faktoren 3600 gælder netop de angivne enheder; brændværdi i MJ/kg skal først omregnes.",
+          "source_locations": [
+            "MO3:9",
+            "MOB:164"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_e",
+            "given_sets": [
+              [
+                "cb",
+                "hi"
+              ]
+            ],
+            "situations": [
+              "consumption"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_{oe}=\\frac{3600}{0{,}2\\cdot42000}\\approx0{,}4286=42{,}86\\%$",
+          "example_check": {
+            "expr": "3600/(0.2*42000)",
+            "expected": 0.428571428571
+          }
+        },
+        {
+          "id": "MO14",
+          "seek": "Økonomisk virkningsgrad fra effekter",
+          "given": "P_b, P_tilf",
+          "condition": "Nyttig bremseeffekt og tilført brændselseffekt ved samme driftspunkt.",
+          "latex": "\\eta_{oe}=\\frac{P_b}{P_{tilf}}",
+          "conversion": "Begge effekter i samme enhed; gang med 100 for procent.",
+          "source_locations": [
+            "MO3:9"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_e",
+            "given_sets": [
+              [
+                "Pb",
+                "Pfuel"
+              ]
+            ],
+            "situations": [
+              "fuel"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_{oe}=\\frac{420}{1000}=0{,}42=42\\%$",
+          "example_check": {
+            "expr": "420/1000",
+            "expected": 0.42
+          },
+          "pitfall": "Tilført brændselseffekt skal være positiv; bland ikke varme pr. cyklus med effekt."
+        },
+        {
+          "id": "MO15",
+          "seek": "Virkningsgrad fra varmebalance",
+          "given": "Q₁, Q₂",
+          "condition": "Komplet kredsproces. Q₁ er tilført varme og Q₂ den positive størrelse af bortført varme.",
+          "latex": "\\eta_{oe}=\\frac{Q_1-Q_2}{Q_1}",
+          "pitfall": "Q₂ indsættes positiv som bortført varme; et negativt Q₂ tælles ellers forkert.",
+          "source_locations": [
+            "MO3:9"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_e",
+            "given_sets": [
+              [
+                "Qin",
+                "Qloss"
+              ]
+            ],
+            "situations": [
+              "cycle"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_{oe}=\\frac{1000-600}{1000}=0{,}4=40\\%$",
+          "example_check": {
+            "expr": "(1000-600)/1000",
+            "expected": 0.4
+          },
+          "conversion": "Begge varmemængder i samme enhed; Q₂ er den positive størrelse af bortført varme."
+        },
+        {
+          "id": "MO16",
+          "seek": "Indiceret arbejde pr. cyklus",
+          "given": "p_i, V_s",
+          "condition": "Middeltryk fra den indicerede cyklus; slagvolumen for én cylinder.",
+          "latex": "W_i=p_iV_s",
+          "conversion": "kPa gange m³ giver kJ pr. cylinder og cyklus; Pa gange m³ giver J.",
+          "source_locations": [
+            "MOB:157"
+          ],
+          "lookup": {
+            "group": "engine",
+            "seek_key": "Wi",
+            "given_sets": [
+              [
+                "pi",
+                "Vs"
+              ]
+            ],
+            "situations": [
+              "cycle"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $W_i=1000\\cdot0{,}02=20\\,\\mathrm{kJ}$",
+          "example_check": {
+            "expr": "1000*0.02",
+            "expected": 20
+          },
+          "pitfall": "Dette er arbejde pr. cylinder og cyklus, ikke effekt. Medregn ikke cylinderantal to gange."
+        },
+        {
+          "id": "MO17",
+          "seek": "Gasarbejde ved konstant tryk",
+          "given": "p, ΔV",
+          "condition": "Konstant tryk under volumenændringen; arbejde leveret af gassen positivt.",
+          "latex": "A=p\\Delta V",
+          "conversion": "Pa gange m³ giver J; volumenændring er slutvolumen minus startvolumen.",
+          "pitfall": "Her er ekspansionsarbejde positivt; varmelærens arbejde på systemet bruger det modsatte fortegn.",
+          "source_locations": [
+            "MO1:28"
+          ],
+          "lookup": {
+            "group": "engine",
+            "seek_key": "Wout",
+            "given_sets": [
+              [
+                "p",
+                "dV"
+              ]
+            ],
+            "situations": [
+              "cycle"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $A=100000\\cdot0{,}002=200\\,\\mathrm{J}$",
+          "example_check": {
+            "expr": "100000*0.002",
+            "expected": 200
+          }
+        },
+        {
+          "id": "MO18",
+          "seek": "Ideel Otto-virkningsgrad",
+          "given": "Kompressionsforhold r, κ",
+          "condition": "Ideel Otto-cyklus med isentropisk kompression og ekspansion samt konstante varmekapaciteter.",
+          "latex": "\\eta_0=1-\\frac{1}{r^{\\kappa-1}}",
+          "pitfall": "Ideel Otto-virkningsgrad må ikke bruges som faktisk bremsevirkningsgrad.",
+          "source_locations": [
+            "MOB:154"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_ideal",
+            "given_sets": [
+              [
+                "r",
+                "kappa"
+              ]
+            ],
+            "situations": [
+              "ideal_otto"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_0=1-\\frac{1}{10^{0{,}4}}\\approx0{,}6019=60{,}19\\%$",
+          "example_check": {
+            "expr": "1-1/10**(1.4-1)",
+            "expected": 0.601892829447
+          },
+          "conversion": "r og κ er dimensionsløse; resultatet er en brøk."
+        },
+        {
+          "id": "MO19",
+          "seek": "Ideel Diesel-virkningsgrad",
+          "given": "r, κ, φ",
+          "condition": "Ideel Diesel-cyklus; isentropisk kompression og ekspansion, isobar varmetilførsel; konstante varmekapaciteter.",
+          "latex": "\\eta_0=1-\\frac{1}{r^{\\kappa-1}}\\frac{\\varphi^\\kappa-1}{\\kappa(\\varphi-1)}",
+          "pitfall": "Kompressionsforhold r skal overstige indsprøjtningsforhold φ, og φ skal overstige 1; κ skal overstige 1.",
+          "source_locations": [
+            "MOB:154"
+          ],
+          "lookup": {
+            "group": "efficiency",
+            "seek_key": "eta_ideal",
+            "given_sets": [
+              [
+                "r",
+                "kappa",
+                "cutoff"
+              ]
+            ],
+            "situations": [
+              "ideal_diesel"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_0=1-\\frac{2^{1{,}4}-1}{18^{0{,}4}\\cdot1{,}4(2-1)}\\approx0{,}6316=63{,}16\\%$",
+          "example_check": {
+            "expr": "1-(2**1.4-1)/(18**0.4*1.4*(2-1))",
+            "expected": 0.6315775314437779
+          },
+          "conversion": "r, κ og φ er dimensionsløse; resultatet er en brøk."
+        },
+        {
+          "id": "MO20",
+          "seek": "Nedre brændværdi fra elementaranalyse",
+          "given": "h, c, s, o, f som masseprocenter",
+          "condition": "Bogmaterialets empiriske tilnærmelse for brændselsolie med kendt sammensætning.",
+          "latex": "h_i=1200h+337c+93s-126o-25f",
+          "conversion": "h, c, s, o og f indsættes som masseprocenter 0–100. Resultat i kJ/kg; divider med 1000 for MJ/kg.",
+          "pitfall": "Empirisk oliemodel; brug masseprocenter, ikke brøker. Metoden gælder ikke automatisk alle brændsler.",
+          "source_locations": [
+            "MOB:167"
+          ],
+          "lookup": {
+            "group": "fuel",
+            "seek_key": "hi",
+            "given_sets": [
+              [
+                "H_pct",
+                "C_pct",
+                "S_pct",
+                "O_pct",
+                "water_pct"
+              ]
+            ],
+            "situations": [
+              "composition"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $h_i=1200\\cdot11+337\\cdot86+93\\cdot1-25\\cdot2=42225\\,\\mathrm{kJ/kg}$",
+          "example_check": {
+            "expr": "1200*11+337*86+93*1-25*2",
+            "expected": 42225
+          }
+        },
+        {
+          "id": "MO21",
+          "seek": "Teoretisk luftbehov",
+          "given": "h, c, s, o som masseprocenter",
+          "condition": "Bogmaterialets elementarbalance for fuldstændig forbrænding; luftens iltmasseandel cirka 23 %.",
+          "latex": "L_{min}=\\frac{8h+\\frac{8}{3}c+s-o}{23}",
+          "conversion": "Elementandele indsættes som masseprocenter; resultat i kg luft pr. kg brændsel.",
+          "pitfall": "Her bruges cirka 23 masse-% ilt i luft; det er ikke luftens iltvolumenprocent.",
+          "source_locations": [
+            "MOB:167"
+          ],
+          "lookup": {
+            "group": "fuel",
+            "seek_key": "Lmin",
+            "given_sets": [
+              [
+                "H_pct",
+                "C_pct",
+                "S_pct",
+                "O_pct"
+              ]
+            ],
+            "situations": [
+              "composition"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $L_{min}=\\frac{8\\cdot11+\\frac{8}{3}\\cdot86+1}{23}\\approx13{,}841\\,\\mathrm{kg/kg}$",
+          "example_check": {
+            "expr": "(8*11+8/3*86+1)/23",
+            "expected": 13.840579710145
+          }
+        },
+        {
+          "id": "MO22",
+          "seek": "Røggassens massestrøm",
+          "given": "ṁ_b, ṁ_l",
+          "condition": "Stationær massebalance; brændsel og luft er de to tilførte massestrømme.",
+          "latex": "\\dot m_{RG}=\\dot m_b+\\dot m_l",
+          "conversion": "Begge massestrømme i kg/s eller begge i kg/h.",
+          "source_locations": [
+            "MOB:170"
+          ],
+          "lookup": {
+            "group": "engine",
+            "seek_key": "exhaustflow",
+            "given_sets": [
+              [
+                "mdot",
+                "airflow"
+              ]
+            ],
+            "situations": [
+              "exhaust"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\dot m_{RG}=0{,}01+0{,}2=0{,}21\\,\\mathrm{kg/s}$",
+          "example_check": {
+            "expr": "0.01+0.2",
+            "expected": 0.21
+          },
+          "pitfall": "Balancen forudsætter stationær drift og ingen andre ind- eller udløb."
+        },
+        {
+          "id": "MO23",
+          "seek": "Udstødningsturbinens effekt",
+          "given": "ṁ_RG, c_p,RG, ΔT",
+          "condition": "Adiabatisk turbinemodel; konstant c_p over det aktuelle temperaturinterval. Temperaturfaldet er indløb minus udløb.",
+          "latex": "P_{TL}=\\dot m_{RG}c_{p,RG}\\Delta T",
+          "conversion": "kg/s gange kJ/(kg·K) gange K giver kW.",
+          "pitfall": "Temperaturfald er indløb minus udløb. En faktisk turbine kan kræve korrektion for varmetab og c_p-variation.",
+          "source_locations": [
+            "MOB:170"
+          ],
+          "lookup": {
+            "group": "power",
+            "seek_key": "Ptl",
+            "given_sets": [
+              [
+                "exhaustflow",
+                "cp_rg",
+                "dropT"
+              ]
+            ],
+            "situations": [
+              "turbine"
+            ]
+          },
+          "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $P_{TL}=0{,}21\\cdot1{,}1\\cdot200=46{,}2\\,\\mathrm{kW}$",
+          "example_check": {
+            "expr": "0.21*1.1*200",
+            "expected": 46.2
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": "Motorens hoveddele og 2-/4-takt",
+          "text": "Grundmaterialet gennemgår motorens konstruktion, stempel, cylinder, plejlstang, krumtap og cyklus. En totaktsmotor har ét arbejdsslag pr. omdrejning; en firetaktsmotor har ét pr. to omdrejninger. Opgaverne om hoveddele og film er begrebstræning, ikke nye formeldefinitioner.",
+          "source_locations": [
+            "MO1:1-28",
+            "MO3:4"
+          ]
+        },
+        {
+          "title": "Hjælpesystemer: startluft, brændolie, smøring og køling",
+          "text": "Lektionen gennemgår dieselmotorens hjælpesystemer med systemdiagrammer. Systemernes driftsværdier skal følge den aktuelle motor og opgave; diagrammerne giver ikke universelle numeriske indstillinger.",
+          "source_locations": [
+            "MO2:1-13"
+          ]
+        },
+        {
+          "title": "MAN L35/44DF og oplyste motordata",
+          "text": "Databladet gælder den navngivne motortype. Producenten markerer tallene som vejledende og projektspecifikke. De indgår derfor ikke som standardværdier for andre motorer.",
+          "source_locations": [
+            "MAN:1-2"
+          ]
+        },
+        {
+          "title": "Energibalance og tab",
+          "text": "Tilført brændselsenergi fordeles på nyttig mekanisk energi samt tab med kølevand, smøreolie, røggas, stråling og konvektion. Diagrammet er kvalitativt; fordelingsprocenter er ikke universelle.",
+          "source_locations": [
+            "MO3:10",
+            "MOB:173"
+          ]
+        }
+      ]
+    }
+  ]
+}
