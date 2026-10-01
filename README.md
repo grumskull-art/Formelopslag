@@ -1,7 +1,7 @@
 # Formelopslag
 
 Selvstændigt offline formelopslag til elektroteknik, varmelære og motorlære.
-173 kildehenviste opslag, global søgning, direkte links, gemte opslag, temaer,
+176 kildehenviste opslag, global søgning, direkte links, gemte opslag, temaer,
 tastaturbetjening og udskrivning. Kataloger, originaldokumenter, kode og test
 ligger i dette projekt; appen læser ikke fra andre projekter.
 
@@ -31,7 +31,7 @@ node test_browser.cjs
 
 `docs/index.html` kan åbnes direkte uden server eller internet. De 30 originale
 kildefiler er bevaret i `sources/`, og deres SHA256 kontrolleres ved validering.
-Katalogerne i `catalogs/` indeholder 87 numerisk kontrollerede eksempler.
+Katalogerne i `catalogs/` indeholder 90 numerisk kontrollerede eksempler.
 De 51 TM-eksempler bruger illustrative værdier og er ikke måledata.
 
 ## Mapper

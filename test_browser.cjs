@@ -44,6 +44,30 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert(await page.locator('#givens input[value="U"]').isChecked());
   assert(await page.locator('article[data-entry="C05"]').count()>0);
   await page.goto(pathToFileURL(htmlPath).href);
+  // Start current is distinct from time-dependent current; assumptions stay visible.
+  await topic('EL','el');
+  await page.locator('#groups button[data-group="capacitors"]').click();
+  await given('Us','R','C');await seek(page,'i0');
+  await only('C42');assert.equal(await page.locator('#incomplete').isChecked(),false);
+  assert.equal(await page.locator('#givens input[value="u0"]').isChecked(),false);
+  assert.match(await page.locator('article .condition').innerText(),/uopladet.*u₀=0/);
+  assert.match(await page.locator('article .explanation').innerText(),/ikke i sig selv bevis/);
+  assert.match(await page.locator('article .math-image').first().getAttribute('alt'),/i\(0\)/);
+  await page.selectOption('#situation','rc_charge');assert.equal(await page.locator('article').count(),0);
+  await given('u0');await only('C41');
+  await page.locator('#reset').click();await route('C21');
+  const explanation=page.locator('article .explanation');
+  assert.equal(await explanation.locator('.math-image').count(),3);
+  assert.match(await explanation.innerText(),/hverken C eller en tid t/);
+  assert.match(await explanation.innerText(),/AC-effektivværdi/);
+  assert(await explanation.locator('img').evaluateAll(imgs=>imgs.every(i=>i.complete&&i.naturalWidth>0)));
+  await page.screenshot({path:path.join(screenshots,'rc-explanation-desktop.png'),fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await explanation.screenshot({path:path.join(screenshots,'rc-explanation-mobile.png')});
+  await page.setViewportSize({width:1280,height:950});
+  cases.push('RC-startstrøm: Us og R nok ved eksplicit uopladet; kendt u0 kræves ellers; forklaring og ligninger på mobil');
+  await page.goto(pathToFileURL(htmlPath).href);
   async function contextQA(qa,label){
    const values=()=>qa.locator('#seek-list [role="option"]').evaluateAll(els=>els.map(x=>x.dataset.value));
    for(const [catalog,group,include,exclude] of [
@@ -130,7 +154,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   for(const [discipline,id] of [['EL','el'],['TM','tm-heat'],['TM','tm-engine']]){
    await page.goto(pathToFileURL(htmlPath).href);await topic(discipline,id);await page.locator('#incomplete').check();await page.locator('#groups button[data-group=""]').click();
    const ids=await page.evaluate(()=>activeCatalog().entries.map(e=>e.id));
-   for(const entry of ids){await page.fill('#search',entry);assert(await page.locator(`article[data-entry="${entry}"]`).count()>0,entry);assert(await page.locator('article img').evaluateAll(imgs=>imgs.every(i=>i.complete&&i.naturalWidth>0)),entry);}
+   for(const entry of ids){await page.fill('#search',entry);assert(await page.locator(`article[data-entry="${entry}"]`).count()>0,entry);assert(await page.locator(`article[data-entry="${entry}"] .explanation`).first().isVisible(),entry);assert(await page.locator('article img').evaluateAll(imgs=>imgs.every(i=>i.complete&&i.naturalWidth>0)),entry);}
    count+=ids.length;
   }
   cases.push('Motorlaere: 2-/4-takt, fagadskillelse og bevaret emnetilstand; alle '+count+' opslag og metoder findes');

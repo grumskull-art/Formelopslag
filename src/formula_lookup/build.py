@@ -48,9 +48,9 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
         cache = Path(cache) if cache else Path(temporary)
         for entry in (e for c in catalogs for e in c["entries"]):
             equations = [entry["latex"]]
-            for field in ("steps", "conversion", "pitfall", "example"):
+            for field in ("steps", "conversion", "pitfall", "example", "explanation"):
                 equations.extend(s for kind, s in math_blocks(entry.get(field, "")) if kind == "math")
-            payload["search_text"][entry["id"]] = "\n".join(markup_search_text(entry.get(f, "")) for f in ("steps", "conversion", "pitfall", "example"))
+            payload["search_text"][entry["id"]] = "\n".join(markup_search_text(entry.get(f, "")) for f in ("steps", "conversion", "pitfall", "example", "explanation"))
             for latex in equations:
                 if latex in payload["math_assets"]:
                     continue

@@ -152,7 +152,8 @@
           "example_check": {
             "expr": "-20000+101325",
             "expected": 81325
-          }
+          },
+          "explanation": "Manometertryk måles relativt til atmosfæren, mens absolut tryk måles fra vakuum. Brug absolut tryk i gasligninger; ved undertryk er manometertrykket negativt."
         },
         {
           "id": "VH02",
@@ -183,7 +184,8 @@
           "example_check": {
             "expr": "2*8.314*300/0.05",
             "expected": 99768
-          }
+          },
+          "explanation": "T er absolut temperatur i kelvin, og p er absolut tryk. n er stofmængde i mol, ikke masse; brug den molare gaskonstant R sammen med mol."
         },
         {
           "id": "VH03",
@@ -213,7 +215,8 @@
             "expr": "0.028/0.028",
             "expected": 1
           },
-          "pitfall": "Molarmasse i g/mol skal divideres med 1000 før brug sammen med kg."
+          "pitfall": "Molarmasse i g/mol skal divideres med 1000 før brug sammen med kg.",
+          "explanation": "n er antal mol, og M er molarmasse, ikke den samlede masse. Masse og molarmasse skal bruge samme masseenhed; kg sammen med kg/mol giver mol."
         },
         {
           "id": "VH04",
@@ -243,7 +246,8 @@
             "expr": "2/0.5",
             "expected": 4
           },
-          "pitfall": "Massefylde og specifikt volumen er reciprokke; de har forskellige enheder."
+          "pitfall": "Massefylde og specifikt volumen er reciprokke; de har forskellige enheder.",
+          "explanation": "m og V skal gælde den samme mængde stof i samme tilstand. ρ er massefylde; den er ikke elektrisk resistivitet, selv om symbolet er det samme."
         },
         {
           "id": "VH05",
@@ -274,7 +278,8 @@
             "expr": "0.028*100000/(8.314*300)",
             "expected": 1.122604442306
           },
-          "pitfall": "Brug absolut tryk og den molarmasse, der gælder for gassen."
+          "pitfall": "Brug absolut tryk og den molarmasse, der gælder for gassen.",
+          "explanation": "M er molarmasse i kg/mol, p er absolut tryk, og T er kelvin. Denne form bruger molar R; indsæt ikke en stofspecifik gaskonstant sammen med M."
         },
         {
           "id": "VH06",
@@ -307,7 +312,8 @@
             "expr": "100000*0.1*600/(300*0.2)",
             "expected": 100000
           },
-          "pitfall": "Gasloven forudsætter konstant stofmængde; lækage eller reaktion bryder denne forudsætning."
+          "pitfall": "Gasloven forudsætter konstant stofmængde; lækage eller reaktion bryder denne forudsætning.",
+          "explanation": "Indeks 1 og 2 betyder start- og sluttilstand for den samme gasmængde. Alle tryk skal være absolutte, og temperaturerne skal være i kelvin; den er ikke gyldig ved ændret stofmængde."
         },
         {
           "id": "VH07",
@@ -336,7 +342,8 @@
             "expr": "80000+20000",
             "expected": 100000
           },
-          "conversion": "Alle partialtryk i samme trykenhed; summen er totaltrykket."
+          "conversion": "Alle partialtryk i samme trykenhed; summen er totaltrykket.",
+          "explanation": "Partialtryk er det tryk, hver idealgas ville give alene ved blandingens slutvolumen og temperatur. Du kan ikke generelt summere tryk fra forskellige beholdere før blanding."
         },
         {
           "id": "VH08",
@@ -366,7 +373,8 @@
             "expr": "1000-400",
             "expected": 600
           },
-          "conversion": "Q, W og ΔU i J; anvend samme fortegnskonvention."
+          "conversion": "Q, W og ΔU i J; anvend samme fortegnskonvention.",
+          "explanation": "Her er varme ind i systemet og arbejde på systemet positive. Derfor står der Q+W; en bog, der definerer arbejde ud af systemet positivt, bruger et andet fortegn."
         },
         {
           "id": "VH09",
@@ -397,7 +405,8 @@
           "example_check": {
             "expr": "-100000*(0.003-0.001)",
             "expected": -200
-          }
+          },
+          "explanation": "p(V) er trykket langs hele processen, ikke kun starttrykket. Ved ekspansion er arbejdet på systemet negativt; kun ved konstant tryk kan integralet erstattes direkte af −pΔV."
         },
         {
           "id": "VH10",
@@ -428,7 +437,8 @@
             "expr": "-100000*0.002",
             "expected": -200
           },
-          "pitfall": "Ekspansion giver negativt arbejde på systemet."
+          "pitfall": "Ekspansion giver negativt arbejde på systemet.",
+          "explanation": "ΔV er slutvolumen minus startvolumen. Ekspansion giver negativt arbejde på systemet og kompression positivt; her er fortegnet modsat arbejde leveret af gassen."
         },
         {
           "id": "VH11",
@@ -460,7 +470,8 @@
             "expr": "2*718*10",
             "expected": 14360
           },
-          "pitfall": "Isokor proces alene udelukker ikke andet arbejde; formlen forudsætter intet andet arbejde."
+          "pitfall": "Isokor proces alene udelukker ikke andet arbejde; formlen forudsætter intet andet arbejde.",
+          "explanation": "c_v gælder varme ved konstant volumen; vælg ikke c_p til samme proces. ΔT er temperaturændringen, og intet volumenarbejde udføres, fordi volumen er uændret."
         },
         {
           "id": "VH12",
@@ -492,7 +503,8 @@
             "expr": "2*1005*10",
             "expected": 20100
           },
-          "pitfall": "Brug c_p og ikke c_v til den angivne isobare model."
+          "pitfall": "Brug c_p og ikke c_v til den angivne isobare model.",
+          "explanation": "c_p gælder varme ved konstant tryk og omfatter energien til volumenarbejdet. ΔT er ændringen, ikke sluttemperaturen; c_v hører til konstant volumen."
         },
         {
           "id": "VH13",
@@ -524,7 +536,8 @@
             "expr": "100000*600/300",
             "expected": 200000
           },
-          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius."
+          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius.",
+          "explanation": "Temperaturforholdet skal beregnes i kelvin, og trykkene skal være absolutte. Volumen og stofmængde er uændrede; ellers skal den generelle tilstandsligning bruges."
         },
         {
           "id": "VH14",
@@ -556,7 +569,8 @@
             "expr": "0.1*600/300",
             "expected": 0.2
           },
-          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius."
+          "pitfall": "Temperaturforhold skal beregnes i Kelvin, ikke Celsius.",
+          "explanation": "T₁ og T₂ skal være i kelvin, ikke °C. Volumen følger temperaturen i denne model, fordi tryk og stofmængde er konstante."
         },
         {
           "id": "VH15",
@@ -588,7 +602,8 @@
             "expr": "100000*0.1/0.2",
             "expected": 50000
           },
-          "pitfall": "Konstant temperatur og stofmængde er nødvendige."
+          "pitfall": "Konstant temperatur og stofmængde er nødvendige.",
+          "explanation": "Ved konstant temperatur giver mindre volumen større absolut tryk. Stofmængden skal være den samme; manometertryk kan ikke indsættes direkte i forholdet."
         },
         {
           "id": "VH16",
@@ -619,7 +634,8 @@
           "example_check": {
             "expr": "100000*0.1*ln(0.1/0.2)",
             "expected": -6931.471805599
-          }
+          },
+          "explanation": "ln er den naturlige logaritme, og V₁/V₂ er et dimensionsløst forhold. Ved ekspansion bliver arbejde på systemet negativt; begge volumener skal have samme enhed."
         },
         {
           "id": "VH17",
@@ -651,7 +667,8 @@
             "expr": "100000*(0.1/0.2)**1.4",
             "expected": 37892.91416276
           },
-          "conversion": "Absolutte tryk og ens volumenenheder; κ er dimensionsløs."
+          "conversion": "Absolutte tryk og ens volumenenheder; κ er dimensionsløs.",
+          "explanation": "κ er isentropeksponenten, ikke en vilkårlig polytropisk eksponent. Processen skal være både adiabatisk og reversibel; trykkene er absolutte."
         },
         {
           "id": "VH18",
@@ -684,7 +701,8 @@
             "expr": "(100000*(0.1/0.2)**1.4*0.2-100000*0.1)/(1.4-1)",
             "expected": -6053.54291862
           },
-          "pitfall": "Tilstandene skal opfylde samme isentrope proces; brug ikke vilkårlige slutdata."
+          "pitfall": "Tilstandene skal opfylde samme isentrope proces; brug ikke vilkårlige slutdata.",
+          "explanation": "Arbejde på systemet er positivt, så kompression og ekspansion får modsatte fortegn. Brug κ for en reversibel adiabatisk proces; κ=1 kan ikke indsættes i nævneren."
         },
         {
           "id": "VH19",
@@ -716,7 +734,8 @@
             "expr": "100000*(0.1/0.2)**1.3",
             "expected": 40612.619817812
           },
-          "conversion": "Absolutte tryk og ens volumenenheder; eksponenten n er dimensionsløs."
+          "conversion": "Absolutte tryk og ens volumenenheder; eksponenten n er dimensionsløs.",
+          "explanation": "n er proceseksponenten, ikke stofmængden i mol. Den må kun sættes lig κ for den tilsvarende isentropiske proces; trykkene skal være absolutte."
         },
         {
           "id": "VH20",
@@ -750,7 +769,8 @@
           "example_check": {
             "expr": "8.314*(240-300)/(0.028*(1.3-1))",
             "expected": -59385.714285714
-          }
+          },
+          "explanation": "n er polytropisk eksponent, mens M er molarmasse. Ved n=1 er denne form ugyldig; den isotermiske logaritmeform bruges i stedet. Arbejde på systemet er positivt."
         },
         {
           "id": "VH21",
@@ -781,7 +801,8 @@
             "expr": "2*500*20",
             "expected": 20000
           },
-          "conversion": "m i kg, oplyst c_n i J/(kg·K) og temperaturforskel i K."
+          "conversion": "m i kg, oplyst c_n i J/(kg·K) og temperaturforskel i K.",
+          "explanation": "c_n skal være oplyst for den polytropiske proces. Kilden giver ikke en komplet formel til at beregne c_n; det må ikke erstattes med c_p eller c_v uden en passende procesantagelse."
         },
         {
           "id": "VH22",
@@ -811,7 +832,8 @@
           "example_check": {
             "expr": "900/300",
             "expected": 3
-          }
+          },
+          "explanation": "δQ_rev er varme langs en reversibel vej, og T skal være i kelvin langs den vej. Ved varierende temperatur kan du ikke bare dividere den samlede varme med én valgt temperatur."
         },
         {
           "id": "VH23",
@@ -841,7 +863,8 @@
             "expr": "12/3",
             "expected": 4
           },
-          "pitfall": "Specifik entropi og total entropi må ikke blandes."
+          "pitfall": "Specifik entropi og total entropi må ikke blandes.",
+          "explanation": "S er den samlede entropi, og s er entropi pr. kg. Brug masse for samme system; stort S og stort s beskriver ikke nødvendigvis den samme sammenligning."
         },
         {
           "id": "VH24",
@@ -872,7 +895,8 @@
           "example_check": {
             "expr": "200000+100000*0.001",
             "expected": 200100
-          }
+          },
+          "explanation": "h og u er energier pr. kg, og v er volumen pr. kg. Totalvolumen V kan ikke indsættes som v; p skal være absolut tryk, og enhederne i summen skal passe."
         },
         {
           "id": "VH25",
@@ -902,7 +926,8 @@
             "expr": "1005*20",
             "expected": 20100
           },
-          "pitfall": "Temperaturafhængigt c_p kræver integration frem for et konstant produkt."
+          "pitfall": "Temperaturafhængigt c_p kræver integration frem for et konstant produkt.",
+          "explanation": "Δh er ændringen i entalpi pr. kg, ikke den samlede entalpiændring. ΔT er temperaturændringen; c_p skal være tilnærmelsesvis konstant i intervallet."
         },
         {
           "id": "VH26",
@@ -931,7 +956,8 @@
             "expr": "(200000-100000)*(0.003-0.001)",
             "expected": 200
           },
-          "conversion": "Pa gange m³ giver J pr. cyklus."
+          "conversion": "Pa gange m³ giver J pr. cyklus.",
+          "explanation": "Her er nettoarbejde leveret af systemet positivt, modsat fortegnet i opslag om arbejde på systemet. Integralet følger en hel cyklus; det er ikke arbejdet i ét deltrin."
         },
         {
           "id": "VH27",
@@ -962,7 +988,8 @@
             "expr": "200/1000",
             "expected": 0.2
           },
-          "pitfall": "Q_ind er tilført varme, ikke nettovarmen. Et varmemotor-eksempel kræver positiv varme og nyttigt nettoarbejde."
+          "pitfall": "Q_ind er tilført varme, ikke nettovarmen. Et varmemotor-eksempel kræver positiv varme og nyttigt nettoarbejde.",
+          "explanation": "W_net er nyttigt nettoarbejde fra hele cyklussen, og Q_ind er kun den tilførte varme. Resultatet er et decimaltal, eksempelvis 0,40 for 40 %, ikke en effekt i watt."
         },
         {
           "id": "VH28",
@@ -992,7 +1019,8 @@
           "example_check": {
             "expr": "1-300/600",
             "expected": 0.5
-          }
+          },
+          "explanation": "T_H og T_L er reservoirernes absolutte temperaturer i kelvin. Resultatet er den reversible motors teoretiske grænse mellem de to reservoirer, ikke en virkelig motors garanterede virkningsgrad."
         }
       ],
       "notes": [
@@ -1185,7 +1213,8 @@
           "example_check": {
             "expr": "0.01*42000",
             "expected": 420
-          }
+          },
+          "explanation": "Massestrømmen er brændsel pr. sekund, ikke brændsel pr. time. Med kg/s og nedre brændværdi i kJ/kg fås kW; dette er tilført effekt før motorens tab."
         },
         {
           "id": "MO02",
@@ -1215,7 +1244,8 @@
             "expr": "pi/4*0.35**2*0.44",
             "expected": 0.04233296100712246
           },
-          "pitfall": "Brug cylinderdiameter, ikke radius. Gang kun med antal cylindre ved beregning af samlet slagvolumen."
+          "pitfall": "Brug cylinderdiameter, ikke radius. Gang kun med antal cylindre ved beregning af samlet slagvolumen.",
+          "explanation": "V_s er slagvolumen for én cylinder, ikke motorens totale slagvolumen. d er diameter og s er slaglængde; brug meter for at få m³."
         },
         {
           "id": "MO03",
@@ -1248,7 +1278,8 @@
           "example_check": {
             "expr": "1000*0.02*6*600/60",
             "expected": 1200
-          }
+          },
+          "explanation": "p_i er indiceret middeltryk, ikke maksimalt cylindertryk. V_s er pr. cylinder, og c er antal cylindre; n er rpm. Totakt giver ét arbejdsslag pr. omdrejning og derfor division med 60."
         },
         {
           "id": "MO04",
@@ -1281,7 +1312,8 @@
           "example_check": {
             "expr": "1000*0.02*6*600/120",
             "expected": 600
-          }
+          },
+          "explanation": "p_i er indiceret middeltryk, og V_s er slagvolumen pr. cylinder. n er rpm; firetakt giver ét arbejdsslag pr. to omdrejninger og derfor division med 120. Brug ikke allerede samlet slagvolumen og gang med c igen."
         },
         {
           "id": "MO05",
@@ -1311,7 +1343,8 @@
             "expr": "600*0.9",
             "expected": 540
           },
-          "pitfall": "Bremseeffekt er nyttig akseleffekt efter mekaniske tab."
+          "pitfall": "Bremseeffekt er nyttig akseleffekt efter mekaniske tab.",
+          "explanation": "P_i er effekt udviklet i cylindrene, mens P_b er nyttig effekt på akslen. De mekaniske tab medregnes gennem η_m, som indsættes som decimaltal."
         },
         {
           "id": "MO06",
@@ -1342,7 +1375,8 @@
             "expr": "2*2*pi*600/60",
             "expected": 125.663706143592
           },
-          "pitfall": "rpm er ikke rad/s; omregningsfaktoren indeholder både 2π og 60."
+          "pitfall": "rpm er ikke rad/s; omregningsfaktoren indeholder både 2π og 60.",
+          "explanation": "M er moment på den samme aksel, hvor bremseeffekten ønskes; n er rpm. Her giver M i kN·m effekt i kW; bruger du N·m, bliver resultatet watt."
         },
         {
           "id": "MO07",
@@ -1372,7 +1406,8 @@
             "expr": "60*100/(2*pi*600)",
             "expected": 1.591549430919
           },
-          "pitfall": "Nul omdrejningstal kan ikke bruges; kontrollér om momentet ønskes i N·m eller kN·m."
+          "pitfall": "Nul omdrejningstal kan ikke bruges; kontrollér om momentet ønskes i N·m eller kN·m.",
+          "explanation": "P_b er mekanisk aksel-effekt, ikke brændselseffekt eller indiceret effekt. Med P_b i kW fås M i kN·m; n er rpm og skal være større end nul."
         },
         {
           "id": "MO08",
@@ -1402,7 +1437,8 @@
             "expr": "540/600",
             "expected": 0.9
           },
-          "pitfall": "P_i skal være positiv. Bremseeffekt og indiceret effekt skal høre til samme driftspunkt."
+          "pitfall": "P_i skal være positiv. Bremseeffekt og indiceret effekt skal høre til samme driftspunkt.",
+          "explanation": "P_b er bremseeffekt på akslen, og P_i er indiceret effekt i cylindrene. Mekanisk virkningsgrad dækker kun de mekaniske tab; den er ikke motorens samlede brændstofvirkningsgrad."
         },
         {
           "id": "MO09",
@@ -1433,7 +1469,8 @@
           "example_check": {
             "expr": "120/600",
             "expected": 0.2
-          }
+          },
+          "explanation": "C_h er brændselsforbrug i kg/h, ikke kg/s. Med P_b i kW fås kg/kWh; specifikt forbrug beskriver brændsel pr. nyttig energi, ikke brændsel pr. time."
         },
         {
           "id": "MO10",
@@ -1464,7 +1501,8 @@
             "expr": "120/750",
             "expected": 0.16
           },
-          "pitfall": "Brug indiceret effekt, ikke bremseeffekt; effekten skal være positiv."
+          "pitfall": "Brug indiceret effekt, ikke bremseeffekt; effekten skal være positiv.",
+          "explanation": "C_h skal være kg/h, og P_i skal være indiceret effekt i kW. Resultatet gælder energi udviklet i cylindrene; brug P_b i stedet, hvis du ønsker specifikt bremseforbrug."
         },
         {
           "id": "MO11",
@@ -1495,7 +1533,8 @@
             "expr": "750/1000",
             "expected": 0.75
           },
-          "pitfall": "Brændselseffekt er ikke bremseeffekt; begge værdier skal høre til samme driftspunkt."
+          "pitfall": "Brændselseffekt er ikke bremseeffekt; begge værdier skal høre til samme driftspunkt.",
+          "explanation": "Indiceret termisk virkningsgrad sammenligner cylinder-effekt med tilført brændselseffekt. Den medregner ikke de efterfølgende mekaniske tab frem til akslen."
         },
         {
           "id": "MO12",
@@ -1526,7 +1565,8 @@
             "expr": "0.9*0.4",
             "expected": 0.36
           },
-          "pitfall": "Procenttal må ikke multipliceres direkte; omregn først til brøker."
+          "pitfall": "Procenttal må ikke multipliceres direkte; omregn først til brøker.",
+          "explanation": "Den samlede økonomiske virkningsgrad fås ved at gange termisk og mekanisk virkningsgrad. Brug decimaltal, eksempelvis 0,90 gange 0,45, ikke tallene 90 og 45."
         },
         {
           "id": "MO13",
@@ -1557,7 +1597,8 @@
           "example_check": {
             "expr": "3600/(0.2*42000)",
             "expected": 0.428571428571
-          }
+          },
+          "explanation": "Faktoren 3600 omregner mellem kWh og kJ. Derfor skal c_b være i kg/kWh og h_i i kJ/kg; g/kWh eller MJ/kg skal først omregnes."
         },
         {
           "id": "MO14",
@@ -1587,7 +1628,8 @@
             "expr": "420/1000",
             "expected": 0.42
           },
-          "pitfall": "Tilført brændselseffekt skal være positiv; bland ikke varme pr. cyklus med effekt."
+          "pitfall": "Tilført brændselseffekt skal være positiv; bland ikke varme pr. cyklus med effekt.",
+          "explanation": "P_b er den nyttige aksel-effekt, mens P_tilf er brændslets tilførte effekt. Økonomisk betyder her motorens samlede energiudnyttelse, ikke en pris eller økonomisk besparelse."
         },
         {
           "id": "MO15",
@@ -1617,7 +1659,8 @@
             "expr": "(1000-600)/1000",
             "expected": 0.4
           },
-          "conversion": "Begge varmemængder i samme enhed; Q₂ er den positive størrelse af bortført varme."
+          "conversion": "Begge varmemængder i samme enhed; Q₂ er den positive størrelse af bortført varme.",
+          "explanation": "Q₁ er tilført varme, og Q₂ er den positive størrelse af bortført varme. Indsæt ikke Q₂ som et negativt tal, for den bliver allerede trukket fra."
         },
         {
           "id": "MO16",
@@ -1647,7 +1690,8 @@
             "expr": "1000*0.02",
             "expected": 20
           },
-          "pitfall": "Dette er arbejde pr. cylinder og cyklus, ikke effekt. Medregn ikke cylinderantal to gange."
+          "pitfall": "Dette er arbejde pr. cylinder og cyklus, ikke effekt. Medregn ikke cylinderantal to gange.",
+          "explanation": "p_i er middeltryk over den indicerede cyklus, og V_s er slagvolumen for én cylinder. Resultatet er arbejde pr. cyklus og cylinder, ikke samlet motoreffekt."
         },
         {
           "id": "MO17",
@@ -1677,7 +1721,8 @@
           "example_check": {
             "expr": "100000*0.002",
             "expected": 200
-          }
+          },
+          "explanation": "Her er arbejde leveret af gassen positivt: ekspansion giver positivt A. ΔV er slutvolumen minus startvolumen; fortegnet er modsat varmelærens arbejde på systemet."
         },
         {
           "id": "MO18",
@@ -1707,7 +1752,8 @@
             "expr": "1-1/10**(1.4-1)",
             "expected": 0.601892829447
           },
-          "conversion": "r og κ er dimensionsløse; resultatet er en brøk."
+          "conversion": "r og κ er dimensionsløse; resultatet er en brøk.",
+          "explanation": "r er kompressionsforholdet mellem volumener, ikke en længde eller radius. Resultatet gælder den ideelle Otto-cyklus og er ikke en virkelig motors samlede virkningsgrad."
         },
         {
           "id": "MO19",
@@ -1738,7 +1784,8 @@
             "expr": "1-(2**1.4-1)/(18**0.4*1.4*(2-1))",
             "expected": 0.6315775314437779
           },
-          "conversion": "r, κ og φ er dimensionsløse; resultatet er en brøk."
+          "conversion": "r, κ og φ er dimensionsløse; resultatet er en brøk.",
+          "explanation": "r er kompressionsforholdet, og φ er volumenforholdet under den isobare varmetilførsel. Resultatet gælder den ideelle Diesel-cyklus; φ=1 kan ikke indsættes direkte i nævneren."
         },
         {
           "id": "MO20",
@@ -1771,7 +1818,8 @@
           "example_check": {
             "expr": "1200*11+337*86+93*1-25*2",
             "expected": 42225
-          }
+          },
+          "explanation": "h, c, s, o og f er masseprocenter fra elementaranalysen; eksempelvis 11 betyder 11 %, ikke 0,11. h er her brintandel, ikke entalpi eller brændværdi; modellen gælder den beskrevne brændselsolie."
         },
         {
           "id": "MO21",
@@ -1803,7 +1851,8 @@
           "example_check": {
             "expr": "(8*11+8/3*86+1)/23",
             "expected": 13.840579710145
-          }
+          },
+          "explanation": "Elementandelene indsættes som masseprocenter, og 23 er luftens omtrentlige iltmasseprocent. Resultatet er teoretisk minimum af kg luft pr. kg brændsel, ikke faktisk lufttilførsel med luftoverskud."
         },
         {
           "id": "MO22",
@@ -1833,7 +1882,8 @@
             "expr": "0.01+0.2",
             "expected": 0.21
           },
-          "pitfall": "Balancen forudsætter stationær drift og ingen andre ind- eller udløb."
+          "pitfall": "Balancen forudsætter stationær drift og ingen andre ind- eller udløb.",
+          "explanation": "Brændsel, luft og røggas er massestrømme med samme tidsenhed. Balancen forudsætter stationær drift med disse tilførsler; en masse i kg kan ikke lægges direkte til en massestrøm i kg/s."
         },
         {
           "id": "MO23",
@@ -1864,7 +1914,8 @@
           "example_check": {
             "expr": "0.21*1.1*200",
             "expected": 46.2
-          }
+          },
+          "explanation": "ΔT er indløbstemperatur minus udløbstemperatur, så et temperaturfald giver positiv effekt. Med kg/s og c_p i kJ/(kg·K) fås kW; modellen ser bort fra varmeudveksling og øvrige energibidrag."
         }
       ],
       "notes": [

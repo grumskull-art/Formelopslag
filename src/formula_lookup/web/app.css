@@ -483,6 +483,14 @@ article>p,.condition {
 .helper {
   margin-top:22px;
 }
+.helper.explanation {
+  border-left:3px solid var(--accent);
+  padding:12px 16px;
+  background:var(--soft);
+}
+.helper.explanation p:last-child {
+  margin-bottom:0;
+}
 .helper h3 {
   color:var(--accent);
   font-size:13px;

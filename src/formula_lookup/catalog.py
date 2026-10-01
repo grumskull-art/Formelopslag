@@ -46,10 +46,13 @@ def validate_catalog(db):
     groups = {g["id"] for g in db["navigation_groups"]}
     for entry in entries:
         code, meta = entry["id"], entry["lookup"]
-        for field in ("id", "seek", "condition", "latex"):
+        origin = entry.get("derived_from")
+        if origin is not None and (origin == code or not any(e["id"] == origin for e in entries)):
+            raise ValueError("Ukendt oprindeligt opslag: " + code)
+        for field in ("id", "seek", "condition", "latex", "explanation"):
             if not isinstance(entry.get(field), str) or not entry[field].strip():
                 raise ValueError(f"Tomt eller ugyldigt felt {field}: {code}")
-        for field in ("steps", "conversion", "pitfall", "example"):
+        for field in ("steps", "conversion", "pitfall", "example", "explanation"):
             math_blocks(entry.get(field, ""))
         if meta["group"] not in groups or meta["seek_key"] not in db["quantities"]:
             raise ValueError("Ukendt opslagstype: " + code)

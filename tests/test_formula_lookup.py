@@ -52,7 +52,7 @@ def test_loader_rejects_missing_or_changed_original_documents(tmp_path, changed)
 
 def test_reference_has_valid_sources_and_all_tm_examples():
     catalogs, _ = load_catalogs(CONFIG)
-    assert validate_catalogs(catalogs) == {"catalogs": 3, "entries": 173, "checked_examples": 87}
+    assert validate_catalogs(catalogs) == {"catalogs": 3, "entries": 176, "checked_examples": 90}
     for catalog in catalogs[1:]:
         for entry in catalog["entries"]:
             assert all(entry.get(field) for field in ("conversion", "pitfall", "example", "example_check"))
@@ -63,6 +63,33 @@ def test_voltage_divider_distinguishes_output_from_supply():
     divider = next(e for e in catalogs[0]["entries"] if e["id"] == "U06")
     assert divider["lookup"]["seek_key"] == "U1"
     assert divider["lookup"]["given_sets"] == [["U", "R1", "R2"]]
+
+
+def test_rc_start_current_requires_only_initial_voltage_difference_and_resistance():
+    catalogs, _ = load_catalogs(CONFIG)
+    entries = {e["id"]: e for e in catalogs[0]["entries"]}
+    assert entries["C41"]["lookup"]["given_sets"] == [["Us", "u0", "R"]]
+    assert entries["C42"]["lookup"]["given_sets"] == [["Us", "R"]]
+    assert entries["C43"]["lookup"]["given_sets"] == [["u0", "R"]]
+    assert entries["C42"]["lookup"]["situations"] == ["rc_charge_empty"]
+    assert "uopladet" in entries["C42"]["condition"]
+    assert "AC-effektivværdi" in entries["C42"]["pitfall"]
+    # Independent KVL checks: capacitor voltage cannot jump through finite R.
+    for initial_voltage in (0, 100, 440, 500):
+        initial_current = (440 - initial_voltage) / 220
+        assert initial_voltage + 220 * initial_current == pytest.approx(440)
+    # After one time constant, the remaining current is 1/e of its start value.
+    assert 2 * math.exp(-.022 / (220 * .0001)) == pytest.approx(2 / math.e)
+    assert entries["C42"]["example_check"]["expected"] == 440 / 220
+
+
+@pytest.mark.parametrize("explanation", ["", " ", None, "Uafsluttet $i(0)"])
+def test_catalog_rejects_missing_or_broken_explanations(explanation):
+    catalogs, _ = load_catalogs(CONFIG)
+    catalog = copy.deepcopy(catalogs[0])
+    catalog["entries"][0]["explanation"] = explanation
+    with pytest.raises(ValueError):
+        validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("expression", ["__import__('os')", "True", "1/0", "1e309", "(-1)**0.5", "2**101", "pi.real"])
@@ -113,6 +140,7 @@ def test_web_export_is_offline_and_does_not_embed_presentation_metadata(tmp_path
     catalog = copy.deepcopy(catalogs[0])
     catalog["entries"] = catalog["entries"][:1]
     catalog["entries"][0]["pitfall"] = "</script><script>window.injected=true</script> __SCRIPT__"
+    catalog["entries"][0]["explanation"] = "</script> Startstrøm $i(0)=U_s/R$"
     target = export_catalogs([catalog], tmp_path / "index.html")
     html = target.read_text()
     payload = json.loads(html.split('<script id="database" type="application/json">')[1].split("</script>")[0])
@@ -121,6 +149,8 @@ def test_web_export_is_offline_and_does_not_embed_presentation_metadata(tmp_path
     assert "page" not in payload["catalogs"][0]["entries"][0]
     assert "window.injected=true</script>" not in html
     assert payload["catalogs"][0]["entries"][0]["pitfall"].endswith("__SCRIPT__")
+    assert "i(0)=U_s/R" in payload["math_assets"]
+    assert "Startstrøm" in payload["search_text"][catalog["entries"][0]["id"]]
     assert '<script src=' not in html and 'PPmaker' not in html
     assert html.count('id="database"') == 1
 

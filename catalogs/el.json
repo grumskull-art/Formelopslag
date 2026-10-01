@@ -37,7 +37,8 @@
         ]
       },
       "card_slide_id": "cards-W04",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "Q er den ladning, der passerer i tidsintervallet, ikke nødvendigvis al ladningen i en kondensator. Strømmen skal være konstant; ellers opdeles intervallet."
     },
     {
       "id": "I01",
@@ -72,7 +73,8 @@
         ]
       },
       "card_slide_id": "cards-W04",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "U er spændingen over netop modstanden R. For en ren ohmsk AC-belastning skal U og I begge være effektivværdier eller begge øjebliksværdier; en kondensator kan ikke generelt erstattes af R."
     },
     {
       "id": "I02",
@@ -112,7 +114,8 @@
         ]
       },
       "card_slide_id": "cards-I02",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "P er elektrisk indgangseffekt ved DC. Hvis kun aksel-effekten kendes, skal den først divideres med virkningsgraden; ved øvrig AC er P/U ikke tilstrækkeligt."
     },
     {
       "id": "I03",
@@ -148,7 +151,8 @@
         ]
       },
       "card_slide_id": "cards-I02",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "P er varmeeffekten i modstanden, ikke hele maskinens nyttige effekt. Kvadratroden giver strømstyrkens størrelse; strømretningen skal vælges særskilt."
     },
     {
       "id": "I04",
@@ -183,7 +187,8 @@
         ]
       },
       "card_slide_id": "cards-I04",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "Resultatet er gennemsnittet over intervallet, ikke strømmen i et bestemt øjeblik. Q er nettoladningen, så strøm i modsatte retninger tæller med modsat fortegn."
     },
     {
       "id": "I05",
@@ -215,7 +220,8 @@
         ]
       },
       "card_slide_id": "cards-I04",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "E er kildens spænding uden belastning; r_i er modstanden inde i kilden, og R er den ydre belastning. De ligger i serie og skal derfor lægges sammen."
     },
     {
       "id": "I06",
@@ -247,7 +253,8 @@
         ]
       },
       "card_slide_id": "cards-I06",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "U_gren er spændingen over den aktuelle parallelgren. Parallelgrene deler spænding, men har normalt forskellige strømme; totalstrømmen må ikke indsættes som grenstrøm."
     },
     {
       "id": "I07",
@@ -282,7 +289,8 @@
         ]
       },
       "card_slide_id": "cards-I06",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "Strømmen gennem R₁ beregnes med R₂ i tælleren. Den mindste modstand får den største grenstrøm; I_total er strømmen før forgreningen."
     },
     {
       "id": "B10",
@@ -315,7 +323,8 @@
         ]
       },
       "card_slide_id": "cards-B10",
-      "index_slide_id": "index-current-1"
+      "index_slide_id": "index-current-1",
+      "explanation": "l er længden af den magnetiske vej, ikke længden af viklingstråden. N er antal vindinger; flere vindinger kræver mindre strøm for samme H i denne model."
     },
     {
       "id": "N02",
@@ -347,7 +356,8 @@
         ]
       },
       "card_slide_id": "cards-N02",
-      "index_slide_id": "index-methods-1"
+      "index_slide_id": "index-methods-1",
+      "explanation": "Vælg først, hvilke strømpile der peger ind og ud af knuden. Et negativt resultat betyder, at den ukendte strøm går modsat den valgte pil."
     },
     {
       "id": "U01",
@@ -379,7 +389,8 @@
         ]
       },
       "card_slide_id": "cards-U01",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "U og I skal gælde den samme modstand. Spændingens fortegn følger din valgte polaritet og strømretning; R beskriver en ohmsk komponent."
     },
     {
       "id": "U02",
@@ -411,7 +422,8 @@
         ]
       },
       "card_slide_id": "cards-U01",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "P er elektrisk DC-effekt i den samme komponent, som strømmen I går igennem. Brug ikke mekanisk udgangseffekt uden først at medregne virkningsgraden."
     },
     {
       "id": "U03",
@@ -447,7 +459,8 @@
         ]
       },
       "card_slide_id": "cards-U03",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "P er den afsatte varmeeffekt i R. Kvadratroden giver spændingens størrelse og fortæller ikke, hvilken terminal der er positiv."
     },
     {
       "id": "U04",
@@ -479,7 +492,8 @@
         ]
       },
       "card_slide_id": "cards-U03",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "W er den elektriske energi overført med ladningen Q. Resultatet er energi pr. ladning, ikke energi pr. sekund; det sidste er effekt."
     },
     {
       "id": "U05",
@@ -511,7 +525,8 @@
         ]
       },
       "card_slide_id": "cards-U05",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "E er kildens EMK, mens U_kl er spændingen på terminalerne under belastning. Ved afladning trækkes det interne spændingsfald fra; denne fortegnsregel gælder strøm ud af pluspolen."
     },
     {
       "id": "U06",
@@ -546,7 +561,8 @@
         ]
       },
       "card_slide_id": "cards-U05",
-      "index_slide_id": "index-voltage-1"
+      "index_slide_id": "index-voltage-1",
+      "explanation": "U er spændingen over begge seriemodstande, mens U₁ kun er spændingen over R₁. Kobles en belastning på midtpunktet, ændres forholdet, og den viste simple spændingsdeler gælder ikke længere."
     },
     {
       "id": "U07",
@@ -579,7 +595,8 @@
         ]
       },
       "card_slide_id": "cards-N02",
-      "index_slide_id": "index-methods-1"
+      "index_slide_id": "index-methods-1",
+      "explanation": "Alle E_k måles med polaritet mod den samme reference på 0 V. V_a er knudens potentiale; en grenstrøm findes bagefter ud fra spændingsforskellen i den gren."
     },
     {
       "id": "E01",
@@ -615,7 +632,8 @@
         ]
       },
       "card_slide_id": "cards-E01",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "ΔΦ/Δt er den gennemsnitlige fluxændring pr. sekund, ikke selve fluxen. Minusset beskriver, at den inducerede spænding modvirker ændringen; N tæller vindingerne."
     },
     {
       "id": "E02",
@@ -646,7 +664,8 @@
         ]
       },
       "card_slide_id": "cards-E01",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "Den afledte dΦ/dt er fluxens ændringshastighed i øjeblikket. Konstant flux giver derfor ingen induceret spænding, selv om fluxen er stor."
     },
     {
       "id": "E03",
@@ -678,7 +697,8 @@
         ]
       },
       "card_slide_id": "cards-E03",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "l er den aktive lederlængde i feltet, og v er lederens hastighed. Udtrykket gælder den vinkelrette geometri og giver spændingens størrelse; polariteten bestemmes af bevægelses- og feltretning."
     },
     {
       "id": "E05",
@@ -712,7 +732,8 @@
         ]
       },
       "card_slide_id": "cards-E03",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "Det er strømændringen, der skaber modspændingen, ikke en konstant strøm. e_s er den inducerede EMK; spændingsfaldet over en spole kan have modsat fortegn med en anden polaritetsdefinition."
     },
     {
       "id": "N01",
@@ -746,7 +767,8 @@
         ]
       },
       "card_slide_id": "cards-N01",
-      "index_slide_id": "index-methods-1"
+      "index_slide_id": "index-methods-1",
+      "explanation": "V_a og V_b er potentialer relativt til samme 0 V-reference. Hver brøk er en grenstrøm ud af knuden; du opstiller én ligning pr. ukendt knude og løser dem samlet."
     },
     {
       "id": "N03",
@@ -780,7 +802,8 @@
         ]
       },
       "card_slide_id": "cards-N01",
-      "index_slide_id": "index-methods-1"
+      "index_slide_id": "index-methods-1",
+      "explanation": "Følg én valgt omløbsretning rundt i en lukket sløjfe. Spændingsstigninger og spændingsfald har modsat fortegn; dette er en kontrol, ikke en sum af alle positive spændingsstørrelser."
     },
     {
       "id": "R01",
@@ -812,7 +835,8 @@
         ]
       },
       "card_slide_id": "cards-R01",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "U måles over komponenten, og I gennem den samme komponent. Resistansen gælder ved den aktuelle temperatur; forholdet beskriver ikke automatisk en kondensators eller spoles AC-modstand."
     },
     {
       "id": "R02",
@@ -848,7 +872,8 @@
         ]
       },
       "card_slide_id": "cards-R01",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "P er varmeeffekten i netop den modstand, der fører I. Strømmen kvadreres, så dens retning ikke ændrer den positive resistans."
     },
     {
       "id": "R03",
@@ -881,7 +906,8 @@
         ]
       },
       "card_slide_id": "cards-R03",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "U er spændingen over modstanden, og P er dens varmeeffekt. Spændingens polaritet forsvinder ved kvadrering; brug ikke hele apparatets effekt til en enkelt modstand."
     },
     {
       "id": "R04",
@@ -916,7 +942,8 @@
         ]
       },
       "card_slide_id": "cards-R03",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "ρ er materialets resistivitet, mens R er modstanden for hele lederen. Med ρ i Ω·mm²/m skal tværsnittet S være i mm² og længden l i meter."
     },
     {
       "id": "R05",
@@ -949,7 +976,8 @@
         ]
       },
       "card_slide_id": "cards-R05",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "t er referencetemperaturen, ikke tid; T er den nye temperatur. Temperaturkoefficienten α_t skal høre til samme reference som den kendte modstand R_t."
     },
     {
       "id": "R06",
@@ -982,7 +1010,8 @@
         ]
       },
       "card_slide_id": "cards-R05",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "R_T er den kendte modstand ved T; R_t er den søgte ved reference t. Brug α_t ved reference t, og anvend kun den lineære model i dens gyldige temperaturområde."
     },
     {
       "id": "R07",
@@ -1015,7 +1044,8 @@
         ]
       },
       "card_slide_id": "cards-R07",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "Modstandene kan kun lægges direkte sammen, når den samme strøm går gennem dem alle. En forgrening mellem modstandene kan bryde denne serieforbindelse."
     },
     {
       "id": "R08",
@@ -1048,7 +1078,8 @@
         ]
       },
       "card_slide_id": "cards-R07",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "Parallel betyder, at alle modstande er forbundet mellem de samme to knuder. Du summerer de omvendte modstande og tager derefter den omvendte værdi; resultatet er mindre end den mindste grenmodstand."
     },
     {
       "id": "R09",
@@ -1083,7 +1114,8 @@
         ]
       },
       "card_slide_id": "cards-R09",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "E er spændingen uden belastning, mens U_kl måles med strømmen I. Deres forskel er det interne spændingsfald; den viste form gælder en afladende DC-kilde."
     },
     {
       "id": "R10",
@@ -1113,7 +1145,8 @@
         ]
       },
       "card_slide_id": "cards-R09",
-      "index_slide_id": "index-resistance-1"
+      "index_slide_id": "index-resistance-1",
+      "explanation": "G er hele komponentens konduktans i siemens, ikke materialets specifikke ledningsevne γ. Stor konduktans svarer til lille resistans."
     },
     {
       "id": "G03",
@@ -1145,7 +1178,8 @@
         ]
       },
       "card_slide_id": "cards-G03",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "ρ er en materialeværdi ved den valgte temperatur. R gælder hele lederen; S skal være i den arealenhed, som du ønsker i resistivitetens enhed."
     },
     {
       "id": "G04",
@@ -1180,7 +1214,8 @@
         ]
       },
       "card_slide_id": "cards-G03",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "S er lederens tværsnit, ikke dens diameter. Brug l i meter og ρ i Ω·mm²/m, hvis resultatet skal være i mm²."
     },
     {
       "id": "G05",
@@ -1215,7 +1250,8 @@
         ]
       },
       "card_slide_id": "cards-G05",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "l er den elektriske lederlængde, som modstanden R gælder for. Brug ikke automatisk kabelrutens længde, hvis den målte kreds også omfatter returlederen."
     },
     {
       "id": "G06",
@@ -1250,7 +1286,8 @@
         ]
       },
       "card_slide_id": "cards-G05",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "ΔT er ændringen fra reference t, ikke den nye temperatur T. Den nye temperatur findes ved at lægge ΔT til t; α_t skal passe til samme reference."
     },
     {
       "id": "G01",
@@ -1284,7 +1321,8 @@
         ]
       },
       "card_slide_id": "cards-G01",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "G beskriver hele komponenten og måles i siemens. Materialets ledningsevne γ er noget andet og kræver også geometri for at bestemme en konkret leders konduktans."
     },
     {
       "id": "G02",
@@ -1317,7 +1355,8 @@
         ]
       },
       "card_slide_id": "cards-G01",
-      "index_slide_id": "index-resistance-2"
+      "index_slide_id": "index-resistance-2",
+      "explanation": "γ er materialets specifikke ledningsevne, ikke konduktansen G for en hel leder. Den er den omvendte af resistiviteten ρ; enheden følger den enhed, ρ er angivet i."
     },
     {
       "id": "P01",
@@ -1348,7 +1387,8 @@
         ]
       },
       "card_slide_id": "cards-P01",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "U og I gælder samme DC-forbruger. Positiv effekt betyder optaget effekt med strøm ind i pluspolen; for øvrig AC er effektivspænding gange effektivstrøm ikke nødvendigvis aktiv effekt."
     },
     {
       "id": "P02",
@@ -1383,7 +1423,8 @@
         ]
       },
       "card_slide_id": "cards-P01",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "Resultatet er varmeeffekten i R, ikke nødvendigvis maskinens nyttige effekt. Ved ren ohmsk sinus-AC giver effektivstrømmen den gennemsnitlige varmeeffekt."
     },
     {
       "id": "P03",
@@ -1415,7 +1456,8 @@
         ]
       },
       "card_slide_id": "cards-P03",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "U skal være spændingen over netop R. Ved ren ohmsk sinus-AC bruges effektivspændingen til gennemsnitlig varmeeffekt, ikke spændingens spidsværdi."
     },
     {
       "id": "P04",
@@ -1449,7 +1491,8 @@
         ]
       },
       "card_slide_id": "cards-P03",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "W er den samlede omsatte energi i intervallet Δt. Resultatet er middel-effekt; den øjeblikkelige effekt kan både være højere og lavere."
     },
     {
       "id": "P05",
@@ -1483,7 +1526,8 @@
         ]
       },
       "card_slide_id": "cards-P05",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "P_ind er tilført effekt, og P_ud er nyttig afgivet effekt. Indsæt η som decimaltal, eksempelvis 0,85 for 85 %, og brug samme driftspunkt."
     },
     {
       "id": "P06",
@@ -1514,7 +1558,8 @@
         ]
       },
       "card_slide_id": "cards-P05",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "Tabet er forskellen mellem tilført og nyttig afgivet effekt. Begge skal gælde samme systemgrænse og driftspunkt; en forskel fra to forskellige belastninger er ikke et effekttab."
     },
     {
       "id": "P07",
@@ -1545,7 +1590,8 @@
         ]
       },
       "card_slide_id": "cards-P07",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "Virkningsgrad er nyttig udgang divideret med indgang, ikke omvendt. Resultatet 0,85 betyder 85 %; effekterne skal gælde samme driftspunkt."
     },
     {
       "id": "P08",
@@ -1580,7 +1626,8 @@
         ]
       },
       "card_slide_id": "cards-P07",
-      "index_slide_id": "index-power-1"
+      "index_slide_id": "index-power-1",
+      "explanation": "P er mekanisk aksel-effekt, og M er drejningsmoment. Brug ω i rad/s eller n i rpm i udtrykket med 60; rad/s og omdrejninger/s er forskellige størrelser."
     },
     {
       "id": "W01",
@@ -1614,7 +1661,8 @@
         ]
       },
       "card_slide_id": "cards-W01",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "Effekt P er energi pr. tid, mens W er den samlede energi. W bliver joule med watt og sekunder, men kWh med kW og timer; effekten skal være konstant."
     },
     {
       "id": "W02",
@@ -1651,7 +1699,8 @@
         ]
       },
       "card_slide_id": "cards-W01",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "UQ kræver konstant spænding; UIt kræver desuden konstant strøm. En kondensator under opladning har normalt varierende spænding, så dens lagrede energi findes med kondensatorens energiformler."
     },
     {
       "id": "W03",
@@ -1685,7 +1734,8 @@
         ]
       },
       "card_slide_id": "cards-W03",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "W er den energi, der skal omsættes ved konstant effekt P. Brug joule og watt for at få sekunder, eller kWh og kW for at få timer."
     },
     {
       "id": "W05",
@@ -1720,7 +1770,8 @@
         ]
       },
       "card_slide_id": "cards-W03",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "Vælg masse m, når brændværdien er pr. kg, og volumen V, når den er pr. liter eller m³. Resultatet er brændslets energi før maskinens tab; nyttig energi kræver også virkningsgrad."
     },
     {
       "id": "M01",
@@ -1755,7 +1806,8 @@
         ]
       },
       "card_slide_id": "cards-M01",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "h er ændringen i højde, ikke nødvendigvis slutpunktets højde over jorden. Formlen giver ændringen i potentiel energi ved et roligt løft og omfatter ikke maskinens tab."
     },
     {
       "id": "M02",
@@ -1786,7 +1838,8 @@
         ]
       },
       "card_slide_id": "cards-M01",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "s er bevægelsesstrækningen i kraftens retning. Formlen kræver en konstant parallel kraft; brug ikke hele kraften direkte, hvis den står skråt på bevægelsen."
     },
     {
       "id": "M05",
@@ -1820,7 +1873,8 @@
         ]
       },
       "card_slide_id": "cards-M05",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "M er konstant drejningsmoment, og θ er den drejede vinkel i radianer. Én hel omdrejning er 2π rad; en vinkel i grader kan ikke indsættes direkte."
     },
     {
       "id": "M03",
@@ -1854,7 +1908,8 @@
         ]
       },
       "card_slide_id": "cards-M05",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "r er den vinkelrette afstand fra rotationsaksen til kraftens virkelinje. Det er kun lig med armens fulde længde, når kraften står vinkelret på armen."
     },
     {
       "id": "M04",
@@ -1894,7 +1949,8 @@
         ]
       },
       "card_slide_id": "cards-M04",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "ω er vinkelhastighed i rad/s, mens n her er omdrejninger pr. sekund. Har du rpm, skal du først dividere med 60; en hel omdrejning svarer til 2π rad."
     },
     {
       "id": "M06",
@@ -1937,7 +1993,8 @@
         ]
       },
       "card_slide_id": "cards-M04",
-      "index_slide_id": "index-energy-1"
+      "index_slide_id": "index-energy-1",
+      "explanation": "P_mek er mekanisk effekt på akslen, ikke elektrisk indgangseffekt. Brug ω i rad/s eller n i rpm i den viste form med 60; omdrejningshastigheden skal være forskellig fra nul."
     },
     {
       "id": "F01",
@@ -1970,7 +2027,8 @@
         ]
       },
       "card_slide_id": "cards-F01",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "Formlen giver kraftens størrelse mellem punktladninger. Ladninger med samme fortegn frastøder, og modsatte fortegn tiltrækker; a er afstanden mellem ladningerne."
     },
     {
       "id": "F02",
@@ -2010,7 +2068,8 @@
         ]
       },
       "card_slide_id": "cards-F01",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "F/Q bruger prøveladningen Q, mens punktkildens felt bruger kildeladningen Q_k. E_f er feltstyrke, ikke energi eller en kildes EMK; retningen afhænger af ladningernes fortegn."
     },
     {
       "id": "F03",
@@ -2041,7 +2100,8 @@
         ]
       },
       "card_slide_id": "cards-F03",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "E_f er feltet dér, hvor ladningen Q befinder sig. En positiv ladning påvirkes i feltets retning, og en negativ ladning i modsat retning."
     },
     {
       "id": "F04",
@@ -2074,7 +2134,8 @@
         ]
       },
       "card_slide_id": "cards-F03",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "a er afstanden mellem punktladningerne. Brug kraftens og ladningernes størrelser; om kraften tiltrækker eller frastøder afgør ikke den positive afstand."
     },
     {
       "id": "F05",
@@ -2107,7 +2168,8 @@
         ]
       },
       "card_slide_id": "cards-F05",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "Resultatet er størrelsen af den ukendte ladning. Fortegnet skal bestemmes ud fra tiltrækning eller frastødning og den kendte ladnings fortegn."
     },
     {
       "id": "F06",
@@ -2142,7 +2204,8 @@
         ]
       },
       "card_slide_id": "cards-F05",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "E_f A gælder et ensartet felt vinkelret på fladen. Q/ε gælder flux gennem en lukket flade om ladningen i et ensartet medium; brug ikke uden videre samme Q til en vilkårlig åben flade."
     },
     {
       "id": "F07",
@@ -2173,7 +2236,8 @@
         ]
       },
       "card_slide_id": "cards-F07",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "ε er den absolutte permittivitet med enhed, mens ε_r er et dimensionsløst forhold til vakuum. Indsæt ikke ε_r alene i en formel, der kræver ε."
     },
     {
       "id": "B01",
@@ -2206,7 +2270,8 @@
         ]
       },
       "card_slide_id": "cards-F07",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "A er arealet vinkelret på feltet, og B skal være ensartet over det. Et skråt felt giver mindre flux; hele B kan kun bruges direkte i den viste vinkelrette geometri."
     },
     {
       "id": "B02",
@@ -2238,7 +2303,8 @@
         ]
       },
       "card_slide_id": "cards-B02",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "Φ er den samlede flux gennem fladen, mens B er flux pr. areal. A skal være det areal, feltet passerer vinkelret igennem, i m²."
     },
     {
       "id": "B03",
@@ -2271,7 +2337,8 @@
         ]
       },
       "card_slide_id": "cards-B02",
-      "index_slide_id": "index-magnetism-1"
+      "index_slide_id": "index-magnetism-1",
+      "explanation": "μ er materialets absolutte permeabilitet, ikke det dimensionsløse μ_r. B=μH kræver en passende materialemodel; for en ikke-lineær kerne må μ ikke blot behandles som en universel konstant."
     },
     {
       "id": "B04",
@@ -2303,7 +2370,8 @@
         ]
       },
       "card_slide_id": "cards-B04",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "a er afstanden fra den lange leders akse til punktet uden for lederen. l indgår ikke her; modellen beskriver feltet om en lang lige leder, ikke en vilkårlig spole."
     },
     {
       "id": "B05",
@@ -2340,7 +2408,8 @@
         ]
       },
       "card_slide_id": "cards-B04",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "l er den magnetiske vejlængde, ikke viklingstrådens længde. NI er amperevindingstallet; modellen forudsætter en tilnærmelsesvis ensartet magnetisk vej."
     },
     {
       "id": "B06",
@@ -2376,7 +2445,8 @@
         ]
       },
       "card_slide_id": "cards-B06",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "F_m kaldes magnetomotorisk kraft, men er ikke en mekanisk kraft i newton. NI er amperevindinger; flere viklinger summeres med fortegn efter deres feltretning."
     },
     {
       "id": "B07",
@@ -2410,7 +2480,8 @@
         ]
       },
       "card_slide_id": "cards-B06",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "R_m er magnetisk reluktans, ikke elektrisk resistans R. l og A beskriver det samme magnetiske segment, og μ skal passe til materialet og driftspunktet."
     },
     {
       "id": "B08",
@@ -2443,7 +2514,8 @@
         ]
       },
       "card_slide_id": "cards-B08",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "NI driver fluxen gennem magnetkredsens samlede reluktans R_m. Modellen ser bort fra lækage; en eventuel luftspalte skal være med i den anvendte reluktans."
     },
     {
       "id": "B09",
@@ -2479,7 +2551,8 @@
         ]
       },
       "card_slide_id": "cards-B08",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "μ_r er dimensionsløs, mens μ har enhed H/m. For en ikke-lineær kerne er B/H en værdi ved et bestemt driftspunkt, ikke nødvendigvis en konstant for hele forløbet."
     },
     {
       "id": "B11",
@@ -2511,7 +2584,8 @@
         ]
       },
       "card_slide_id": "cards-B11",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "A er kernens tværsnit normalt på fluxen, ikke hele kernens overflade. Brug Φ og B for samme del af magnetkredsen."
     },
     {
       "id": "B12",
@@ -2543,7 +2617,8 @@
         ]
       },
       "card_slide_id": "cards-B11",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "H og B er forskellige størrelser med forskellige enheder. Brug materialets absolutte μ i H/m; μ_r alene er ikke nok."
     },
     {
       "id": "B13",
@@ -2574,7 +2649,8 @@
         ]
       },
       "card_slide_id": "cards-B13",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "μ_r er forholdet til vakuums permeabilitet og har ingen enhed. μ og μ₀ skal angives i samme enhed; værdien kan afhænge af driftspunktet i en ikke-lineær kerne."
     },
     {
       "id": "E04",
@@ -2607,7 +2683,8 @@
         ]
       },
       "card_slide_id": "cards-E04",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "N er antal vindinger, og l er magnetisk vejlængde. Formlen kræver en lineær, ensartet magnetkreds og negligerer lækage; den er ikke automatisk gyldig for enhver spole."
     },
     {
       "id": "E06",
@@ -2639,7 +2716,8 @@
         ]
       },
       "card_slide_id": "cards-E04",
-      "index_slide_id": "index-induction-1"
+      "index_slide_id": "index-induction-1",
+      "explanation": "ΔI er strømændringen i intervallet Δt, ikke nødvendigvis slutstrømmen. Minusset følger den inducerede modspændings polaritet; en modsat spændingsreference kræver et konsistent fortegn."
     },
     {
       "id": "K01",
@@ -2674,7 +2752,8 @@
         ]
       },
       "card_slide_id": "cards-B13",
-      "index_slide_id": "index-magnetism-2"
+      "index_slide_id": "index-magnetism-2",
+      "explanation": "l er kun den del af lederen, der ligger i magnetfeltet. Formlen giver kraftens størrelse ved vinkelret leder og felt; kraftretningen bestemmes særskilt."
     },
     {
       "id": "K02",
@@ -2709,7 +2788,8 @@
         ]
       },
       "card_slide_id": "cards-K02",
-      "index_slide_id": "index-magnetism-3"
+      "index_slide_id": "index-magnetism-3",
+      "explanation": "l er aktiv lederlængde i feltet, ikke hele kabel-længden. Modellen kræver leder og magnetfelt vinkelret på hinanden samt strøm og felt forskellige fra nul."
     },
     {
       "id": "K03",
@@ -2744,7 +2824,8 @@
         ]
       },
       "card_slide_id": "cards-K02",
-      "index_slide_id": "index-magnetism-3"
+      "index_slide_id": "index-magnetism-3",
+      "explanation": "Kraft, strøm og aktiv længde skal gælde samme lederdel. Resultatet er fluxtæthedens størrelse i den vinkelrette geometri, ikke feltets retning."
     },
     {
       "id": "K04",
@@ -2778,7 +2859,8 @@
         ]
       },
       "card_slide_id": "cards-K04",
-      "index_slide_id": "index-magnetism-3"
+      "index_slide_id": "index-magnetism-3",
+      "explanation": "a er centerafstanden mellem de parallelle ledere, og l er den fælles aktive længde. Samme strømretning giver tiltrækning; modsat strømretning giver frastødning."
     },
     {
       "id": "C01",
@@ -2809,7 +2891,8 @@
       },
       "card_slide_id": "cards-C01",
       "index_slide_id": "index-capacitors-1",
-      "page": 59
+      "page": 59,
+      "explanation": "D er elektrisk fluxtæthed, ikke elektrisk feltstyrke E. Q er ladningens størrelse på én plade, og A er pladernes fælles overlapareal."
     },
     {
       "id": "C02",
@@ -2840,7 +2923,8 @@
       },
       "card_slide_id": "cards-C01",
       "index_slide_id": "index-capacitors-1",
-      "page": 59
+      "page": 59,
+      "explanation": "Q er ladningens størrelse på én plade. Den anden plade har modsat ladning; du skal ikke lægge de to pladeladningers størrelser sammen."
     },
     {
       "id": "C03",
@@ -2877,7 +2961,8 @@
       },
       "card_slide_id": "cards-C03",
       "index_slide_id": "index-capacitors-1",
-      "page": 60
+      "page": 60,
+      "explanation": "E er elektrisk feltstyrke, mens D er elektrisk fluxtæthed. ε=ε₀ε_r beskriver dielektrikummet; relativ permittivitet ε_r må ikke bruges alene som ε."
     },
     {
       "id": "C04",
@@ -2908,7 +2993,8 @@
       },
       "card_slide_id": "cards-C03",
       "index_slide_id": "index-capacitors-1",
-      "page": 60
+      "page": 60,
+      "explanation": "U er spændingen mellem pladerne, og a er pladeafstanden i meter. Formlen forudsætter et tilnærmelsesvis ensartet felt og ser bort fra randfelter."
     },
     {
       "id": "C05",
@@ -2945,7 +3031,8 @@
       },
       "card_slide_id": "cards-C05",
       "index_slide_id": "index-capacitors-1",
-      "page": 61
+      "page": 61,
+      "explanation": "Q/U bruger ladning og spænding på den samme kondensator; geometriformlen bruger overlapareal, afstand og dielektrikum. Det er to måder at finde samme C, og du behøver kun oplysningerne til én af dem."
     },
     {
       "id": "C06",
@@ -2978,7 +3065,8 @@
       },
       "card_slide_id": "cards-C05",
       "index_slide_id": "index-capacitors-1",
-      "page": 61
+      "page": 61,
+      "explanation": "A er fælles overlapareal for ét pladepar, ikke summen af begge pladers flader. Udtrykket gælder én ideel pladeafstand; en flerpladekondensator har en særskilt formel."
     },
     {
       "id": "C07",
@@ -3011,7 +3099,8 @@
       },
       "card_slide_id": "cards-C07",
       "index_slide_id": "index-capacitors-1",
-      "page": 62
+      "page": 62,
+      "explanation": "a er afstanden mellem pladerne, ikke pladernes størrelse. Med samme areal og materiale giver større afstand mindre kapacitans."
     },
     {
       "id": "C08",
@@ -3042,7 +3131,8 @@
       },
       "card_slide_id": "cards-C07",
       "index_slide_id": "index-capacitors-1",
-      "page": 62
+      "page": 62,
+      "explanation": "Q er kondensatorens aktuelle pladeladning, og U er dens aktuelle spænding. U er kun lig forsyningsspændingen, når den pågældende kreds og tilstand giver det."
     },
     {
       "id": "C09",
@@ -3073,7 +3163,8 @@
       },
       "card_slide_id": "cards-C09",
       "index_slide_id": "index-capacitors-1",
-      "page": 63
+      "page": 63,
+      "explanation": "U er spændingen over kondensatoren, ikke automatisk forsyningsspændingen. Q angiver ladningens størrelse på én plade; den anden plade har modsat fortegn."
     },
     {
       "id": "C10",
@@ -3106,7 +3197,8 @@
       },
       "card_slide_id": "cards-C09",
       "index_slide_id": "index-capacitors-1",
-      "page": 63
+      "page": 63,
+      "explanation": "ε_r er et dimensionsløst materiale-forhold, ikke permittivitet i F/m. Brug overlapareal A og afstand a for samme ideelle pladepar."
     },
     {
       "id": "C11",
@@ -3140,7 +3232,8 @@
       },
       "card_slide_id": "cards-C11",
       "index_slide_id": "index-capacitors-2",
-      "page": 64
+      "page": 64,
+      "explanation": "n tæller plader, men der er n−1 virksomme mellemrum. A er overlaparealet pr. pladepar; modellen kræver ens mellemrum og skiftevis sammenkoblede plader."
     },
     {
       "id": "C12",
@@ -3174,7 +3267,8 @@
       },
       "card_slide_id": "cards-C11",
       "index_slide_id": "index-capacitors-2",
-      "page": 64
+      "page": 64,
+      "explanation": "Resultatet n er antal plader, ikke antal mellemrum. Pladeantal skal være et helt tal; et ikke-heltal viser, at de givne værdier ikke passer præcist til modellen."
     },
     {
       "id": "C13",
@@ -3206,7 +3300,8 @@
       },
       "card_slide_id": "cards-C13",
       "index_slide_id": "index-capacitors-2",
-      "page": 65
+      "page": 65,
+      "explanation": "q₀ er ladningen ved start, mens q(t) er ladningen efter tiden t. Hvis kondensatoren er uopladet, er q₀=0; en konstant strøm giver lineær ladningsstigning, ikke RC-kredsens aftagende strøm."
     },
     {
       "id": "C14",
@@ -3239,7 +3334,8 @@
       },
       "card_slide_id": "cards-C13",
       "index_slide_id": "index-capacitors-2",
-      "page": 65
+      "page": 65,
+      "explanation": "u₀ er spændingen over kondensatoren ved start, ikke forsyningsspændingen. Ved u₀=0 bliver u_C(t)=It/C; dette kræver konstant strøm og er en anden model end opladning gennem en modstand."
     },
     {
       "id": "C15",
@@ -3272,7 +3368,8 @@
       },
       "card_slide_id": "cards-C15",
       "index_slide_id": "index-capacitors-2",
-      "page": 66
+      "page": 66,
+      "explanation": "u_m er den spænding, du vil nå, og u₀ er spændingen ved start. Det er spændingsstigningen u_m−u₀, der skal oplades; den oplyste strøm skal holdes konstant."
     },
     {
       "id": "C16",
@@ -3304,7 +3401,8 @@
       },
       "card_slide_id": "cards-C15",
       "index_slide_id": "index-capacitors-2",
-      "page": 66
+      "page": 66,
+      "explanation": "I_a er en positiv, konstant strøm ud af kondensatoren. Derfor trækkes den afladede ladning fra q₀; forløbet bruges kun, indtil kondensatorspændingen når nul."
     },
     {
       "id": "C17",
@@ -3337,7 +3435,8 @@
       },
       "card_slide_id": "cards-C17",
       "index_slide_id": "index-capacitors-2",
-      "page": 67
+      "page": 67,
+      "explanation": "u₀ er kondensatorens startspænding, og I_a er den positive afladningsstrøm. Konstant strøm giver et lineært fald; afladning gennem en almindelig modstand giver i stedet et eksponentielt fald."
     },
     {
       "id": "C18",
@@ -3370,7 +3469,8 @@
       },
       "card_slide_id": "cards-C17",
       "index_slide_id": "index-capacitors-2",
-      "page": 67
+      "page": 67,
+      "explanation": "u_m er den ønskede slutspænding, så faldet er u₀−u_m. Ved u_m=0 findes tiden til nul i konstantstrømsmodellen; RC-modellen når ikke præcis nul på endelig tid."
     },
     {
       "id": "C19",
@@ -3402,7 +3502,8 @@
       },
       "card_slide_id": "cards-C19",
       "index_slide_id": "index-capacitors-2",
-      "page": 68
+      "page": 68,
+      "explanation": "τ=RC beskriver, hvor hurtigt RC-forløbet ændrer sig, ikke hvornår det er helt færdigt. Efter én τ er 36,8 % af den oprindelige afvigelse tilbage; efter fem τ cirka 0,67 %."
     },
     {
       "id": "C20",
@@ -3436,7 +3537,8 @@
       },
       "card_slide_id": "cards-C19",
       "index_slide_id": "index-capacitors-2",
-      "page": 68
+      "page": 68,
+      "explanation": "U_s er den konstante forsyningsspænding; u₀ er spændingen over kondensatoren ved t=0. Spændingen starter ved u₀ og nærmer sig U_s. Kun når kondensatoren er uopladet, må du sætte u₀=0."
     },
     {
       "id": "C21",
@@ -3470,7 +3572,8 @@
       },
       "card_slide_id": "cards-C21",
       "index_slide_id": "index-capacitors-3",
-      "page": 69
+      "page": 69,
+      "explanation": "Startstrøm ved t=0: $i(0)=\\dfrac{U_s-u_0}{R}$ U_s er forsyningen; u₀ er spændingen over kondensatoren før indkobling. Startstrømmen kræver hverken C eller en tid t; vælg Startstrøm i(0) for opslag med de rette input. Kun ved en uopladet kondensator er u₀=0 og i(0)=U_s/R. Strøm efter tiden t: $i(t)=i(0)e^{-t/(RC)}$ Strømmens størrelse aftager, fordi spændingsforskellen over modstanden aftager. Tidskonstant: $\\tau=RC$ R og C bestemmer hastigheden, mens startstrømmen bestemmes af spændingsforskellen og R. Modellen gælder et DC-trin; 440 V AC-effektivværdi er ikke en kendt øjebliksspænding ved indkobling."
     },
     {
       "id": "C22",
@@ -3504,7 +3607,8 @@
       },
       "card_slide_id": "cards-C21",
       "index_slide_id": "index-capacitors-3",
-      "page": 69
+      "page": 69,
+      "explanation": "u_m er den ønskede kondensatorspænding, ikke forsyningsspændingen U_s. Målet skal ligge mellem u₀ og U_s; præcis U_s nås kun som en grænse ved uendelig tid."
     },
     {
       "id": "C23",
@@ -3538,7 +3642,8 @@
       },
       "card_slide_id": "cards-C23",
       "index_slide_id": "index-capacitors-3",
-      "page": 70
+      "page": 70,
+      "explanation": "Du finder modstanden, der giver en bestemt opladningstid til målspændingen u_m. Skeln mellem forsyning U_s, startspænding u₀ og målspænding; målet skal ligge mellem start og forsyning."
     },
     {
       "id": "C24",
@@ -3572,7 +3677,8 @@
       },
       "card_slide_id": "cards-C23",
       "index_slide_id": "index-capacitors-3",
-      "page": 70
+      "page": 70,
+      "explanation": "Du finder kapacitansen ud fra tiden til målspændingen u_m gennem en kendt R. U_s er forsyningen, u₀ er start, og u_m er målet; de tre spændinger kan ikke bruges i flæng."
     },
     {
       "id": "C25",
@@ -3608,7 +3714,8 @@
       },
       "card_slide_id": "cards-C25",
       "index_slide_id": "index-capacitors-3",
-      "page": 71
+      "page": 71,
+      "explanation": "u₀ er spændingen over kondensatoren, når afladningen begynder. Forsyningen er frakoblet, men der skal være en lukket vej gennem R; en isoleret ideel kondensator aflades ikke efter dette forløb."
     },
     {
       "id": "C26",
@@ -3641,7 +3748,8 @@
       },
       "card_slide_id": "cards-C25",
       "index_slide_id": "index-capacitors-3",
-      "page": 71
+      "page": 71,
+      "explanation": "Startstrøm ud af kondensatoren: $i_{\\mathrm{ud}}(0)=\\dfrac{u_0}{R}$ Den kræver u₀ og R, ikke C eller t; vælg Startstrøm ud ved afladning for det særskilte opslag. Strøm efter tiden t: $i_{\\mathrm{ud}}(t)=i_{\\mathrm{ud}}(0)e^{-t/(RC)}$ Tidskonstanten er τ=RC. Her er strøm ud positiv; med opladningens strømretning ville fortegnet være negativt."
     },
     {
       "id": "C27",
@@ -3677,7 +3785,8 @@
       },
       "card_slide_id": "cards-C27",
       "index_slide_id": "index-capacitors-3",
-      "page": 72
+      "page": 72,
+      "explanation": "u₀ er startspændingen, og u_m er den lavere målspænding. Målspændingen skal være større end nul; helt afladet efter fem τ er en praktisk tilnærmelse, ikke matematisk nul."
     },
     {
       "id": "C28",
@@ -3713,7 +3822,8 @@
       },
       "card_slide_id": "cards-C27",
       "index_slide_id": "index-capacitors-3",
-      "page": 72
+      "page": 72,
+      "explanation": "R er modstanden i den faktiske lukkede afladevej. u_m skal ligge mellem nul og u₀; en afladetid til præcis nul kan ikke bruges i denne RC-formel."
     },
     {
       "id": "C29",
@@ -3746,7 +3856,8 @@
       },
       "card_slide_id": "cards-C29",
       "index_slide_id": "index-capacitors-3",
-      "page": 73
+      "page": 73,
+      "explanation": "C findes ud fra et spændingsfald fra u₀ til den positive målspænding u_m. R skal beskrive den lukkede afladevej, og målet må ikke være præcis nul."
     },
     {
       "id": "C30",
@@ -3777,7 +3888,8 @@
       },
       "card_slide_id": "cards-C29",
       "index_slide_id": "index-capacitors-3",
-      "page": 73
+      "page": 73,
+      "explanation": "u_C er spændingen over kondensatoren i den tilstand, hvor energien ønskes. Lagret energi er ikke det samme som al energien leveret af forsyningen under opladning."
     },
     {
       "id": "C31",
@@ -3809,7 +3921,8 @@
       },
       "card_slide_id": "cards-C31",
       "index_slide_id": "index-capacitors-4",
-      "page": 74
+      "page": 74,
+      "explanation": "Q og u_C skal beskrive den samme kondensator i samme tilstand. Faktoren ½ skyldes, at kondensatorspændingen ændrer sig med ladningen; brug ikke W=UQ med en fast forsyningsspænding til lagret energi."
     },
     {
       "id": "C32",
@@ -3841,7 +3954,8 @@
       },
       "card_slide_id": "cards-C31",
       "index_slide_id": "index-capacitors-4",
-      "page": 74
+      "page": 74,
+      "explanation": "Q er ladningens størrelse på én plade. Kvadreringen gør den lagrede energi positiv uanset polaritet; energien er ikke hele forsyningens leverede energi."
     },
     {
       "id": "C33",
@@ -3872,7 +3986,8 @@
       },
       "card_slide_id": "cards-C33",
       "index_slide_id": "index-capacitors-4",
-      "page": 75
+      "page": 75,
+      "explanation": "W er energien lagret i kondensatoren ved spændingen u_C, ikke forbruget fra forsyningen. En nulspænding giver ingen mulighed for at bestemme C med denne brøk."
     },
     {
       "id": "C34",
@@ -3903,7 +4018,8 @@
       },
       "card_slide_id": "cards-C33",
       "index_slide_id": "index-capacitors-4",
-      "page": 75
+      "page": 75,
+      "explanation": "Kvadratroden giver spændingens størrelse, ikke dens polaritet. W skal være den lagrede kondensatorenergi, og C skal være positiv."
     },
     {
       "id": "C35",
@@ -3934,7 +4050,8 @@
       },
       "card_slide_id": "cards-C35",
       "index_slide_id": "index-capacitors-4",
-      "page": 76
+      "page": 76,
+      "explanation": "D er elektrisk fluxtæthed, mens E er elektrisk feltstyrke. ε er den absolutte permittivitet ε₀ε_r; de to felttyper har forskellige enheder."
     },
     {
       "id": "C36",
@@ -3965,7 +4082,8 @@
       },
       "card_slide_id": "cards-C35",
       "index_slide_id": "index-capacitors-4",
-      "page": 76
+      "page": 76,
+      "explanation": "E er feltstyrken mellem pladerne, og a er afstanden i meter. U er spændingen over pladerne, ikke automatisk en ekstern forsyningsspænding."
     },
     {
       "id": "C37",
@@ -3996,7 +4114,8 @@
       },
       "card_slide_id": "cards-C37",
       "index_slide_id": "index-capacitors-4",
-      "page": 77
+      "page": 77,
+      "explanation": "a er pladeafstanden i meter. Brug spændingen over pladerne og feltstyrken i det samme ensartede felt; en generel forsyningsspænding er ikke nødvendigvis denne U."
     },
     {
       "id": "C38",
@@ -4028,7 +4147,8 @@
       },
       "card_slide_id": "cards-C37",
       "index_slide_id": "index-capacitors-4",
-      "page": 77
+      "page": 77,
+      "explanation": "Q er ladningens størrelse på én plade, og A er det fælles overlapareal. Brug ε=ε₀ε_r, ikke den relative permittivitet ε_r alene."
     },
     {
       "id": "C39",
@@ -4062,7 +4182,8 @@
       },
       "card_slide_id": "cards-C39",
       "index_slide_id": "index-capacitors-4",
-      "page": 78
+      "page": 78,
+      "explanation": "A er overlaparealet pr. pladepar, ikke alle pladers samlede areal. n tæller plader, så antallet af virksomme mellemrum er n−1."
     },
     {
       "id": "C40",
@@ -4096,7 +4217,108 @@
       },
       "card_slide_id": "cards-C39",
       "index_slide_id": "index-capacitors-4",
-      "page": 78
+      "page": 78,
+      "explanation": "a er den fælles afstand mellem nabopladerne. n−1 tæller de virksomme mellemrum; modellen kræver ens plader med skiftevis forbindelse."
+    },
+    {
+      "id": "C41",
+      "seek": "Startstrøm i(0) ved indkobling [A]",
+      "given": "Forsyningsspænding Uₛ [V], Startspænding u₀ [V], Modstand R [Ω]",
+      "condition": "DC-trin gennem en positiv seriemodstand R. Startspændingen u₀ er kendt; strøm ind i positiv plade.",
+      "latex": "i(0)=\\dfrac{U_s-u_0}{R}",
+      "explanation": "U_s er forsyningsspændingen, og u₀ er kondensatorspændingen lige før indkobling. Ved t=0 er eksponentialleddet 1, så hverken C eller tid skal bruges. Kun hvis uopladet er oplyst eller antaget, må u₀ sættes til nul; se C42.",
+      "steps": "Startøjeblikket betyder t=0. Kondensatorspændingen ved start er u₀.",
+      "conversion": "Volt divideret med ohm giver ampere. Modstanden er den samlede seriemodstand i den viste model.",
+      "pitfall": "Ved U_s=u₀ er startstrømmen nul; ved U_s<u₀ bliver strømmen negativ med den valgte retning. DC-trin må ikke erstattes med en AC-effektivværdi.",
+      "example": "$i(0)=\\dfrac{440-100}{220}=1{,}54545\\,\\mathrm{A}$",
+      "example_check": {
+        "expr": "(440-100)/220",
+        "expected": 1.5454545454545454
+      },
+      "source_locations": [
+        "EL18:6-7"
+      ],
+      "derived_from": "C21",
+      "lookup": {
+        "group": "capacitors",
+        "seek_key": "i0",
+        "given_sets": [
+          [
+            "Us",
+            "u0",
+            "R"
+          ]
+        ],
+        "situations": [
+          "rc_charge"
+        ]
+      }
+    },
+    {
+      "id": "C42",
+      "seek": "Startstrøm i(0), uopladet kondensator [A]",
+      "given": "Forsyningsspænding Uₛ [V], Modstand R [Ω]",
+      "condition": "Kun uopladet kondensator (u₀=0) ved DC-indkobling gennem en positiv seriemodstand R.",
+      "latex": "i(0)=\\dfrac{U_s}{R}",
+      "explanation": "Uopladet betyder, at kondensatoren har 0 V over sig før indkobling. Derfor kræves kun forsyningsspænding og modstand. Kapacitansen bestemmer, hvor hurtigt strømmen falder bagefter, ikke dens startværdi. Manglende oplysning om u₀ er ikke i sig selv bevis på, at kondensatoren er uopladet.",
+      "steps": "Startøjeblikket betyder t=0. Den uopladede kondensator har u₀=0.",
+      "conversion": "Volt divideret med ohm giver ampere. Modstanden er den samlede seriemodstand i den viste model.",
+      "pitfall": "440 V her er en påtrykt DC-spænding. Hvis 440 V er AC-effektivværdi, afhænger startstrømmen også af indkoblingsfasen; brug ikke 440/R direkte. R=0 ligger uden for modellen.",
+      "example": "Illustrativt med R=220 Ω og 440 V DC: $i(0)=\\dfrac{440}{220}=2\\,\\mathrm{A}$",
+      "example_check": {
+        "expr": "440/220",
+        "expected": 2
+      },
+      "source_locations": [
+        "EL18:6"
+      ],
+      "derived_from": "C21",
+      "lookup": {
+        "group": "capacitors",
+        "seek_key": "i0",
+        "given_sets": [
+          [
+            "Us",
+            "R"
+          ]
+        ],
+        "situations": [
+          "rc_charge_empty"
+        ]
+      }
+    },
+    {
+      "id": "C43",
+      "seek": "Startstrøm ud ved afladning [A]",
+      "given": "Startspænding u₀ [V], Modstand R [Ω]",
+      "condition": "Forsyning frakoblet; lukket afladevej gennem positiv R. Strøm ud af kondensatoren regnes positiv for u₀≥0.",
+      "latex": "i_{\\mathrm{ud}}(0)=\\dfrac{u_0}{R}",
+      "explanation": "u₀ er spændingen over kondensatoren, når afladevejen lukkes. Startstrømmen kræver kun u₀ og R; C bestemmer det efterfølgende fald gennem τ=RC. En isoleret kondensator uden afladevej følger ikke denne model.",
+      "steps": "Startøjeblikket betyder t=0. Kondensatorspændingen ved start er u₀.",
+      "conversion": "Volt divideret med ohm giver ampere. Modstanden er den samlede seriemodstand i den viste model.",
+      "pitfall": "Med opladningens strømretning er afladningsstrømmen negativ. En frakoblet forsyning er ikke det samme som en lukket afladevej.",
+      "example": "Illustrativt med u₀=440 V og R=220 Ω: $i_{\\mathrm{ud}}(0)=\\dfrac{440}{220}=2\\,\\mathrm{A}$",
+      "example_check": {
+        "expr": "440/220",
+        "expected": 2
+      },
+      "source_locations": [
+        "EL18:8-9"
+      ],
+      "derived_from": "C26",
+      "lookup": {
+        "group": "capacitors",
+        "seek_key": "i0_out",
+        "given_sets": [
+          [
+            "u0",
+            "R"
+          ]
+        ],
+        "situations": [
+          "rc_discharge"
+        ]
+      }
     }
   ],
   "constants": [
@@ -6841,7 +7063,9 @@
     "targetU": "Målspænding uₘ [V]",
     "i_t": "Strøm i(t) [A]",
     "Wc": "Lagret energi W [J]",
-    "U1": "Delspænding U₁ [V]"
+    "U1": "Delspænding U₁ [V]",
+    "i0": "Startstrøm i(0) ved indkobling [A]",
+    "i0_out": "Startstrøm ud ved afladning [A]"
   },
   "situations": {
     "charge": "Ladning passerer et tværsnit",
@@ -6885,7 +7109,8 @@
     "constant_current_discharge": "Konstant afladningsstrøm; gyldig før uC når 0",
     "rc_charge": "DC-trin gennem R, konstant Uₛ, R og C",
     "rc_discharge": "Lukket afladevej gennem R; forsyning frakoblet",
-    "capacitor_energy": "Ideel kondensator med konstant C"
+    "capacitor_energy": "Ideel kondensator med konstant C",
+    "rc_charge_empty": "DC-indkobling gennem R; kondensatoren er uopladet (u₀=0)"
   },
   "material_reference": {
     "temperature": "20 °C",
