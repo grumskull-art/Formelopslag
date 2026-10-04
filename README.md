@@ -17,6 +17,11 @@ Kør fra denne mappe:
 beregningsvej og markér de størrelser, opgaven oplyser. Kontrollér kortets
 fysiske betingelser, fortegn og enheder.
 
+Valg af søgt størrelse viser beregningsvejene med krav pr. metode, også før
+oplysninger er markeret. Den samlede inputliste er sammenfoldet; kildehuller
+viser en afgrænsning uden inputliste. Eksempler og trin kan foldes ud og kommer
+med på udskrift. Formler kan kopieres som almindelig tekst eller LaTeX.
+
 ## Opsætning og kontroller
 
 ```bash
@@ -33,6 +38,9 @@ node test_browser.cjs
 kildefiler er bevaret i `sources/`, og deres SHA256 kontrolleres ved validering.
 Katalogerne i `catalogs/` indeholder 94 numerisk kontrollerede eksempler.
 De 51 TM-eksempler bruger illustrative værdier og er ikke måledata.
+Kildelinks åbner originalfilerne på GitHub og kræver internet; selve opslaget
+virker offline. Versionsnummeret omfatter både kataloger, brugerflade og
+konfiguration. Publicering kræver også bestået Chromium-browserkontrol.
 
 ## Mapper
 

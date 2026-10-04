@@ -28,13 +28,24 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    await selectMethod(`${id}:${index}`,`${id} · ${entry.seek}${entry.lookup.given_sets.length>1?' · kræver '+entry.lookup.given_sets[index].map(k=>entry.quantities[k]).join(', '):''}`);await selectSituation(entry.lookup.situations[0],await page.evaluate(s=>activeCatalog().situations[s],entry.lookup.situations[0]));
    assert.deepEqual(await page.locator('#givens input').evaluateAll(els=>els.map(x=>x.value).sort()),await page.evaluate(()=>[...new Set(activeCatalog().entries.flatMap(e=>e.lookup.given_sets.flat()))].sort()));
   }
-  async function given(...keys){for(const key of keys)await page.locator(`#givens input[value="${key}"]`).check();}
+  async function given(...keys){for(const key of keys){const input=page.locator(`#givens input[value="${key}"]`);await input.evaluate(el=>{for(let d=el.closest('details');d;d=d.parentElement.closest('details'))d.open=true;});await input.check();}}
   async function only(id){assert.deepEqual(await page.locator('article').evaluateAll(els=>els.map(x=>x.dataset.entry)),[id]);}
   // Selecting known quantities works before selecting a target or formula.
   await topic('EL','el');
+  assert.equal(await page.locator('#all-givens').evaluate(el=>el.open),false);
+  assert(await page.locator('#all-givens input').first().isHidden());
   await page.locator('#groups button[data-group="capacitors"]').click();
+  await seek(page,'i_t');
+  assert.deepEqual(await page.locator('article').evaluateAll(els=>els.map(e=>e.dataset.entry).sort()),['C21','C26']);
+  assert.match(await page.locator('#status').innerText(),/2 relevante beregningsveje/);
+  assert.match(await page.locator('article[data-entry="C21"] .missing').innerText(),/Forsyningsspænding/);
+  assert.doesNotMatch(await page.locator('article[data-entry="C26"] .missing').innerText(),/Forsyningsspænding/);
+  assert.doesNotMatch(await page.locator('#model-note').innerText(),/Forsyningsspænding/);
+  await page.selectOption('#situation','rc_discharge');
+  assert.deepEqual(await page.locator('#relevant-givens input').evaluateAll(els=>els.map(e=>e.value)),['u0','R','C','t']);
+  await only('C26');await page.locator('#reset').click();await page.locator('#groups button[data-group="capacitors"]').click();
   assert(await page.locator('#known').isVisible());
-  assert.equal(await page.locator('#incomplete').isChecked(),false);
+  assert.equal(await page.locator('#incomplete').isChecked(),true);
   await given('Q','U');
   assert(await page.locator('article[data-entry="C05"]').count()>0);
   assert.equal(await page.locator('article .missing').count(),0);
@@ -48,12 +59,13 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   await topic('EL','el');
   await page.locator('#groups button[data-group="capacitors"]').click();
   await given('Us','R','C');await seek(page,'i0');
-  await only('C42');assert.equal(await page.locator('#incomplete').isChecked(),false);
+  assert.equal(await page.locator('article[data-entry="C42"]').count(),1);assert.equal(await page.locator('#incomplete').isChecked(),true);
+  await page.selectOption('#situation','rc_charge_empty');await only('C42');
   assert.equal(await page.locator('#givens input[value="u0"]').isChecked(),false);
   assert.match(await page.locator('article .condition').innerText(),/uopladet.*u₀=0/);
   assert.match(await page.locator('article .explanation').innerText(),/ikke i sig selv bevis/);
   assert.match(await page.locator('article .math-image').first().getAttribute('alt'),/i\(0\)/);
-  await page.selectOption('#situation','rc_charge');assert.equal(await page.locator('article').count(),0);
+  await page.selectOption('#situation','rc_charge');await only('C41');assert.match(await page.locator('article .missing').innerText(),/Startspænding/);
   await given('u0');await only('C41');
   await page.locator('#reset').click();await route('C21');
   assert.deepEqual(await page.locator('#relevant-givens input').evaluateAll(els=>els.map(x=>x.value)),['Us','u0','R','C','t']);
@@ -61,10 +73,12 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert(await page.locator('#other-givens input[value="epsilon"]').isHidden());
   assert.match(await page.locator('#given-help-u0').innerText(),/Uopladet betyder 0 V/);
   assert.match(await page.locator('#given-help-Us').innerText(),/tilsluttede forsyning/);
-  assert(await page.locator('#given-example').isVisible());
-  assert.match(await page.locator('#given-example').innerText(),/440 V DC.*220 Ω/s);
-  assert.match(await page.locator('#given-example').innerText(),/0,736 A/);
-  assert.equal(await page.locator('#given-example img').count(),3);
+  assert.equal(await page.locator('#given-example').count(),0);
+  const rcExample=page.locator('article details').filter({has:page.locator('summary', {hasText:/^Eksempel$/})});
+  assert.equal(await rcExample.evaluate(el=>el.open),false);await rcExample.locator('summary').click();
+  assert.match(await rcExample.innerText(),/440 V DC.*220 Ω/s);
+  assert.match(await rcExample.innerText(),/0,736 A/);
+  assert.equal(await rcExample.locator('img').count(),3);
   assert.equal(await page.locator('#givens input:checked').count(),0);
   await page.locator('#other-givens summary').click();
   await given('epsilon');assert(await page.locator('#other-givens').evaluate(el=>el.open));
@@ -153,12 +167,17 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   await page.locator('#groups button[data-group=""]').click();await route('VH02');await only('VH02');
   await seek(page,'cn');assert.equal(await page.locator('article').count(),0);assert.match(await page.locator('#model-note').innerText(),/Ingen kildeunderbygget/);
   await seek(page,'steam_h');assert.equal(await page.locator('article').count(),0);assert.match(await page.locator('#model-note').innerText(),/damptabeller mangler/);
+  assert(await page.locator('#known').isHidden());assert.equal(await page.locator('#givens input').count(),0);assert.match(await page.locator('#model-note').innerText(),/Næste skridt/);
+  await page.fill('#global-search','damp');await page.locator('.discovery-card[data-target="steam_h"]').click();assert(await page.locator('#known').isHidden());assert.equal(await page.locator('article').count(),0);
   await page.goto(pathToFileURL(htmlPath).href);await topic('TM','tm-heat');await page.fill('#search','damp');assert.match(await page.locator('#notes').innerText(),/damptabeller/);
   await route('VH16');await given('p1','V1','V2');await page.screenshot({path:path.join(screenshots,'heat-desktop.png'),fullPage:true});
   assert.match(await page.locator('article .source').innerText(),/Lektion 5 og 6 9.22-9.27.pptx · slide 7/);
   cases.push('Varmelaere: isolerede variable, metodespecifikke input, bevaret tilstand, kildehuller og kildehenvisning');
   await page.selectOption('#topic','tm-engine');assert.equal(await page.locator('article').count(),0);assert.equal(await page.locator('#seek-list [data-value="steam_h"]').count(),0);assert.equal(await page.locator('#seek-list [data-value="I"]').count(),0);
-  await route('MO08');await only('MO08');assert(await page.locator('#method').isHidden());assert.equal(await page.locator('#method-text').innerText(),'MO08 · Mekanisk virkningsgrad');assert.equal(await page.locator('#method').inputValue(),'MO08:0');assert(await page.locator('#situation').isHidden());assert.equal(await page.locator('#situation-label').innerText(),'Forudsætning');assert.equal(await page.locator('#situation-text').innerText(),'Aksel- og bremseeffekt ved samme driftspunkt');assert.equal(await page.locator('#situation').inputValue(),'shaft');assert.match(await page.locator('article .missing').innerText(),/P_b|P_i/);
+  await route('MO08');await only('MO08');assert(await page.locator('#method').isHidden());assert.equal(await page.locator('#method-label').innerText(),'Anvendt formel');assert.equal(await page.locator('#method-text').innerText(),'MO08 · Mekanisk virkningsgrad');assert.equal(await page.locator('#method').inputValue(),'MO08:0');assert(await page.locator('#situation').isHidden());assert.equal(await page.locator('#situation-label').innerText(),'Forudsætning');assert.equal(await page.locator('#situation-text').innerText(),'Bremseeffekt og indiceret effekt fra samme motor og driftspunkt.');assert.equal(await page.locator('#situation').inputValue(),'mechanical_efficiency');assert.match(await page.locator('article .missing').innerText(),/P_b|P_i/);
+  assert.equal(await page.locator('article .helper').filter({has:page.locator('h3',{hasText:/^Eksempel$/})}).count(),1);
+  const sourceLink=await page.locator('article .source a').first().getAttribute('href');assert(sourceLink.startsWith('https://github.com/grumskull-art/Formelopslag/blob/main/sources/'));
+  assert(fs.existsSync(path.join(__dirname,decodeURIComponent(new URL(sourceLink).pathname.split('/blob/main/')[1]))));
   assert(await page.locator('#seek').isVisible());assert.equal(await page.locator('#seek-list [data-value=""]').count(),0);assert.equal(await page.locator('#seek').evaluate(el=>el.value),'eta_m');
   await route('MO03');assert.match(await page.locator('article .missing').innerText(),/Indiceret middeltryk/);await page.locator('#incomplete').uncheck();assert.equal(await page.locator('article').count(),0);assert.match(await page.locator('#model-note').innerText(),/Valgt metode mangler oplysninger: Indiceret middeltryk/);await page.locator('#incomplete').check();await given('pi','Vs','c','rpm');await only('MO03');assert(await page.locator('#method').isVisible());assert.equal(await page.locator('#method option[value="MO03:0"]').count(),1);assert.equal(await page.locator('#method option[value="MO04:0"]').count(),1);assert.equal(await page.locator('#method option[value=""]').innerText(),'Alle formler – find ud fra mine oplysninger');
   await page.selectOption('#method','MO04:0');assert.equal(await page.locator('#method').isVisible(),true);assert.equal(await page.locator('#situation').isHidden(),true);assert.equal(await page.locator('#situation-text').innerText(),'Firetaktsmotor');await only('MO04');
@@ -214,6 +233,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    assert.equal((await page.locator('body').innerText()).includes('PPmaker'),false);
    await page.fill('#global-search','stroem');assert(await page.locator('.discovery-card').count()>0);
    await page.fill('#global-search','MO04');await page.locator('.discovery-card').click();await only('MO04');
+   assert.match(await page.locator('#discovery-status').innerText(),/^1 resultat på/);
    await given('pi','Vs','c','rpm');assert.equal(await page.locator('article .ready').count(),1);
    const deepLink=page.url();assert.match(deepLink,/method=MO04/);
    await page.locator('button[data-save="MO04"]').click();assert.equal(await page.locator('#saved-count').innerText(),'1');
@@ -232,8 +252,14 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    await page.evaluate(()=>{document.execCommand=()=>false;});
    await page.locator('button[data-share]').click();assert(await page.locator('#copy-dialog').isVisible());assert.match(await page.locator('#copy-value').inputValue(),/method=MO04/);await page.locator('#copy-dialog button').click();
    await page.locator('button[data-formula]').click();assert(await page.locator('#copy-dialog').isVisible());assert.match(await page.locator('#copy-value').inputValue(),/P/);await page.locator('#copy-dialog button').click();
+   await page.locator('button[data-latex]').click();assert(await page.locator('#copy-dialog').isVisible());assert.equal(await page.locator('#copy-value').inputValue(),await page.evaluate(()=>activeCatalog().entries.find(e=>e.id==='MO04').latex));await page.locator('#copy-dialog button').click();
    await page.locator('#givens input[value="pi"]').focus();await page.keyboard.press('Space');assert.equal(await page.locator('#givens input[value="pi"]').evaluate(el=>el===document.activeElement),true);
-   await page.emulateMedia({media:'print'});assert(await page.locator('.hero').isHidden());assert(await page.locator('article').isVisible());await page.emulateMedia({media:'screen'});
+   const printExample=page.locator('article details.card-detail').filter({has:page.locator('summary',{hasText:/^Eksempel$/})});
+   assert.equal(await printExample.evaluate(el=>el.open),false);
+   await page.emulateMedia({media:'print'});await page.evaluate(()=>dispatchEvent(new Event('beforeprint')));
+   assert(await page.locator('.hero').isHidden());assert(await page.locator('article').isVisible());assert(await printExample.locator('.helper').isVisible());
+   await page.pdf({path:path.join(screenshots,'formula-print.pdf')});
+   await page.evaluate(()=>dispatchEvent(new Event('afterprint')));await page.emulateMedia({media:'screen'});assert.equal(await printExample.evaluate(el=>el.open),false);
    cases.push('Selvstaendigt produkt: global soegning, U/U1, direkte links, gemte opslag, nulstilling, valideret URL, tema, kopiering, tastatur og print');
    if(process.env.FORMULA_QA_URL){
     const url=new URL(process.env.FORMULA_QA_URL);assert(['127.0.0.1','localhost','[::1]'].includes(url.hostname));

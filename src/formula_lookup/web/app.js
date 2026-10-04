@@ -7,13 +7,14 @@ function richField(label,source,extraClass=''){
  if(!source)return '';
  return `<section class="helper ${esc(extraClass)}"><h3>${esc(label)}</h3>`+source.split('$').map((value,i)=>!value.trim()?'':i%2?mathImage(value.trim()):`<p>${esc(value.trim()).replaceAll('\n','<br>')}</p>`).join('')+'</section>';
 }
+function foldedField(label,source){return source?`<details class="card-detail"><summary>${esc(label)}</summary>${richField(label,source)}</details>`:'';}
 
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let activeGroup='',currentCatalogId='';
 const states=new Map();
 function activeCatalog(){return db.catalogs.find(c=>c.id===currentCatalogId);}
 function state(){
- if(!states.has(currentCatalogId))states.set(currentCatalogId,{known:new Set(),seek:'',method:'',situation:'',search:'',incomplete:false,group:'',acOther:false});
+ if(!states.has(currentCatalogId))states.set(currentCatalogId,{known:new Set(),seek:'',method:'',situation:'',search:'',incomplete:true,group:'',acOther:false});
  return states.get(currentCatalogId);
 }
 function remember(){if(currentCatalogId)Object.assign(state(),{seek:$('seek').value,method:$('method').value,situation:$('situation').value,search:$('search').value,incomplete:$('incomplete').checked,group:activeGroup,acOther:$('ac-other').checked});}
@@ -122,6 +123,7 @@ window.addEventListener('scroll',()=>{
 });
 function syncMethods(routes,value){
  const el=$('method'),field=$('method-field'),text=$('method-text');
+ $('method-label').textContent=routes.length===1?'Anvendt formel':'Vælg beregningsvej';
  el.innerHTML=routes.length>1?optionHtml('','Alle formler – find ud fra mine oplysninger')+routes.map(r=>optionHtml(r.key,r.label)).join(''):routes.map(r=>optionHtml(r.key,r.label)).join('');
  field.hidden=!routes.length;text.hidden=routes.length!==1;el.hidden=routes.length<=1;
  text.textContent=routes.length===1?routes[0].label:'';
@@ -153,15 +155,22 @@ function sourceText(ref,c=activeCatalog()){
  const [id,pages]=ref.split(':'),source=c?.source_inventory?.find(s=>s.id===id);
  return source?`${(source.original_file||source.file).split('/').pop()} · ${source.unit||'slide'} ${pages}`:ref;
 }
-function sources(refs){return `<p class="subtle source"><strong>Kilder</strong>${refs.map(ref=>`<span>${esc(sourceText(ref))}</span>`).join('')}</p>`;}
+function sources(refs){return `<div class="subtle source"><strong>Kilder</strong>${refs.map(ref=>{
+ const source=activeCatalog()?.source_inventory?.find(s=>s.id===ref.split(':')[0]);
+ const link=source&&db.source_base_url?`<a href="${esc(db.source_base_url+source.file.split('/').map(encodeURIComponent).join('/'))}" target="_blank" rel="noopener">Åbn kilde på GitHub</a>`:'';
+ return `<p>${esc(sourceText(ref))} ${link||`<small>Find filen i projektets ${esc(source?.file||'sources/')}.</small>`}</p>`;
+ }).join('')}<small>Kilderne ligger separat fra offlineopslaget.</small></div>`;}
 function renderGivens(c,chosen,available){
- const all=[...new Set(available.flatMap(e=>e.lookup.given_sets.flat()))],scoped=scopedEntries();
- const relevant=chosen?chosen.option:scoped.length?[...new Set(scoped.flatMap(e=>e.lookup.given_sets.flat()))]:all;
+ const gap=c?.unavailable_targets?.[$('seek').value],all=gap?[]:[...new Set(available.flatMap(e=>e.lookup.given_sets.flat()))];
+ const scoped=matchEntries($('seek').value,[], $('situation').value,$('search').value.trim(),true,activeGroup).map(r=>r.entry);
+ const relevant=gap?[]:chosen?chosen.option:[...new Set(scoped.flatMap(e=>e.lookup.given_sets.flat()))];
+ const overview=!activeGroup&&!$('seek').value&&!$('search').value.trim();
  const other=all.filter(k=>!relevant.includes(k));
  const group=chosen?.entry.lookup.group||activeGroup||(scoped.length&&scoped.every(e=>e.lookup.group===scoped[0].lookup.group)?scoped[0].lookup.group:'');
  const guide=c?.given_guides?.[group],scope=[currentCatalogId,activeGroup,$('seek').value,chosen?.key||''].join(':');
  const focused=document.activeElement?.closest('#givens input')?.value;
  const expanded=$('givens').dataset.scope===scope&&$('other-givens')?.open;
+ const overviewExpanded=$('givens').dataset.scope===scope&&$('all-givens')?.open;
  const card=(k,guided=true)=>{
   const info=guided?guide?.quantities[k]:null,help=info?.help;
   return `<label class="given-option"><input type="checkbox" value="${esc(k)}" aria-labelledby="given-name-${esc(k)}" ${state().known.has(k)?'checked':''} ${help?`aria-describedby="given-help-${esc(k)}"`:''}><span><span class="given-name" id="given-name-${esc(k)}">${esc(info?.label||c.quantities[k])}</span>${help?`<small id="given-help-${esc(k)}">${esc(help)}</small>`:''}</span></label>`;
@@ -175,15 +184,11 @@ function renderGivens(c,chosen,available){
    return items.length?`<section class="given-group"><h3>${esc(g.label)}</h3>${grid(items)}</section>`:'';
   }).join('')+grid(keys.filter(k=>!guide.groups.some(g=>g.keys.includes(k))));
  };
- $('known').hidden=!all.length;
+ $('known').hidden=!relevant.length||$('ac-other').checked;
  const selected=all.filter(k=>state().known.has(k)).length;
  $('given-context').textContent=(chosen?'Oplysninger til '+chosen.entry.id+' · '+chosen.entry.seek:$('seek').value?'Relevante oplysninger til '+selectedOptionText('seek'):'Vælg dine oplysninger, så finder vi formlerne.')+` · ${selected} valgt`;
- $('givens').innerHTML=`<div id="relevant-givens">${layout(relevant)}</div>`+(other.length?`<details id="other-givens" ${expanded?'open':''}><summary>Andre oplysninger i emnet (${other.length}${other.some(k=>state().known.has(k))?' · '+other.filter(k=>state().known.has(k)).length+' valgt':''})</summary>${layout(other)}</details>`:'');
+ $('givens').innerHTML=(overview?`<details id="all-givens" ${overviewExpanded||selected?'open':''}><summary>Start med kendte oplysninger (${all.length})</summary>`:'')+`<div id="relevant-givens">${layout(relevant)}</div>`+(other.length?`<details id="other-givens" ${expanded?'open':''}><summary>Andre oplysninger i emnet (${other.length}${other.some(k=>state().known.has(k))?' · '+other.filter(k=>state().known.has(k)).length+' valgt':''})</summary>${layout(other)}</details>`:'')+(overview?'</details>':'');
  $('givens').dataset.scope=scope;
- const example=chosen?.entry||(scoped.length===1?scoped[0]:null);
- const exampleText=example?.lookup.given_sets.length===1?example.example:'';
- $('given-example').hidden=!exampleText;
- $('given-example').innerHTML=exampleText?richField('Eksempel med tal',exampleText,'given-example'):'';
  if(focused){const input=[...$('givens').querySelectorAll('input')].find(i=>i.value===focused);if(input){const details=input.closest('details');if(details)details.open=true;input.focus({preventScroll:true});}}
 }
 function render(){
@@ -191,14 +196,14 @@ function render(){
  const chosen=routesForControls().find(r=>r.key===selected);
  const available=c?c.entries.filter(e=>!activeGroup||e.lookup.group===activeGroup):[];
  renderGivens(c,chosen,available);
- const started=c&&($('seek').value||query||known.length),found=started&&!$('ac-other').checked?matchEntries($('seek').value,known,situation,query,$('incomplete').checked,activeGroup).filter(r=>!selected||r.method===selected):[];
+ const started=c&&($('seek').value||query||known.length),found=started&&!$('ac-other').checked?matchEntries($('seek').value,known,situation,query,$('incomplete').checked&&!!($('seek').value||query),activeGroup).filter(r=>!selected||r.method===selected):[];
  const gap=c?.unavailable_targets?.[$('seek').value];
  $('results').classList.toggle('single',found.length===1);
- $('status').textContent=!c?'Vælg fag og emne.':!started?'Vælg de oplysninger, du har. Du kan også vælge, hvad du søger.':`${found.length} ${found.length===1?'formel':'formler'} · ${found.filter(r=>r.complete).length} med de nødvendige størrelser · ${c.topic}`;
+ $('status').textContent=!c?'Vælg fag og emne.':gap?'Kildegrundlag mangler · '+c.topic:!started?'Vælg underemne eller søgt størrelse. Du kan også starte med kendte oplysninger.':`${found.length} ${found.length===1?'relevant beregningsvej':'relevante beregningsveje'} · ${found.filter(r=>r.complete).length} med de nødvendige størrelser · ${c.topic}`;
  const missing=chosen?.option.filter(k=>!state().known.has(k))||[];
- const missingInCompare=!$('incomplete').checked&&!selected?[...new Set(matchEntries($('seek').value,known,situation,query,true,activeGroup).flatMap(r=>r.missing))]:[];
- $('model-note').textContent=$('ac-other').checked?'AC-materialet mangler. Afklar kurveform, RMS, effektfaktor og aktiv/tilsyneladende effekt. DC-formlen I=P/U vælges ikke her.':gap||(started&&!found.length&&chosen&&missing.length?'Valgt metode mangler oplysninger: '+missing.map(k=>c.quantities[k]).join(', '):started&&!found.length&&missingInCompare.length?'Beregningsvejene mangler oplyste størrelser: '+missingInCompare.map(k=>c.quantities[k]).join(', ')+'. Slå visning af manglende oplysninger til for at se kravene.':started&&!found.length?'Ingen beregningsvej matcher de valgte filtre. Kontrollér emne, søgt størrelse, situation og filtre.':found.length?'Formler ud fra dine oplysninger. Kontrollér procesbetingelser, fortegn og enheder.':'');
- $('results').innerHTML=found.map(({entry:e,method,missing,option,situationConfirmed})=>`<article data-entry="${esc(e.id)}" data-method="${esc(method)}"><h2>${esc(e.id+' · '+e.seek)}</h2>${cardActions(e,method)}<p class="condition"><strong>Gælder:</strong> ${esc(e.condition)}</p><p><strong>Denne metode kræver:</strong> ${option.map(k=>esc(c.quantities[k])).join(', ')}</p>${mathImage(e.latex,26)}${richField('Kort forklaret',e.explanation,'explanation')}<p class="${missing.length?'missing':situationConfirmed?'ready':'pending'}">${missing.length?'Mangler: '+missing.map(k=>esc(c.quantities[k])).join(', '):situationConfirmed?'Størrelserne er oplyst; kontrollér stadig betingelserne.':'Størrelserne er oplyst; fysisk situation skal afklares.'}</p>${selected===method?'':`<button class="choose-method" type="button" data-method="${esc(method)}" data-seek="${esc(e.lookup.seek_key)}">Vælg denne metode</button>`}${richField('Trin',e.steps)}${richField('Omregn',e.conversion)}${richField('Pas på',e.pitfall)}${richField('Eksempel',e.example)}${sources(e.source_locations)}<details><summary>Formlens LaTeX</summary><pre>${esc(e.latex)}</pre></details></article>`).join('')||(started&&!gap?'<p>Ingen kildeunderbygget beregningsvej matcher de valgte filtre.</p>':'');
+ const hiddenRoutes=started&&!found.length&&!$('incomplete').checked?matchEntries($('seek').value,known,situation,query,true,activeGroup):[];
+ $('model-note').textContent=$('ac-other').checked?'AC-materialet mangler. Afklar kurveform, RMS, effektfaktor og aktiv/tilsyneladende effekt. DC-formlen I=P/U vælges ikke her.':gap?gap+' Næste skridt: find det nævnte kildemateriale, eller brug Feedback til at beskrive det manglende opslag.':started&&!found.length&&chosen&&missing.length?'Valgt metode mangler oplysninger: '+missing.map(k=>c.quantities[k]).join(', '):hiddenRoutes.length?'Der findes relevante beregningsveje. Slå visning af manglende oplysninger til for at se kravene til hver metode.':started&&!found.length?'Ingen beregningsvej matcher de valgte filtre. Kontrollér emne, søgt størrelse, situation og filtre.':found.length?'Vælg dine oplysninger. Krav og mangler står ved hver beregningsvej; kontrollér betingelser, fortegn og enheder.':'';
+ $('results').innerHTML=found.map(({entry:e,method,missing,option,situationConfirmed})=>`<article data-entry="${esc(e.id)}" data-method="${esc(method)}"><h2>${esc(e.id+' · '+e.seek)}</h2>${cardActions(e,method)}<p class="condition"><strong>Gælder:</strong> ${esc(e.condition)}</p><p><strong>Denne metode kræver:</strong> ${option.map(k=>esc(c.quantities[k])).join(', ')}</p>${mathImage(e.latex,26)}${richField('Kort forklaret',e.explanation,'explanation')}<p class="${missing.length?'missing':situationConfirmed?'ready':'pending'}">${missing.length?'Mangler: '+missing.map(k=>esc(c.quantities[k])).join(', '):situationConfirmed?'Størrelserne er oplyst; kontrollér stadig betingelserne.':'Størrelserne er oplyst; fysisk situation skal afklares.'}</p>${selected===method?'':`<button class="choose-method" type="button" data-method="${esc(method)}" data-seek="${esc(e.lookup.seek_key)}">Vælg denne metode</button>`}${foldedField('Trin',e.steps)}${foldedField('Omregn',e.conversion)}${foldedField('Pas på',e.pitfall)}${foldedField('Eksempel',e.example)}${sources(e.source_locations)}<details><summary>Formlens LaTeX</summary><pre>${esc(e.latex)}</pre></details></article>`).join('')||(started&&!gap?'<p>Ingen beregningsvej vises med de aktuelle filtre.</p>':'');
  const notes=(c?.notes||[]).filter(n=>!query||[n.title,n.text].join(' ').toLocaleLowerCase('da').includes(query.toLocaleLowerCase('da')));
  $('topic-notes').hidden=!notes.length;
  $('notes').innerHTML=notes.map(n=>`<section class="note-item"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p>${sources(n.source_locations)}</section>`).join('');
@@ -252,7 +257,7 @@ const discoveryIndex=db.catalogs.flatMap(c=>[
  ...Object.entries(c.unavailable_targets||{}).map(([key,gap])=>({catalog:c,seek:key,gap,text:[c.topic,c.quantities[key],gap].join(' ')}))
 ]);
 function announce(message){clearTimeout(noticeTimer);$('action-status').textContent=message;noticeTimer=setTimeout(()=>{$('action-status').textContent='';},4500);}
-function cardActions(entry,method){return `<div class="card-actions"><button type="button" data-save="${esc(entry.id)}" aria-pressed="${savedEntries.has(entry.id)}" aria-label="Gem ${esc(entry.id)}">${savedEntries.has(entry.id)?'Gemt':'Gem opslag'}</button><button type="button" data-share="${esc(method)}">Kopiér link</button><button type="button" data-formula="${esc(entry.latex)}">Kopiér formel</button></div>`;}
+function cardActions(entry,method){return `<div class="card-actions"><button type="button" data-save="${esc(entry.id)}" aria-pressed="${savedEntries.has(entry.id)}" aria-label="Gem ${esc(entry.id)}">${savedEntries.has(entry.id)?'Gemt':'Gem opslag'}</button><button type="button" data-share="${esc(method)}">Kopiér link</button><button type="button" data-formula="${esc(entry.latex)}">Kopiér som tekst</button><button type="button" data-latex="${esc(entry.latex)}">Kopiér LaTeX</button></div>`;}
 function renderDiscovery(){
  const query=$('global-search').value.trim();
  $('saved-count').textContent=savedEntries.size;
@@ -260,7 +265,7 @@ function renderDiscovery(){
  if(!query&&!savedOnly){$('discovery-results').innerHTML='';$('show-more').hidden=true;$('discovery-status').textContent='Søg efter en størrelse, et emne eller en formelkode.';return;}
  const found=discoveryIndex.filter(item=>(!savedOnly||savedEntries.has(item.entry?.id))&&(!query||matchesQuery(item.text,query)));
  found.sort((a,b)=>Number(normalize(b.entry?.id)===normalize(query))-Number(normalize(a.entry?.id)===normalize(query)));
- $('discovery-status').textContent=found.length?`${found.length} resultater på tværs af fag · viser ${Math.min(discoveryLimit,found.length)}`:savedOnly&&!savedEntries.size?'Du har ingen gemte opslag endnu. Åbn en formel og vælg “Gem opslag”.':'Ingen resultater. Prøv en størrelse, et emne eller en formelkode; fx strøm eller Carnot.';
+ $('discovery-status').textContent=found.length?`${found.length} ${found.length===1?'resultat':'resultater'} på tværs af fag · viser ${Math.min(discoveryLimit,found.length)}`:savedOnly&&!savedEntries.size?'Du har ingen gemte opslag endnu. Åbn en formel og vælg “Gem opslag”.':'Ingen resultater. Prøv en størrelse, et emne eller en formelkode; fx strøm eller Carnot.';
  $('discovery-results').innerHTML=found.slice(0,discoveryLimit).map(item=>`<button type="button" class="discovery-card" data-catalog="${esc(item.catalog.id)}" data-entry="${esc(item.entry?.id||'')}" data-target="${esc(item.seek)}"><span>${esc(item.catalog.discipline+' · '+item.catalog.topic)}${item.gap?' · Kildehul':''}</span><strong>${esc(item.entry?item.entry.id+' · '+item.entry.seek:item.catalog.quantities[item.seek])}</strong><span>${esc(item.gap?'Kildegrundlag mangler – se afgrænsningen':item.entry.given)}</span></button>`).join('');
  $('show-more').hidden=found.length<=discoveryLimit;
 }
@@ -284,7 +289,7 @@ function routeHash(method=$('method').value){
  if(!$('incomplete').checked)params.set('complete','1');if($('ac-other').checked)params.set('ac','1');
  return '#'+params.toString();
 }
-function syncUrl(){if(restoring)return;try{history.replaceState(null,'',location.pathname+location.search+routeHash());}catch{/* Offline previews can restrict history access. */}}
+function syncUrl(){if(restoring)return;try{history.replaceState(null,'',location.pathname+location.search+routeHash());}catch{/* Offline previews can restrict history access. */}updateFeedbackLink();}
 function applyHash(){
  const params=new URLSearchParams(location.hash.slice(1)),catalog=db.catalogs.find(c=>c.id===params.get('catalog'));
  if(!catalog){if(location.hash)announce('Linket indeholder ikke et kendt fagområde. Vælg et opslag.');return;}
@@ -329,8 +334,12 @@ $('results').addEventListener('click',event=>{
  if(b.dataset.save){const id=b.dataset.save;savedEntries.has(id)?savedEntries.delete(id):savedEntries.add(id);const persisted=writeStorage(storageKey,[...savedEntries]);
   document.querySelectorAll('button[data-save]').forEach(button=>{const saved=savedEntries.has(button.dataset.save);button.textContent=saved?'Gemt':'Gem opslag';button.setAttribute('aria-pressed',String(saved));});renderDiscovery();if(!persisted)announce('Gemt for denne session. Browseren tillader ikke lokal lagring.');}
  if(b.dataset.share){const url=new URL(location.href);url.hash=routeHash(b.dataset.share);copyText(url.href,'Link');}
- if(b.dataset.formula)copyText(db.math_assets[b.dataset.formula].search,'Formel');
+ if(b.dataset.formula)copyText(db.math_assets[b.dataset.formula].search,'Formel som tekst');
+ if(b.dataset.latex)copyText(b.dataset.latex,'LaTeX');
 });
+const printDetails=new Set();
+window.addEventListener('beforeprint',()=>{document.querySelectorAll('article details.card-detail:not([open])').forEach(d=>{printDetails.add(d);d.open=true;});});
+window.addEventListener('afterprint',()=>{printDetails.forEach(d=>{d.open=false;});printDetails.clear();});
 $('reset').addEventListener('click',()=>resetChoices());
 $('print').addEventListener('click',()=>{if(!$('results').querySelector('article'))announce('Vælg et opslag før udskrivning.');else window.print();});
 $('theme-toggle').addEventListener('click',()=>{const order=['auto','light','dark'],theme=order[(order.indexOf($('theme-toggle').dataset.theme)+1)%3];applyTheme(theme);writeStorage('formelopslag.theme.v1',theme);});

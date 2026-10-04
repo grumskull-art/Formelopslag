@@ -28,6 +28,14 @@ jobs:
       - run: formelopslag validate
       - run: python -m pytest -q
       - run: formelopslag build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --package-lock=false playwright@1.62.1
+      - run: npx playwright install --with-deps chromium
+      - run: node test_browser.cjs
+        env:
+          PLAYWRIGHT_MODULE: ${{ github.workspace }}/node_modules/playwright
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs

@@ -41,8 +41,12 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
     payload = {"catalogs": catalogs, "math_style": MATH_STYLE, "math_assets": {}, "search_text": {}}
     payload["data_hash"] = hashlib.sha256(json.dumps(catalogs, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
     settings = settings or {}
-    payload["cheatsheet_version"] = payload["data_hash"][:12]
+    version_content = b"".join(WEB.joinpath(name).read_bytes() for name in ("index.html", "app.css", "app.js"))
+    version_content += json.dumps(settings, ensure_ascii=False, sort_keys=True).encode()
+    version_content += payload["data_hash"].encode()
+    payload["cheatsheet_version"] = hashlib.sha256(version_content).hexdigest()[:12]
     payload["feedback_email"] = settings.get("feedback_email", "")
+    payload["source_base_url"] = settings.get("source_base_url", "")
     color = settings.get("math_color", "17324D")
     with tempfile.TemporaryDirectory(prefix="formelopslag-math-") as temporary:
         cache = Path(cache) if cache else Path(temporary)

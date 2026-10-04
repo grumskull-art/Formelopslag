@@ -806,8 +806,11 @@ dialog button {
     margin-bottom:20px;
     background:#fff;
   }
-  article details {
+  article details:not(.card-detail) {
     display:none;
+  }
+  article details.card-detail {
+    display:block;
   }
   .math-image {
     filter:none!important;

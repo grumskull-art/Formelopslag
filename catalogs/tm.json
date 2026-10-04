@@ -1157,6 +1157,7 @@
         "two_stroke": "Totaktsmotor",
         "four_stroke": "Firetaktsmotor",
         "shaft": "Aksel- og bremseeffekt ved samme driftspunkt",
+        "mechanical_efficiency": "Bremseeffekt og indiceret effekt fra samme motor og driftspunkt.",
         "consumption": "Stationært brændselsforbrug",
         "cycle": "Motorens komplette arbejdscyklus",
         "ideal_otto": "Ideel Otto-proces; konstante varmekapaciteter",
@@ -1429,7 +1430,7 @@
               ]
             ],
             "situations": [
-              "shaft"
+              "mechanical_efficiency"
             ]
           },
           "example": "Illustrativt regneeksempel med valgte værdier; ikke måledata. $\\eta_m=\\frac{540}{600}=0{,}9=90\\%$",

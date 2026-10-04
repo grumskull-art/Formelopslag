@@ -69,10 +69,16 @@ def validate_catalog(db):
             for option in meta["given_sets"]
         ):
             raise ValueError("Ugyldige givne størrelser: " + code)
+        if len({tuple(sorted(option)) for option in meta["given_sets"]}) != len(meta["given_sets"]):
+            raise ValueError("Dublerede beregningsveje: " + code)
         if not meta["situations"] or any(s not in db["situations"] for s in meta["situations"]):
             raise ValueError("Ukendt fysisk situation: " + code)
+        if len(set(meta["situations"])) != len(meta["situations"]):
+            raise ValueError("Dublerede fysiske situationer: " + code)
         if entry.get("example_check"):
             check = entry["example_check"]
+            if type(check.get("expected")) not in (int, float) or not math.isfinite(check["expected"]):
+                raise ValueError("Ugyldigt regneeksempel: " + code)
             if not math.isclose(checked_number(check["expr"]), check["expected"], rel_tol=1e-10, abs_tol=1e-12):
                 raise ValueError("Regneeksempel stemmer ikke: " + code)
     unavailable = set(db.get("unavailable_targets", {}))
@@ -89,6 +95,8 @@ def validate_catalog_sources(db):
         refs = entry.get("source_locations", [])
         if not refs:
             raise ValueError("Kilde mangler: " + entry.get("id", entry.get("title", "")))
+        if len(set(refs)) != len(refs):
+            raise ValueError("Dublerede kildehenvisninger: " + entry.get("id", entry.get("title", "")))
         for ref in refs:
             match = re.fullmatch(r"([^:]+):([0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*)", ref)
             if not match or match[1] not in sources:

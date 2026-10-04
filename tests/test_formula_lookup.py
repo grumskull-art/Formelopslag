@@ -103,7 +103,7 @@ def test_numeric_checks_reject_code_and_nonfinite_results(expression):
         checked_number(expression)
 
 
-@pytest.mark.parametrize("mutation", ["same-input", "duplicate-input", "duplicate-group", "blank-condition", "bad-example"])
+@pytest.mark.parametrize("mutation", ["same-input", "duplicate-input", "duplicate-group", "blank-condition", "bad-example", "duplicate-route", "duplicate-situation", "duplicate-source", "nonfinite-example"])
 def test_catalog_rejects_ambiguous_or_incorrect_routes(mutation):
     catalogs, _ = load_catalogs(CONFIG)
     catalog = copy.deepcopy(catalogs[1])
@@ -116,10 +116,18 @@ def test_catalog_rejects_ambiguous_or_incorrect_routes(mutation):
         catalog["navigation_groups"].append(catalog["navigation_groups"][0])
     elif mutation == "blank-condition":
         entry["condition"] = " "
+    elif mutation == "duplicate-route":
+        entry["lookup"]["given_sets"].append(list(reversed(entry["lookup"]["given_sets"][0])))
+    elif mutation == "duplicate-situation":
+        entry["lookup"]["situations"] *= 2
+    elif mutation == "duplicate-source":
+        entry["source_locations"] *= 2
+    elif mutation == "nonfinite-example":
+        entry["example_check"]["expected"] = float("inf")
     else:
         entry["example_check"]["expected"] += 1
     with pytest.raises(ValueError):
-        validate_catalog(catalog)
+        validate_catalogs([catalog])
 
 
 def test_thermodynamic_and_engine_checks_match_independent_derivations():
@@ -163,3 +171,38 @@ def test_web_export_is_offline_and_does_not_embed_presentation_metadata(tmp_path
 def test_standalone_import_and_validation_never_load_powerpoint():
     program = "from formula_lookup.cli import load_catalogs; load_catalogs('project.json'); import sys; assert not any(n.startswith('powerpoint_app') or n == 'pptx' for n in sys.modules)"
     subprocess.run([sys.executable, "-c", program], check=True)
+
+
+def test_mo08_uses_brake_and_indicated_power_condition():
+    catalogs, _ = load_catalogs(CONFIG)
+    engine = catalogs[2]
+    entry = next(e for e in engine["entries"] if e["id"] == "MO08")
+    assert entry["lookup"]["given_sets"] == [["Pb", "Pi"]]
+    assert engine["situations"][entry["lookup"]["situations"][0]] == "Bremseeffekt og indiceret effekt fra samme motor og driftspunkt."
+
+
+def test_export_version_changes_with_ui_and_settings(tmp_path, monkeypatch):
+    from formula_lookup import build
+    catalogs, _ = load_catalogs(CONFIG)
+    catalog = copy.deepcopy(catalogs[0])
+    catalog["entries"] = catalog["entries"][:1]
+    web = tmp_path / "web"
+    web.mkdir()
+    for name in ("index.html", "app.css", "app.js"):
+        (web / name).write_bytes((build.WEB / name).read_bytes())
+    monkeypatch.setattr(build, "WEB", web)
+
+    def payload(settings=None):
+        html = export_catalogs([catalog], tmp_path / "index.html", settings).read_text()
+        return json.loads(html.split('<script id="database" type="application/json">')[1].split("</script>")[0])
+
+    original = payload()
+    assert payload()["cheatsheet_version"] == original["cheatsheet_version"]
+    with (web / "app.css").open("a") as stylesheet:
+        stylesheet.write("\n/* UI version regression */\n")
+    changed_ui = payload()
+    assert changed_ui["data_hash"] == original["data_hash"]
+    assert changed_ui["cheatsheet_version"] != original["cheatsheet_version"]
+    changed_settings = payload({"source_base_url": "https://example.org/"})
+    assert changed_settings["cheatsheet_version"] != changed_ui["cheatsheet_version"]
+    assert changed_settings["source_base_url"] == "https://example.org/"

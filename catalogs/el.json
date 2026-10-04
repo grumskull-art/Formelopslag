@@ -7030,7 +7030,7 @@
     "epsilon0": "Vakuumpermittivitet ε0 [F/m]",
     "epsilonr": "Relativ permittivitet εr [1]",
     "a": "Afstand a [m]",
-    "Ef": "Elektrisk feltstyrke Ef [V/m]",
+    "Ef": "Elektrisk feltstyrke E [V/m]",
     "Psi": "Elektrisk feltflux Ψ [V·m]",
     "Phi": "Magnetisk flux Φ [Wb]",
     "dPhi": "Fluxændring ΔΦ [Wb]",

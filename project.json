@@ -1,6 +1,7 @@
 {
   "project_root": ".",
   "feedback_email": "Grumskull@gmail.com",
+  "source_base_url": "https://github.com/grumskull-art/Formelopslag/blob/main/",
   "catalogs": [
     {"path": "catalogs/el.json", "id": "el", "discipline": "EL", "topic": "Elektroteknik"},
     {"path": "catalogs/tm.json"}
