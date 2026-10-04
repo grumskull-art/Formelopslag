@@ -14,8 +14,11 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   const context=await browser.newContext({viewport:{width:1280,height:950},offline:true});
   const page=await context.newPage(),errors=[],network=[],cases=[];
   const exportedHtml=fs.readFileSync(htmlPath,'utf8');assert.match(exportedHtml,/function scopedEntries\(/);assert.match(exportedHtml,/function seekOptions\(/);
+  assert.match(exportedHtml,/<link rel="icon" href="data:image\/svg\+xml,/);
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))network.push(r.url())});
+  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.goto(pathToFileURL(htmlPath).href);
+  assert(await page.evaluate(()=>new Promise(resolve=>{const icon=new Image();icon.onload=()=>resolve(true);icon.onerror=()=>resolve(false);icon.src=document.querySelector('link[rel=icon]').href;})));
   assert.equal(await page.locator('article').count(),0);assert(await page.locator('#seek').isHidden());assert(await page.locator('#known').isHidden());
   async function topic(discipline,id){await page.locator(`#topic-shortcuts button[data-catalog="${id}"]`).click();assert.equal(await page.evaluate(()=>activeCatalog().discipline),discipline);assert.equal(await page.locator('#discipline').count(),0);}
   async function seek(target,key){await target.locator('#seek').click();await target.locator(`#seek-list [data-value="${key}"]`).click();}
@@ -48,12 +51,25 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert.equal(await page.locator('#incomplete').isChecked(),true);
   await given('Q','U');
   assert(await page.locator('article[data-entry="C05"]').count()>0);
-  assert.equal(await page.locator('article .missing').count(),0);
+  assert.equal(await page.locator('article[data-entry="C05"] .missing').count(),0);
+  assert(await page.locator('article .missing').count()>0);
+  await page.locator('#incomplete').uncheck();assert.equal(await page.locator('article .missing').count(),0);
+  await page.locator('#incomplete').check();assert(await page.locator('article .missing').count()>0);
   assert.equal(await page.locator('#seek').evaluate(el=>el.value),'');
   await seek(page,'C');
   assert(await page.locator('#givens input[value="Q"]').isChecked());
   assert(await page.locator('#givens input[value="U"]').isChecked());
   assert(await page.locator('article[data-entry="C05"]').count()>0);
+  await page.goto(pathToFileURL(htmlPath).href);
+  await topic('EL','el');await page.locator('#groups button[data-group="current"]').click();await given('U');
+  assert.equal(await page.locator('#seek').evaluate(el=>el.value),'');
+  assert.equal(await page.locator('article[data-entry="I01"]').count(),1);
+  assert.match(await page.locator('article[data-entry="I01"] .missing').innerText(),/Modstand/);
+  assert(await page.locator('article').evaluateAll(els=>els.every(el=>{const [id,index]=el.dataset.method.split(':');return activeCatalog().entries.find(e=>e.id===id).lookup.given_sets[+index].includes('U');})));
+  await page.locator('#incomplete').uncheck();assert.equal(await page.locator('article').count(),0);
+  await page.locator('#incomplete').check();assert.equal(await page.locator('article[data-entry="I01"]').count(),1);
+  await given('R');assert.equal(await page.locator('article[data-entry="I01"] .missing').count(),0);
+  await page.reload();assert(await page.locator('#givens input[value="U"]').isChecked());assert(await page.locator('#givens input[value="R"]').isChecked());
   await page.goto(pathToFileURL(htmlPath).href);
   // Start current is distinct from time-dependent current; assumptions stay visible.
   await topic('EL','el');
@@ -217,8 +233,9 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   }
   cases.push('Alle fag/emner/søgte størrelser/underemnefiltre: '+selectorAudits+' kardinalitetskontroller af metode og situation');
   const dark=await browser.newContext({viewport:{width:390,height:844},offline:true,colorScheme:'dark'}),mobile=await dark.newPage();
+  mobile.on('pageerror',e=>errors.push(e.message));mobile.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await mobile.goto(pathToFileURL(htmlPath).href);await contextQA(mobile,'mobile');
-  mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(pathToFileURL(htmlPath).href);await mobile.locator('#topic-shortcuts button[data-catalog="tm-engine"]').click();await seek(mobile,'Pi');await mobile.selectOption('#method','MO04:0');
+  await mobile.goto(pathToFileURL(htmlPath).href);await mobile.locator('#topic-shortcuts button[data-catalog="tm-engine"]').click();await seek(mobile,'Pi');await mobile.selectOption('#method','MO04:0');
   assert.notEqual(await mobile.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 255, 255)');assert(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert(await mobile.locator('.feedback summary').isVisible());
   await mobile.screenshot({path:path.join(screenshots,'engine-mobile-dark.png'),fullPage:true});await mobile.locator('.feedback summary').click();assert(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await mobile.setViewportSize({width:320,height:720});assert(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await dark.close();
@@ -232,6 +249,12 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    await page.goto(pathToFileURL(htmlPath).href);
    assert.equal((await page.locator('body').innerText()).includes('PPmaker'),false);
    await page.fill('#global-search','stroem');assert(await page.locator('.discovery-card').count()>0);
+   await page.fill('#global-search','Ef');
+   assert.deepEqual(await page.locator('.discovery-card').evaluateAll(els=>els.slice(0,3).map(e=>e.dataset.entry).sort()),['C03','C04','F02']);
+   await page.fill('#global-search','E_f');
+   assert.deepEqual(await page.locator('.discovery-card').evaluateAll(els=>els.slice(0,3).map(e=>e.dataset.entry).sort()),['C03','C04','F02']);
+   await page.locator('.discovery-card[data-entry="F02"]').click();await only('F02');
+   assert.match(await page.locator('article h2').innerText(),/feltstyrke E \[/);
    await page.fill('#global-search','MO04');await page.locator('.discovery-card').click();await only('MO04');
    assert.match(await page.locator('#discovery-status').innerText(),/^1 resultat på/);
    await given('pi','Vs','c','rpm');assert.equal(await page.locator('article .ready').count(),1);
@@ -266,6 +289,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
     const live=await browser.newContext({viewport:{width:1440,height:900}}),qa=await live.newPage();
     qa.on('pageerror',e=>errors.push(e.message));qa.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
     qa.on('requestfailed',r=>errors.push(`${r.url()}: ${r.failure()?.errorText}`));
+    qa.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()}: ${r.url()}`);});
     await qa.route('**/*',route=>new URL(route.request().url()).origin===url.origin?route.continue():route.abort());
     await qa.goto(url.href);await contextQA(qa,'local-server');await live.close();
    }

@@ -65,6 +65,28 @@ def test_voltage_divider_distinguishes_output_from_supply():
     assert divider["lookup"]["given_sets"] == [["U", "R1", "R2"]]
 
 
+def test_electric_field_notation_is_consistent_without_changing_quantity_ids():
+    catalogs, _ = load_catalogs(CONFIG)
+    electrical = catalogs[0]
+    assert electrical["quantities"]["Ef"] == "Elektrisk feltstyrke E [V/m]"
+    assert {e["id"] for e in electrical["entries"] if e["lookup"]["seek_key"] == "Ef"} == {"F02", "C03", "C04"}
+    for entry in electrical["entries"]:
+        assert "Ef" not in entry["seek"].split()
+        assert "Ef" not in entry["given"].split()
+        assert "E_f" not in entry["latex"]
+        assert "E_f" not in entry["explanation"]
+    assert electrical["quantity_aliases"]["Ef"] == ["Ef", "E_f"]
+
+
+@pytest.mark.parametrize("aliases", [{"unknown": ["E"]}, {"Ef": []}, {"Ef": [None]}, {"Ef": ["E", "E"]}])
+def test_catalog_rejects_invalid_quantity_aliases(aliases):
+    catalogs, _ = load_catalogs(CONFIG)
+    electrical = copy.deepcopy(catalogs[0])
+    electrical["quantity_aliases"] = aliases
+    with pytest.raises(ValueError, match="størrelsesaliaser"):
+        validate_catalog(electrical)
+
+
 def test_rc_start_current_requires_only_initial_voltage_difference_and_resistance():
     catalogs, _ = load_catalogs(CONFIG)
     entries = {e["id"]: e for e in catalogs[0]["entries"]}

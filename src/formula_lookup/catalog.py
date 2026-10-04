@@ -44,6 +44,11 @@ def validate_catalog(db):
         if len(set(ids)) != len(ids):
             raise ValueError("Dublerede " + label + ".")
     groups = {g["id"] for g in db["navigation_groups"]}
+    for key, aliases in db.get("quantity_aliases", {}).items():
+        if (key not in db["quantities"] or not isinstance(aliases, list) or not aliases
+                or any(not isinstance(alias, str) or not alias.strip() for alias in aliases)
+                or len(set(aliases)) != len(aliases)):
+            raise ValueError("Ugyldige størrelsesaliaser: " + key)
     for group, guide in db.get("given_guides", {}).items():
         keys = [k for section in guide["groups"] for k in section["keys"]]
         if (group not in groups or len(keys) != len(set(keys))

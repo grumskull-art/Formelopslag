@@ -2032,10 +2032,10 @@
     },
     {
       "id": "F02",
-      "seek": "Elektrisk feltstyrke Ef [V/m]",
+      "seek": "Elektrisk feltstyrke E [V/m]",
       "given": "F [N], Q [C] eller kildeladning Qk",
       "condition": "F/Q er feltet på prøveladningen; a ved punktkilden.",
-      "latex": "E_f=\\frac{F}{Q},\\qquad |E_f|=\\frac{|Q_k|}{4\\pi\\varepsilon a^2}",
+      "latex": "E=\\frac{F}{Q},\\qquad |E|=\\frac{|Q_k|}{4\\pi\\varepsilon a^2}",
       "steps": "Feltretningen defineres med en positiv prøveladning.",
       "conversion": "$\\dfrac{1\\,\\mathrm{N}}{1\\,\\mathrm{C}}=\\dfrac{1\\,\\mathrm{V}}{1\\,\\mathrm{m}}$",
       "pitfall": "Elektrisk feltstyrke i V/m er ikke det samme som kildens EMK i V.",
@@ -2069,14 +2069,14 @@
       },
       "card_slide_id": "cards-F01",
       "index_slide_id": "index-magnetism-1",
-      "explanation": "F/Q bruger prøveladningen Q, mens punktkildens felt bruger kildeladningen Q_k. E_f er feltstyrke, ikke energi eller en kildes EMK; retningen afhænger af ladningernes fortegn."
+      "explanation": "F/Q bruger prøveladningen Q, mens punktkildens felt bruger kildeladningen Q_k. E er feltstyrke, ikke energi eller en kildes EMK; retningen afhænger af ladningernes fortegn."
     },
     {
       "id": "F03",
       "seek": "Kraft F [N]",
-      "given": "Q [C], Ef [V/m]",
+      "given": "Q [C], E [V/m]",
       "condition": "Prøveladning i givet elektrisk felt.",
-      "latex": "\\vec F=Q\\vec E_f",
+      "latex": "\\vec F=Q\\vec E",
       "steps": "Negativ Q giver kraft modsat feltretningen.",
       "conversion": "Q i C.",
       "pitfall": "Feltet fra prøveladningen selv indgår ikke.",
@@ -2101,7 +2101,7 @@
       },
       "card_slide_id": "cards-F03",
       "index_slide_id": "index-magnetism-1",
-      "explanation": "E_f er feltet dér, hvor ladningen Q befinder sig. En positiv ladning påvirkes i feltets retning, og en negativ ladning i modsat retning."
+      "explanation": "E er feltet dér, hvor ladningen Q befinder sig. En positiv ladning påvirkes i feltets retning, og en negativ ladning i modsat retning."
     },
     {
       "id": "F04",
@@ -2174,9 +2174,9 @@
     {
       "id": "F06",
       "seek": "Elektrisk flux Ψ [V·m]",
-      "given": "Ef [V/m], A [m²] eller Q [C], ε",
+      "given": "E [V/m], A [m²] eller Q [C], ε",
       "condition": "Ensartet normalt felt; eller lukket kugle i ensartet medium.",
-      "latex": "\\Psi=E_f A=\\frac{Q}{\\varepsilon}",
+      "latex": "\\Psi=E A=\\frac{Q}{\\varepsilon}",
       "steps": "Kuglens areal: $A=4\\pi a^2$ Lukket flade: $\\Psi=\\dfrac{Q}{\\varepsilon}$",
       "conversion": "$\\dfrac{\\mathrm{V}}{\\mathrm{m}}\\cdot\\mathrm{m}^2=\\mathrm{V}\\cdot\\mathrm{m}$",
       "pitfall": "Flux er ikke et bogstaveligt antal feltlinjer; ikke magnetisk Φ [Wb].",
@@ -2205,7 +2205,7 @@
       },
       "card_slide_id": "cards-F05",
       "index_slide_id": "index-magnetism-1",
-      "explanation": "E_f A gælder et ensartet felt vinkelret på fladen. Q/ε gælder flux gennem en lukket flade om ladningen i et ensartet medium; brug ikke uden videre samme Q til en vilkårlig åben flade."
+      "explanation": "E A gælder et ensartet felt vinkelret på fladen. Q/ε gælder flux gennem en lukket flade om ladningen i et ensartet medium; brug ikke uden videre samme Q til en vilkårlig åben flade."
     },
     {
       "id": "F07",
@@ -6977,6 +6977,9 @@
       "description": "C [F] · plader, DC-opladning og afladning"
     }
   ],
+  "quantity_aliases": {
+    "Ef": ["Ef", "E_f"]
+  },
   "quantities": {
     "I": "Strøm I [A]",
     "U": "Spænding U [V]",
