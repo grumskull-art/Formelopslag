@@ -193,6 +193,8 @@ function renderGivens(c,chosen,available){
 }
 function render(){
   const c=activeCatalog(),known=[...state().known],situation=$('situation').value,query=$('search').value.trim(),selected=$('method').value;
+ const detailKey=detail=>JSON.stringify([detail.closest('article').dataset.method,detail.querySelector('summary').textContent]);
+ const expandedCards=new Set([...$('results').querySelectorAll('article details[open]')].map(detailKey));
  const chosen=routesForControls().find(r=>r.key===selected);
  const available=c?c.entries.filter(e=>!activeGroup||e.lookup.group===activeGroup):[];
  renderGivens(c,chosen,available);
@@ -205,6 +207,7 @@ function render(){
  const hiddenRoutes=started&&!found.length&&!$('incomplete').checked?matchEntries($('seek').value,known,situation,query,true,activeGroup).filter(relevant):[];
  $('model-note').textContent=$('ac-other').checked?'AC-materialet mangler. Afklar kurveform, RMS, effektfaktor og aktiv/tilsyneladende effekt. DC-formlen I=P/U vælges ikke her.':gap?gap+' Næste skridt: find det nævnte kildemateriale, eller brug Feedback til at beskrive det manglende opslag.':started&&!found.length&&chosen&&missing.length?'Valgt metode mangler oplysninger: '+missing.map(k=>c.quantities[k]).join(', '):hiddenRoutes.length?'Der findes relevante beregningsveje. Slå visning af manglende oplysninger til for at se kravene til hver metode.':started&&!found.length?'Ingen beregningsvej matcher de valgte filtre. Kontrollér emne, søgt størrelse, situation og filtre.':found.length?'Vælg dine oplysninger. Krav og mangler står ved hver beregningsvej; kontrollér betingelser, fortegn og enheder.':'';
  $('results').innerHTML=found.map(({entry:e,method,missing,option,situationConfirmed})=>`<article data-entry="${esc(e.id)}" data-method="${esc(method)}"><h2>${esc(e.id+' · '+e.seek)}</h2>${cardActions(e,method)}<p class="condition"><strong>Gælder:</strong> ${esc(e.condition)}</p><p><strong>Denne metode kræver:</strong> ${option.map(k=>esc(c.quantities[k])).join(', ')}</p>${mathImage(e.latex,26)}${richField('Kort forklaret',e.explanation,'explanation')}<p class="${missing.length?'missing':situationConfirmed?'ready':'pending'}">${missing.length?'Mangler: '+missing.map(k=>esc(c.quantities[k])).join(', '):situationConfirmed?'Størrelserne er oplyst; kontrollér stadig betingelserne.':'Størrelserne er oplyst; fysisk situation skal afklares.'}</p>${selected===method?'':`<button class="choose-method" type="button" data-method="${esc(method)}" data-seek="${esc(e.lookup.seek_key)}">Vælg denne metode</button>`}${foldedField('Trin',e.steps)}${foldedField('Omregn',e.conversion)}${foldedField('Pas på',e.pitfall)}${foldedField('Eksempel',e.example)}${sources(e.source_locations)}<details><summary>Formlens LaTeX</summary><pre>${esc(e.latex)}</pre></details></article>`).join('')||(started&&!gap?'<p>Ingen beregningsvej vises med de aktuelle filtre.</p>':'');
+ $('results').querySelectorAll('article details').forEach(detail=>{detail.open=expandedCards.has(detailKey(detail));});
  const notes=(c?.notes||[]).filter(n=>!query||[n.title,n.text].join(' ').toLocaleLowerCase('da').includes(query.toLocaleLowerCase('da')));
  $('topic-notes').hidden=!notes.length;
  $('notes').innerHTML=notes.map(n=>`<section class="note-item"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p>${sources(n.source_locations)}</section>`).join('');
@@ -296,7 +299,7 @@ function routeHash(method=$('method').value){
 function syncUrl(){if(restoring)return;try{history.replaceState(null,'',location.pathname+location.search+routeHash());}catch{/* Offline previews can restrict history access. */}updateFeedbackLink();}
 function applyHash(){
  const params=new URLSearchParams(location.hash.slice(1)),catalog=db.catalogs.find(c=>c.id===params.get('catalog'));
- if(!catalog){if(location.hash)announce('Linket indeholder ikke et kendt fagområde. Vælg et opslag.');return;}
+ if(!catalog){const invalid=!!location.hash;resetChoices(true,true);if(invalid)announce('Linket indeholder ikke et kendt fagområde. Vælg et opslag.');return;}
  restoring=true;
  try{
   openCatalog(catalog.id);const s=state();
@@ -317,10 +320,10 @@ async function copyText(text,label){
  const previous=document.activeElement;input.focus();input.select();let copied=false;try{copied=document.execCommand('copy');}catch{}input.remove();previous?.focus({preventScroll:true});
  if(copied)announce(label+' kopieret.');else{$('copy-label').textContent=label;$('copy-value').value=text;$('copy-dialog').showModal();$('copy-value').focus();$('copy-value').select();}
 }
-function resetChoices(all=false){
+function resetChoices(all=false,quiet=false){
  if(all){states.clear();currentCatalogId='';updateTopics();$('global-search').value='';savedOnly=false;renderDiscovery();}
  else if(currentCatalogId){states.delete(currentCatalogId);const c=currentCatalogId;currentCatalogId='';$('topic').value=c;activateTopic();}
- announce('Valgene er nulstillet.');syncUrl();
+ if(!quiet)announce('Valgene er nulstillet.');syncUrl();
 }
 function applyTheme(theme){
  if(!['auto','light','dark'].includes(theme))theme='auto';

@@ -32,7 +32,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    assert.deepEqual(await page.locator('#givens input').evaluateAll(els=>els.map(x=>x.value).sort()),await page.evaluate(()=>[...new Set(activeCatalog().entries.flatMap(e=>e.lookup.given_sets.flat()))].sort()));
   }
   async function given(...keys){for(const key of keys){const input=page.locator(`#givens input[value="${key}"]`);await input.evaluate(el=>{for(let d=el.closest('details');d;d=d.parentElement.closest('details'))d.open=true;});await input.check();}}
-  async function only(id){assert.deepEqual(await page.locator('article').evaluateAll(els=>els.map(x=>x.dataset.entry)),[id]);}
+  async function only(id){await page.locator(`article[data-entry="${id}"]`).waitFor({state:'visible'});assert.deepEqual(await page.locator('article').evaluateAll(els=>els.map(x=>x.dataset.entry)),[id]);}
   // Selecting known quantities works before selecting a target or formula.
   await topic('EL','el');
   assert.equal(await page.locator('#all-givens').evaluate(el=>el.open),false);
@@ -95,6 +95,8 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert.match(await rcExample.innerText(),/440 V DC.*220 Ω/s);
   assert.match(await rcExample.innerText(),/0,736 A/);
   assert.equal(await rcExample.locator('img').count(),3);
+  await given('R');assert(await rcExample.evaluate(el=>el.open));
+  await page.locator('#givens input[value="R"]').uncheck();assert(await rcExample.evaluate(el=>el.open));
   assert.equal(await page.locator('#givens input:checked').count(),0);
   await page.locator('#other-givens summary').click();
   await given('epsilon');assert(await page.locator('#other-givens').evaluate(el=>el.open));
@@ -112,6 +114,8 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await explanation.screenshot({path:path.join(screenshots,'rc-explanation-mobile.png')});
   await page.setViewportSize({width:1280,height:950});
+  await route('C26');
+  assert.equal(await page.locator('article details.card-detail').filter({has:page.locator('summary',{hasText:/^Eksempel$/})}).evaluate(el=>el.open),false);
   cases.push('RC-startstrøm: Us og R nok ved eksplicit uopladet; kendt u0 kræves ellers; forklaring og ligninger på mobil');
   await page.goto(pathToFileURL(htmlPath).href);
   async function contextQA(qa,label){
@@ -270,6 +274,18 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    await page.reload();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
    await page.goto(pathToFileURL(htmlPath).href+'#catalog=tm-engine&seek=Pi&method=EVIL%3A0&known=bad&group=evil');
    assert.equal(await page.locator('#givens input:checked').count(),0);assert.equal(await page.locator('#method').inputValue(),'');
+   await page.goto(deepLink);await only('MO04');
+   const alternate=pathToFileURL(htmlPath).href+'#catalog=el&seek=I&method=I01%3A0&known=U%2CR';
+   await page.goto(alternate);await only('I01');
+   await page.goBack();await only('MO04');assert.equal(await page.locator('#givens input:checked').count(),4);
+   await page.goForward();await only('I01');assert.equal(await page.locator('#givens input:checked').count(),2);
+   await page.goto(pathToFileURL(htmlPath).href);assert.equal(await page.locator('article').count(),0);assert(await page.locator('#seek').isHidden());assert(await page.locator('#known').isHidden());
+   await page.goto(deepLink);await only('MO04');await page.goBack();
+   await page.locator('#seek').waitFor({state:'hidden'});assert.equal(await page.locator('article').count(),0);assert.equal(new URL(page.url()).hash,'');
+   await page.goForward();await only('MO04');assert.equal(await page.locator('#givens input:checked').count(),4);
+   await page.goto(deepLink);await page.goto(pathToFileURL(htmlPath).href+'#catalog=unknown');
+   assert.equal(await page.locator('article').count(),0);assert(await page.locator('#known').isHidden());assert.match(await page.locator('#action-status').innerText(),/ikke et kendt fagområde/);
+   assert.equal(new URL(page.url()).hash,'');
    // Offline clipboard fallback exposes selectable text if browser permissions deny copying.
    await page.goto(deepLink);
    await page.evaluate(()=>{document.execCommand=()=>false;});
