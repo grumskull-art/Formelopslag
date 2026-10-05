@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+branch_name=$(git symbolic-ref --quiet --short HEAD) || {
+    printf '%s\n' 'Commit afvist: vælg develop før du committer.' >&2
+    exit 1
+}
+if [ "$branch_name" != develop ]; then
+    printf '%s\n' 'Commit afvist: alt arbejde skal committes på develop. Kør git switch develop.' >&2
+    exit 1
+fi

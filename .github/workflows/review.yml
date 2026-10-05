@@ -1,29 +1,27 @@
-name: Publish Formelopslag
+name: Review Formelopslag
 
 on:
   push:
+    branches: [develop]
+  pull_request:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: false
+  group: review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'
+  verify:
+    name: Validate and preview
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - uses: actions/configure-pages@v5
       - run: python -m pip install -r requirements-lock.txt
       - run: python -m pip install --no-deps -e .
       - run: formelopslag validate
@@ -37,16 +35,9 @@ jobs:
       - run: node test_browser.cjs
         env:
           PLAYWRIGHT_MODULE: ${{ github.workspace }}/node_modules/playwright
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          path: docs
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          name: formelopslag-preview-${{ github.event.pull_request.head.sha || github.sha }}
+          path: docs/index.html
+          if-no-files-found: error
+          retention-days: 14

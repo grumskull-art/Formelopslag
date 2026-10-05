@@ -5,7 +5,43 @@ Selvstændigt offline formelopslag til elektroteknik, varmelære og motorlære.
 tastaturbetjening og udskrivning. Kataloger, originaldokumenter, kode og test
 ligger i dette projekt; appen læser ikke fra andre projekter.
 
-## Start
+## Samarbejde på GitHub
+
+Vi arbejder og committer på `develop`. `main` opdateres gennem en PR efter
+gennemgang, én godkendelse fra en anden samarbejdspartner og beståede kontroller.
+GitHub beskytter `main` mod direkte pushes, også fra administratorer.
+
+```bash
+git fetch origin
+git switch develop
+git pull --ff-only
+git config core.hooksPath .githooks
+```
+
+Aktivér hook-indstillingen én gang i hver klon. Den afviser commits på andre
+branches og pushes til `main`. Push almindeligt med `git push`; brug ikke force.
+Hvis I begge har nye commits, stopper `git pull --ff-only`. Flet da med
+`git merge origin/develop`, løs eventuelle konflikter og push igen.
+En invitation til repoet skal være accepteret, før en makker kan godkende en PR.
+
+Efter push til `develop`: åbn **Actions → Review Formelopslag**, vælg den
+seneste kørsel og download artifactet **formelopslag-preview-…**. Pak det ud,
+og åbn `index.html` direkte i browseren. Det er den testede branchversion.
+Opret derefter en PR med base `main` og compare `develop`; der er også et
+preview på PR-kørslen. Behold `develop` efter merge. Synkronisér derefter
+`develop` med både makkerens ændringer og den mergede `main`:
+
+```bash
+git fetch origin
+git switch develop
+git pull --ff-only
+git merge origin/main
+git push
+```
+
+Produktsiden publiceres fra `main`.
+
+## Lokal start
 
 Kør fra denne mappe:
 
