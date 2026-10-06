@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="da"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Kildebaserede formler til elektroteknik, varmelære og motorlære. Find beregningsvejen, se enheder, forudsætninger og eksempler. Fungerer offline.">
+<meta name="description" content="Kildebaserede formler til elektroteknik, varmelære og motorlære, samt et interaktivt log(p)-h-diagram for vand. Find beregningsvejen, se enheder, forudsætninger og eksempler. Fungerer offline.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23076d66'/%3E%3Ctext x='16' y='24' text-anchor='middle' fill='white' font-size='26' font-family='serif'%3E%C6%92%3C/text%3E%3C/svg%3E">
 <meta name="color-scheme" content="light dark"><title>Formelopslag · EL og TM</title><style>__STYLES__</style></head>
-<body><a class="skip-link" href="#workspace">Gå til formelopslag</a><main>
+<body data-view="formulas"><a class="skip-link" href="#workspace">Gå til formelopslag</a><main>
 <header class="topbar"><a class="brand" href="#" aria-label="Formelopslag, start"><span class="brand-mark" aria-hidden="true">ƒ</span> Formelopslag</a><div class="header-actions"><button id="theme-toggle" type="button" aria-label="Skift farvetema">Tema: automatisk</button><details class="feedback"><summary id="feedback-summary">Feedback</summary><div class="feedback-panel"><label for="feedback-type" id="feedback-type-label">Type</label><select id="feedback-type"></select><a id="feedback-link" href="mailto:">Åbn mail</a><p class="subtle" id="feedback-help"></p></div></details></div></header>
+<nav class="view-switch" aria-label="Værktøjer"><button type="button" id="view-formulas" aria-pressed="true">Formler</button><button type="button" id="view-ph" aria-pressed="false">log(p)-h · vand</button></nav>
 <section class="hero"><p class="eyebrow">EL / TM · MASKINMESTER</p><h1>Find den rigtige formel.</h1><p class="hero-copy">Fra det, du har opgivet, til den beregningsvej du kan bruge.<br>Kilder, enheder og forudsætninger følger med.</p><p class="catalog-count" id="catalog-count"></p></section>
 <section class="discovery" aria-label="Søg på tværs af fag"><label for="global-search">Søg i hele formelsamlingen</label><div class="search-row"><input id="global-search" type="search" placeholder="Fx strøm, Carnot, drejningsmoment eller MO04" autocomplete="off" aria-describedby="discovery-status"><button id="saved-toggle" type="button" aria-pressed="false">Gemte <span id="saved-count">0</span></button></div><p id="discovery-status" class="subtle" role="status" aria-live="polite">Søg efter en størrelse, et emne eller en formelkode.</p><div id="discovery-results" class="discovery-results"></div><button id="show-more" type="button" hidden>Vis flere opslag</button></section>
 <nav id="topic-shortcuts" class="topic-shortcuts" aria-label="Vælg fagområde"></nav>
@@ -18,6 +19,66 @@
 <details id="topic-notes" hidden><summary>Faglige noter og kildehuller</summary><div id="notes"></div></details>
 <details id="register-section" hidden><summary>Konstanter og materialer fra undervisningen</summary><div id="registers" class="table-scroll"></div></details>
 <details class="scope-details"><summary>Kildegrundlag og afgrænsning</summary><p id="scope"></p><p>Et match viser en mulig beregningsvej. Kontrollér altid fysisk model, fortegn og enheder. Kildehuller markeres udtrykkeligt.</p></details></section>
+<section id="ph" class="ph-tool" tabindex="-1" hidden>
+<div class="ph-intro"><p class="eyebrow">VAND · H₂O · IAPWS-IF97</p><h1>log(p)-h for vand</h1><p class="hero-copy">Et-trins tør ekspansion. Kredsen, tilstandspunkterne og nøgletallene følger med, så snart du ændrer en værdi.</p></div>
+<div class="ph-grid">
+<div class="ph-side">
+<label class="ph-qe">QE køleydelse [kW]<input id="ph-qe" type="number" value="10" step="any" inputmode="decimal" autocomplete="off"></label>
+<fieldset class="ph-fields"><legend>Temperaturer</legend>
+<label>TE fordampning [°C]<input id="ph-te" type="number" value="5" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>TC kondensering [°C]<input id="ph-tc" type="number" value="35" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>ΔT<sub>SH</sub> nyttig overhedning [K]<input id="ph-tsh" type="number" value="5" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>ΔT<sub>SC</sub> underkøling [K]<input id="ph-tsc" type="number" value="2" step="any" inputmode="decimal" autocomplete="off"></label>
+</fieldset>
+<fieldset class="ph-fields"><legend>Kompressor</legend>
+<label>η<sub>is</sub> [0–1]<input id="ph-eta" type="number" value="0.75" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>f<sub>Q</sub> varmetab [0–1]<input id="ph-fq" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>η<sub>vol</sub> [0–1]<input id="ph-etav" type="number" value="0.85" step="any" inputmode="decimal" autocomplete="off"></label>
+</fieldset>
+<fieldset class="ph-fields"><legend>Tryktab</legend>
+<label>Δp fordamper [K]<input id="ph-dte" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>Δp sugeledning [K]<input id="ph-dts" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>ΔT<sub>SH,SL</sub> unyttig overhedning [K]<input id="ph-tshs" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>Δp kondensator [bar]<input id="ph-dpc" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>Δp trykledning [K]<input id="ph-dtd" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>Δp væskeledning [bar]<input id="ph-dpl" type="number" value="0" step="any" inputmode="decimal" autocomplete="off"></label>
+</fieldset>
+<p class="subtle">Tryktab i fordamper, sugeledning og trykledning er kelvin langs mætningskurven. Kondensator og væskeledning er bar. Vand ligger nær 0,01 bar i køleområdet, så et tryktab på 0,1 bar er stort.</p>
+<button id="ph-reset" type="button">Standard vandkøler</button>
+</div>
+<div class="ph-stage">
+<div class="ph-toolbar">
+<div class="ph-toggles">
+<label><input type="checkbox" id="ph-show-sat" checked> Mætning</label>
+<label><input type="checkbox" id="ph-show-x" checked> Kvalitet</label>
+<label><input type="checkbox" id="ph-show-t" checked> Isotermer</label>
+<label><input type="checkbox" id="ph-show-s" checked> Isentroper</label>
+<label><input type="checkbox" id="ph-show-v" checked> Isokorer</label>
+<label><input type="checkbox" id="ph-show-cycle"> Kreds</label>
+</div>
+<div class="ph-zoom">
+<button type="button" id="ph-in">Zoom ind</button>
+<button type="button" id="ph-out">Zoom ud</button>
+<button type="button" id="ph-fit">Tilpas til kreds</button>
+<button type="button" id="ph-wide">0–120 °C</button>
+<button type="button" id="ph-dome">Dampkuppel</button>
+</div>
+</div>
+<div class="ph-chart" id="ph-chart"><svg id="ph-svg" viewBox="0 0 1000 640" role="img" aria-labelledby="ph-caption"></svg></div>
+<p id="ph-caption" class="subtle"></p>
+<p id="ph-readout" class="ph-readout" aria-live="polite">Peg på diagrammet for at læse tryk, temperatur og entalpi. Klik kopierer tilstanden. Træk for at panorere, og brug hjulet eller knapperne for at zoome.</p>
+</div>
+</div>
+<p id="ph-status" class="note" role="status"></p>
+<div id="ph-results" class="ph-metrics"></div>
+<p id="ph-balance" class="subtle"></p>
+<div class="table-scroll"><table class="ph-table" id="ph-states"></table></div>
+<details class="ph-notes"><summary>Sådan er kredsen regnet</summary>
+<p>Punkterne er de samme som i CoolPacks et-trins tørre ekspansion uden sugegaskøler. 1 er kompressorens indløb og er lig 8. 2 er afgangen efter η<sub>is</sub> og varmetab. 3 er efter det isenthalpiske tryktab i trykledningen. 4 er underkølet væske ved TC. 5 er før ventilen efter tryktabet i væskeledningen. 6 er efter den isenthalpiske ekspansion, med dampindhold x6. 7 er fordamperens udløb efter den nyttige overhedning.</p>
+<p>Akselarbejdet pr. kg er w = (h<sub>2s</sub> − h<sub>1</sub>) / η<sub>is</sub>, og h<sub>2</sub> = h<sub>1</sub> + w·(1 − f<sub>Q</sub>). COP = Q<sub>E</sub> / W<sub>aksel</sub>. COP* = Q<sub>E</sub> / (m·(h<sub>2</sub> − h<sub>1</sub>)), altså uden at regne kompressorens varmetab med i den varme, kølemidlet optager. Carnot = T<sub>E</sub> / (T<sub>C</sub> − T<sub>E</sub>) med begge temperaturer i kelvin.</p>
+<p>Tallene er IAPWS-IF97, område 1, 2 og 4, op til 350 °C. Område 3 omkring det kritiske punkt er ikke med. Diagrammet er ikke undervisningens damptabel og udfylder ikke det kildehul.</p>
+</details>
+</section>
 <footer><span>Formelopslag · fungerer også offline</span><span class="subtle version" id="version"></span></footer><p id="action-status" class="action-status" role="status" aria-live="polite"></p>
 <dialog id="copy-dialog"><form method="dialog"><label id="copy-label" for="copy-value">Kopiér tekst</label><p class="subtle">Markér teksten og kopiér med Ctrl+C eller browserens kopieringsmenu.</p><textarea id="copy-value" readonly></textarea><button>Luk</button></form></dialog>
 <dialog id="mathcad-dialog" aria-labelledby="mathcad-title"><form id="mathcad-form"><h2 id="mathcad-title">Kopiér til Mathcad</h2><p class="subtle">Indsæt på et tomt sted i Mathcad Prime 11 med Ctrl+V.</p><p id="mathcad-note" class="note" hidden></p><label for="mathcad-formula">Vælg formel</label><select id="mathcad-formula"></select><div id="mathcad-preview"></div><label for="mathcad-mode">Medtag</label><select id="mathcad-mode"><option value="formula">Kun valgt formel</option><option value="inputs">Formel med mine input og evaluering</option><option value="workflow">Beregningsforløb med mine input</option><option value="example">Opslagets kildebaserede regneeksempel</option></select><fieldset id="mathcad-workflow" hidden><legend>Vælg formler i beregningsforløbet</legend><div id="mathcad-workflow-items"></div></fieldset><p id="mathcad-input-help" class="subtle" hidden>Ingen værdier er forhåndsudfyldt. Brug punktum eller dansk decimalkomma. Definitionerne placeres før de valgte formler.</p><div id="mathcad-inputs"></div><p id="mathcad-error" class="missing" role="alert"></p><div class="mathcad-actions"><button type="button" id="mathcad-copy">Kopiér til Mathcad</button><button type="button" id="mathcad-close">Luk</button></div></form></dialog>

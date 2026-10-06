@@ -42,6 +42,10 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
   assert.equal(inputExports,await page.evaluate(()=>db.catalogs.reduce((n,c)=>n+c.entries.reduce((m,e)=>m+e.mathcad.formulas.length,0),0)));
   cases.push('Mathcad options: input exports from all '+inputExports+' formula choices');
   await options('el','R09');assert.deepEqual(await page.locator('#mathcad-inputs input').evaluateAll(els=>els.map(i=>i.value)),['','','']);
+  assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Kilde-EMK · E [V]','Klemspænding · Ukl [V]','Strøm · I [A]']);
+  await options('el','I01');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Spænding · U [V]','Modstand · R [Ω]']);
+  await options('el','I02');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Elektrisk effekt · P [W]','Spænding · U [V]']);
+  await page.selectOption('#mathcad-formula','steps-1-0');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Afgivet effekt · Pud [W]','Virkningsgrad · η']);
   await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/Indtast/);
   await fill({E:'<script>',U_kl:10,I:1});await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/endeligt tal/);
   await fill({E:'12,4',U_kl:'11,2',I:6});const reference=await summary(await copy());assert.equal(reference.root,'worksheet');assert.equal(reference.regions,5);assert.deepEqual(reference.left,['E','Ukl','I','ri']);assert.equal(reference.right[0],'12.4V');assert(reference.labels.some(n=>n.text==='Ω'&&n.label==='UNIT'));assert(reference.labels.every(n=>n.contextual===null));

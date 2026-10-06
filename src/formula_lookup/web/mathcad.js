@@ -52,6 +52,28 @@ function mcInputInfos(forms){
  return [...inputs.values()];
 }
 function mcDraftKey(info){return JSON.stringify([info.name,info.unit,info.type,info.argument_unit||'']);}
+function mcSymbolKey(text){
+ const sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₐ':'a','ₑ':'e','ᵢ':'i','ₒ':'o','ᵤ':'u','ₛ':'s','ₓ':'x'};
+ return text.normalize('NFKD').replace(/\([^)]*\)/g,'').replace(/\p{M}/gu,'').replace(/[₀-₉ₐₑᵢₒᵤₛₓ]/g,ch=>sub[ch]||'').replace(/δ/g,'').replace(/[_\s]/g,'');
+}
+function mcHasSymbol(text,name){
+ const target=mcSymbolKey(name);
+ return !!target&&text.split(/\s+/).some(token=>token.split(/[=:/·]/).some(piece=>mcSymbolKey(piece)===target));
+}
+function mcSymbolHtml(name){
+ const parts=name.split('_');
+ return esc(parts[0])+parts.slice(1).map(part=>`<sub>${esc(part)}</sub>`).join('');
+}
+function mcInputLabel(info){
+ let text=info.label.replace(/\s*\[[^\]]+\]/g,'').trim();
+ const parts=text.split(/\s+/).filter(Boolean),last=parts.at(-1)||'';
+ const nameKey=mcSymbolKey(info.name),lastKey=mcSymbolKey(last);
+ if(last&&nameKey&&(nameKey===lastKey||(nameKey.startsWith(lastKey)&&lastKey.length<=4&&lastKey.length<nameKey.length))){parts.pop();text=parts.join(' ');}
+ const unit=info.unit==='1'?'':` [${esc(info.unit)}]`,symbol=mcSymbolHtml(info.name),description=esc(text);
+ if(!text)return symbol+unit;
+ if(mcHasSymbol(text,info.name))return description+unit;
+ return `${description} · ${symbol}${unit}`;
+}
 function mcRemember(){if(!mcEntry)return;const values=mcDrafts.get(mcEntry.id)||new Map();document.querySelectorAll('#mathcad-inputs [data-mc-input]').forEach(i=>values.set(i.dataset.mcDraft,i.value));mcDrafts.set(mcEntry.id,values);}
 function mcRefresh(){
  mcRemember();$('mathcad-error').textContent='';const mode=$('mathcad-mode').value,selected=mcSelected();
@@ -62,7 +84,7 @@ function mcRefresh(){
  try{
   const forms=mode==='workflow'?mcOrder(mcWorkflow()):[selected],infos=mcInputInfos(forms),values=mcDrafts.get(mcEntry.id);
   $('mathcad-inputs').innerHTML=infos.map((i,n)=>{const hint=i.type==='function'?`Udtryk i x, hvor x = ${i.argument}/(${i.argument_unit}). Resultatets talværdi i ${i.unit}. Brug *, /, ^, pi, e, sin, cos, tan, ln, log, exp eller sqrt.`:i.type==='vector'?'Værdier adskilles med semikolon. Første element har indeks 1.':i.type==='matrix'?'Semikolon mellem kolonner; ny linje mellem rækker. Indeks starter ved 1.':i.type==='range'?'Første og sidste heltalsindeks fra 1 adskilles med semikolon.':i.type==='index'?'Heltalsindeks fra 1.':'';
-   return `<div class="mathcad-input"><label for="mc-input-${n}">${esc(i.label.replace(/\s*\[[^\]]+\]/g,''))} · ${esc(i.name)} [${esc(i.unit)}]</label><${i.type==='matrix'?'textarea':'input'} id="mc-input-${n}" data-mc-input="${esc(i.name)}" ${i.type==='matrix'?'':'type="text"'} ${i.type==='scalar'?'inputmode="decimal"':''} autocomplete="off" aria-describedby="mc-hint-${n}">${i.type==='matrix'?'</textarea>':''}<small id="mc-hint-${n}" class="subtle">${esc(hint)}</small></div>`;
+   return `<div class="mathcad-input"><label for="mc-input-${n}">${mcInputLabel(i)}</label><${i.type==='matrix'?'textarea':'input'} id="mc-input-${n}" data-mc-input="${esc(i.name)}" ${i.type==='matrix'?'':'type="text"'} ${i.type==='scalar'?'inputmode="decimal"':''} autocomplete="off"${hint?` aria-describedby="mc-hint-${n}"`:''}>${i.type==='matrix'?'</textarea>':''}${hint?`<small id="mc-hint-${n}" class="subtle">${esc(hint)}</small>`:''}</div>`;
   }).join('');
   $('mathcad-inputs').querySelectorAll('[data-mc-input]').forEach(i=>{i.dataset.mcDraft=mcDraftKey(infos.find(info=>info.name===i.dataset.mcInput));i.value=values?.get(i.dataset.mcDraft)||'';});
  }catch(error){$('mathcad-error').textContent=error.message;$('mathcad-inputs').replaceChildren();}
