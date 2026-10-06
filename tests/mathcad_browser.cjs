@@ -13,7 +13,7 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
    await options(entry.catalog,entry.id,'formula');await page.evaluate(()=>{window.__mathcadCopied=null;});assert.equal(await copy(),entry.xml,'dialog: '+entry.id);
   }
   cases.push('Mathcad: primary XML copied directly and through options from all '+entries.length+' configured entries');
-  async function options(catalog,id,mode='inputs'){await open(catalog,id);await page.locator(`#results [data-mathcad-options="${id}"]`).click();await page.selectOption('#mathcad-mode',mode);}
+  async function options(catalog,id,mode='inputs'){if(await page.locator('#mathcad-dialog').evaluate(el=>el.open))await page.locator('#mathcad-close').click();await open(catalog,id);await page.locator(`#results [data-mathcad-options="${id}"]`).click();await page.selectOption('#mathcad-mode',mode);}
   async function fill(values){for(const [name,value] of Object.entries(values))await page.locator(`[data-mc-input="${name}"]`).fill(String(value));}
   async function copy(){await page.locator('#mathcad-copy').click();assert(await page.locator('#mathcad-dialog').isHidden(),await page.locator('#mathcad-error').innerText());return page.evaluate(()=>window.__mathcadCopied);}
   async function summary(xml){return page.evaluate(xml=>{
@@ -42,7 +42,11 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
   assert.equal(inputExports,await page.evaluate(()=>db.catalogs.reduce((n,c)=>n+c.entries.reduce((m,e)=>m+e.mathcad.formulas.length,0),0)));
   cases.push('Mathcad options: input exports from all '+inputExports+' formula choices');
   await options('el','R09');assert.deepEqual(await page.locator('#mathcad-inputs input').evaluateAll(els=>els.map(i=>i.value)),['','','']);
-  await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/Indtast/);
+  assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Kilde-EMK · E [V]','Klemspænding · Ukl [V]','Strøm · I [A]']);
+  await options('el','I01');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Spænding · U [V]','Modstand · R [Ω]']);
+  await options('el','I02');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Elektrisk effekt · P [W]','Spænding · U [V]']);
+  await page.selectOption('#mathcad-formula','steps-1-0');assert.deepEqual(await page.locator('#mathcad-inputs label').allInnerTexts(),['Afgivet effekt · Pud [W]','Virkningsgrad · η']);
+  await options('el','R09');await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/Indtast/);
   await fill({E:'<script>',U_kl:10,I:1});await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/endeligt tal/);
   await fill({E:'12,4',U_kl:'11,2',I:6});const reference=await summary(await copy());assert.equal(reference.root,'worksheet');assert.equal(reference.regions,5);assert.deepEqual(reference.left,['E','Ukl','I','ri']);assert.equal(reference.right[0],'12.4V');assert(reference.labels.some(n=>n.text==='Ω'&&n.label==='UNIT'));assert(reference.labels.every(n=>n.contextual===null));
   await options('el','R09');await fill({E:12,U_kl:10,I:1});await copy();

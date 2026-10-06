@@ -298,6 +298,8 @@ function routeHash(method=$('method').value){
 }
 function syncUrl(){if(restoring)return;try{history.replaceState(null,'',location.pathname+location.search+routeHash());}catch{/* Offline previews can restrict history access. */}updateFeedbackLink();}
 function applyHash(){
+ if((location.hash||'')==='#ph'){showDiagram(true);return;}
+ if(document.body.dataset.view==='ph')showFormulas();
  const params=new URLSearchParams(location.hash.slice(1)),catalog=db.catalogs.find(c=>c.id===params.get('catalog'));
  if(!catalog){const invalid=!!location.hash;resetChoices(true,true);if(invalid)announce('Linket indeholder ikke et kendt fagområde. Vælg et opslag.');return;}
  restoring=true;
@@ -353,12 +355,375 @@ window.addEventListener('afterprint',()=>{printDetails.forEach(d=>{d.open=false;
 $('reset').addEventListener('click',()=>resetChoices());
 $('print').addEventListener('click',()=>{if(!$('results').querySelector('article'))announce('Vælg et opslag før udskrivning.');else window.print();});
 $('theme-toggle').addEventListener('click',()=>{const order=['auto','light','dark'],theme=order[(order.indexOf($('theme-toggle').dataset.theme)+1)%3];applyTheme(theme);writeStorage('formelopslag.theme.v1',theme);});
-document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();resetChoices(true);window.scrollTo(0,0);});
-document.querySelector('.skip-link').addEventListener('click',event=>{event.preventDefault();$('workspace').focus();$('workspace').scrollIntoView({block:'start'});});
+document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();showFormulas();resetChoices(true);window.scrollTo(0,0);});
+document.querySelector('.skip-link').addEventListener('click',event=>{event.preventDefault();const target=document.body.dataset.view==='ph'?$('ph'):$('workspace');target.focus();target.scrollIntoView({block:'start'});});
 window.addEventListener('hashchange',applyHash);
 window.addEventListener('popstate',applyHash);
 window.addEventListener('storage',event=>{if(event.key===storageKey){const incoming=readStorage(storageKey,[]);savedEntries.clear();if(Array.isArray(incoming))incoming.filter(id=>formulaIds.has(id)).forEach(id=>savedEntries.add(id));document.querySelectorAll('button[data-save]').forEach(button=>{const saved=savedEntries.has(button.dataset.save);button.textContent=saved?'Gemt':'Gem opslag';button.setAttribute('aria-pressed',String(saved));});renderDiscovery();}});
-document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.target.closest('input,textarea,select,[contenteditable]')){event.preventDefault();$('global-search').focus();}});
+document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.target.closest('input,textarea,select,[contenteditable]')){event.preventDefault();if(document.body.dataset.view==='ph')$('ph-te').focus();else $('global-search').focus();}});
+const PH={w:1000,h:640,l:96,r:16,t:12,b:50};
+let phView=null,phCycle=null,phMode='dome',phLines=null,phKey='',phDrag=null;
+function showFormulas(){
+ document.body.dataset.view='formulas';
+ if($('ph'))$('ph').hidden=true;
+ $('view-formulas').setAttribute('aria-pressed','true');
+ $('view-ph').setAttribute('aria-pressed','false');
+ const skip=document.querySelector('.skip-link');
+ skip.setAttribute('href','#workspace');
+ skip.textContent='Gå til formelopslag';
+}
+function showDiagram(fromHash){
+ if(typeof Water==='undefined'){announce('log(p)-h-værktøjet findes ikke i denne fil.');return;}
+ document.body.dataset.view='ph';
+ $('ph').hidden=false;
+ $('view-formulas').setAttribute('aria-pressed','false');
+ $('view-ph').setAttribute('aria-pressed','true');
+ const skip=document.querySelector('.skip-link');
+ skip.setAttribute('href','#ph');
+ skip.textContent='Gå til diagrammet';
+ if(!fromHash&&location.hash!=='#ph')history.replaceState(null,'',location.pathname+location.search+'#ph');
+ drawPh();
+ if(!fromHash)$('ph').scrollIntoView({block:'start'});
+}
+function openFormulas(){
+ showFormulas();
+ const hash=currentCatalogId?routeHash():'';
+ if((location.hash||'')!==hash)history.replaceState(null,'',location.pathname+location.search+hash);
+ window.scrollTo(0,0);
+}
+function phNum(id){
+ const raw=$(id).value.trim();
+ if(!raw)return NaN;
+ return Number(raw.replace(',','.'));
+}
+function readPh(){
+ const fields=[['ph-qe','QE'],['ph-te','TE'],['ph-tc','TC'],['ph-tsh','dTSH'],['ph-tsc','dTSC'],['ph-eta','eta'],['ph-fq','fQ'],['ph-etav','etaVol'],['ph-dte','dTevap'],['ph-dts','dTsuc'],['ph-tshs','dTSHsuc'],['ph-dpc','dPcond'],['ph-dtd','dTdis'],['ph-dpl','dPliq']];
+ const input={};
+ for(const [id,key] of fields){const value=phNum(id);if(!Number.isFinite(value))return null;input[key]=value;}
+ return input;
+}
+function phFmt(value,digits){return Number.isFinite(value)?value.toLocaleString('da-DK',{maximumFractionDigits:digits,minimumFractionDigits:digits}):'–';}
+function phBar(pMPa){
+ const bar=pMPa*10;
+ const digits=bar>=100?0:bar>=10?1:bar>=1?2:bar>=0.1?2:bar>=0.01?3:4;
+ return phFmt(bar,digits);
+}
+function phX(h){return PH.l+(h-phView.hMin)/(phView.hMax-phView.hMin)*(PH.w-PH.l-PH.r);}
+function phY(p){
+ const l0=Math.log10(phView.pMin),l1=Math.log10(phView.pMax);
+ return PH.t+(l1-Math.log10(p))/(l1-l0)*(PH.h-PH.t-PH.b);
+}
+function phPressureTicks(view){
+ const ticks=[];
+ for(let exp=Math.floor(Math.log10(view.pMin));exp<=Math.ceil(Math.log10(view.pMax));exp++)for(const m of [1,2,5]){
+  const p=m*10**exp;
+  if(p>view.pMin*1.02&&p<view.pMax*0.98)ticks.push(p);
+ }
+ return ticks.length?ticks:[Math.sqrt(view.pMin*view.pMax)];
+}
+function phEnthalpyTicks(view){
+ const span=view.hMax-view.hMin,step=span>2200?500:span>1200?250:span>500?100:span>200?50:20,ticks=[];
+ for(let h=Math.ceil(view.hMin/step)*step;h<view.hMax-step*0.2;h+=step)ticks.push(h);
+ return ticks;
+}
+function phPath(points){
+ let d='',pen=false;
+ for(const pt of points){
+  const p=pt.p??pt.P;
+  if(!Number.isFinite(pt.h)||!Number.isFinite(p)||p<=0){pen=false;continue;}
+  d+=`${pen?'L':'M'}${phX(pt.h).toFixed(1)} ${phY(p).toFixed(1)}`;
+  pen=true;
+ }
+ return d;
+}
+function phLinesNow(){
+ const volumes=$('ph-show-v').checked;
+ const key=[phView.hMin,phView.hMax,phView.pMin,phView.pMax,volumes].map(v=>typeof v==='number'?v.toPrecision(6):v).join('|');
+ if(phLines&&key===phKey)return phLines;
+ const temps=phCycle?[phCycle.points[1].T-273.15]:[];
+ phLines=Water.isolines(phView,{temps,volumes});
+ phKey=key;
+ return phLines;
+}
+function markPhMode(){for(const [id,mode] of [['ph-fit','cycle'],['ph-wide','wide'],['ph-dome','dome']])$(id).setAttribute('aria-pressed',String(phMode===mode));}
+function phLayout(){
+ const el=$('ph-chart');
+ if(!el)return false;
+ const w=Math.round(el.clientWidth),h=Math.round(el.clientHeight);
+ if(w<240||h<220)return false;
+ PH.w=w;PH.h=h;
+ PH.l=Math.max(92,Math.min(112,Math.round(w*0.14)));
+ PH.r=16;PH.t=12;PH.b=50;
+ $('ph-svg').setAttribute('viewBox',`0 0 ${w} ${h}`);
+ return true;
+}
+function phSpread(items,gap,pos){
+ const kept=[];
+ for(const item of items){
+  const at=pos(item);
+  if(kept.every(prev=>Math.abs(pos(prev)-at)>=gap))kept.push(item);
+ }
+ return kept;
+}
+function phVisible(points){
+ return points.filter(pt=>{
+  const p=pt.p??pt.P;
+  return pt.h>=phView.hMin&&pt.h<=phView.hMax&&p>=phView.pMin&&p<=phView.pMax;
+ });
+}
+function phSpot(points,bias){
+ const vis=phVisible(points);
+ if(!vis.length)return null;
+ const target=phView.hMin+(phView.hMax-phView.hMin)*bias;
+ return vis.reduce((best,pt)=>Math.abs(pt.h-target)<Math.abs(best.h-target)?pt:best);
+}
+function phLabelPressure(frac){
+ const lo=Math.log10(phView.pMin),hi=Math.log10(phView.pMax);
+ return 10**(lo+(hi-lo)*Math.min(0.9,Math.max(0.1,frac)));
+}
+function phAtPressure(points,pTarget){
+ const vis=phVisible(points);
+ if(!vis.length||!(pTarget>0))return null;
+ return vis.reduce((best,pt)=>Math.abs(Math.log(pt.p)-Math.log(pTarget))<Math.abs(Math.log(best.p)-Math.log(pTarget))?pt:best);
+}
+function phIsothermAnchor(tC,segments){
+ const p=Water.psat(tC+273.15);
+ if(p>=phView.pMin&&p<=phView.pMax){
+  const sat=Water.saturation(tC+273.15);
+  if(sat&&Number.isFinite(sat.hf))return {x:phX(sat.hf)+26,y:phY(sat.P)-11,anchor:'start'};
+ }
+ const spot=phAtPressure(segments.flat(),phLabelPressure(0.62));
+ if(!spot)return null;
+ const x=phX(spot.h);
+ return PH.w-PH.r-x>68?{x:x+8,y:phY(spot.p),anchor:'start'}:{x:x-8,y:phY(spot.p),anchor:'end'};
+}
+function paintPh(){
+ if(!phView||!phLayout())return;
+ const lines=phLinesNow();
+ const on=id=>$(id).checked;
+ const grid=[];
+ for(const p of phSpread(phPressureTicks(phView),20,p=>phY(p))){
+  const y=phY(p);
+  grid.push(`<line class="ph-grid" x1="${PH.l}" y1="${y.toFixed(1)}" x2="${PH.w-PH.r}" y2="${y.toFixed(1)}"></line><text class="ph-label" x="${(PH.l-8).toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" dominant-baseline="middle">${phBar(p)}</text>`);
+ }
+ const hTicks=phEnthalpyTicks(phView).filter(h=>{
+  const label=phFmt(h,0),x=phX(h),half=label.length*4.4+8;
+  return x-half>PH.l&&x+half<PH.w-PH.r;
+ });
+ for(const h of phSpread(hTicks,64,h=>phX(h))){
+  const x=phX(h);
+  grid.push(`<line class="ph-grid" x1="${x.toFixed(1)}" y1="${PH.t}" x2="${x.toFixed(1)}" y2="${(PH.h-PH.b).toFixed(1)}"></line><text class="ph-label" x="${x.toFixed(1)}" y="${(PH.h-PH.b+22).toFixed(1)}" text-anchor="middle">${phFmt(h,0)}</text>`);
+ }
+ let curves='';
+ const tagBoxes=[];
+ const markerPos=[];
+ if(on('ph-show-cycle')&&phCycle){
+  const placed=[];
+  for(const pt of phCycle.points){
+   if(pt.n===8&&Math.abs(pt.h-phCycle.points[0].h)<1e-6&&Math.abs(pt.P-phCycle.points[0].P)<1e-12)continue;
+   let x=phX(pt.h),y=phY(pt.P);
+   if(placed.some(item=>Math.hypot(item.x-x,item.y-y)<30))y-=30;
+   placed.push({x,y});
+   markerPos.push({pt,x,y});
+   tagBoxes.push({l:x-16,r:x+16,t:y-16,b:y+16});
+  }
+ }
+ function phTag(text,x,y,anchor,cls){
+  const width=text.length*8.6+8,height=18;
+  const plotL=PH.l+2,plotR=PH.w-PH.r-2,plotT=PH.t+height,plotB=PH.h-PH.b-6;
+  let ax=x,left=anchor==='end'?x-width:anchor==='middle'?x-width/2:x;
+  if(left<plotL){ax+=plotL-left;left=plotL;}
+  if(left+width>plotR){const shift=left+width-plotR;ax-=shift;left-=shift;}
+  if(left<plotL-1)return '';
+  let ay=y;
+  if(ay<plotT){if(plotT-ay>18)return '';ay=plotT;}
+  if(ay>plotB){if(ay-plotB>18)return '';ay=plotB;}
+  const boxAt=yy=>({l:left-2,r:left+width+2,t:yy-height,b:yy+3});
+  let box=boxAt(ay);
+  const hit=item=>box.l<item.r&&box.r>item.l&&box.t<item.b&&box.b>item.t;
+  if(tagBoxes.some(hit)){
+   let placed=false;
+   for(const dy of [-18,18,-36,36]){
+    const yy=ay+dy;
+    if(yy<plotT||yy>plotB)continue;
+    box=boxAt(yy);
+    if(tagBoxes.some(hit))continue;
+    ay=yy;placed=true;break;
+   }
+   if(!placed)return '';
+  }
+  tagBoxes.push(box);
+  return `<text class="ph-tag ${cls}" x="${ax.toFixed(1)}" y="${ay.toFixed(1)}" text-anchor="${anchor}">${esc(text)}</text>`;
+ }
+ let tags='';
+ if(on('ph-show-v'))for(const line of lines.isochores)curves+=`<path class="ph-v" d="${phPath(line.points)}"></path>`;
+ if(on('ph-show-t'))for(const line of lines.isotherms){
+  for(const segment of line.segments)curves+=`<path class="ph-t" d="${phPath(segment)}"></path>`;
+  const anchor=phIsothermAnchor(line.t,line.segments);
+  if(anchor)tags+=phTag(`${Math.round(line.t)} °C`,anchor.x,anchor.y,anchor.anchor,'ph-tag-t');
+ }
+ if(on('ph-show-x'))for(const line of lines.quality){
+  curves+=`<path class="ph-x" d="${phPath(line.points)}"></path>`;
+  const spot=phAtPressure(line.points,phLabelPressure(0.78));
+  if(spot)tags+=phTag(`x ${phFmt(line.x,1)}`,phX(spot.h),phY(spot.p),'middle','ph-tag-x');
+ }
+ if(on('ph-show-s')){
+  const entropy=lines.isentropes;
+  entropy.forEach((line,i)=>{
+   curves+=`<path class="ph-s" d="${phPath(line.points)}"></path>`;
+   const frac=entropy.length===1?0.55:0.8-i*(0.6/(entropy.length-1));
+   const spot=phAtPressure(line.points,phLabelPressure(frac));
+   if(spot)tags+=phTag(`s ${phFmt(line.s,2)}`,phX(spot.h)-8,phY(spot.p),'end','ph-tag-s');
+  });
+ }
+ if(on('ph-show-sat'))curves+=`<path class="ph-sat" d="${phPath(lines.bubble)}"></path><path class="ph-sat" d="${phPath(lines.dew)}"></path>`;
+ if(on('ph-show-cycle')&&phCycle)curves+=`<path class="ph-cycle" d="${phPath(phCycle.points)}"></path>`;
+ const markers=markerPos.map(({pt,x,y})=>{
+  const tip=`${pt.n} ${pt.name}: ${phFmt(pt.T-273.15,1)} °C, ${phBar(pt.P)} bar, h ${phFmt(pt.h,1)} kJ/kg`;
+  return `<g class="ph-marker"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13"></circle><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central">${pt.n}</text><title>${esc(tip)}</title></g>`;
+ }).join('');
+ $('ph-svg').innerHTML=`<rect class="ph-bg" width="${PH.w}" height="${PH.h}"></rect><defs><clipPath id="ph-clip"><rect x="${PH.l}" y="${PH.t}" width="${PH.w-PH.l-PH.r}" height="${PH.h-PH.t-PH.b}"></rect></clipPath></defs>${grid.join('')}<rect class="ph-frame" x="${PH.l}" y="${PH.t}" width="${PH.w-PH.l-PH.r}" height="${PH.h-PH.t-PH.b}"></rect><text class="ph-unit" x="${((PH.l+PH.w-PH.r)/2).toFixed(1)}" y="${PH.h-8}" text-anchor="middle">h [kJ/kg]</text><text class="ph-unit" transform="translate(14 ${((PH.t+PH.h-PH.b)/2).toFixed(1)}) rotate(-90)" text-anchor="middle">p [bar]</text><g clip-path="url(#ph-clip)">${curves}</g>${tags}${markers}`;
+ markPhMode();
+}
+let phPaintQueued=false;
+function queuePhPaint(){
+ if(phPaintQueued)return;
+ phPaintQueued=true;
+ requestAnimationFrame(()=>{phPaintQueued=false;paintPh();});
+}
+function phMetric(label,value){return `<div><span>${label}</span><strong>${value}</strong></div>`;}
+function fillPh(result){
+ const r=result.results;
+ $('ph-caption').textContent=`Et-trins kreds ved TE ${phFmt(phNum('ph-te'),1)} °C og TC ${phFmt(phNum('ph-tc'),1)} °C. COP ${phFmt(r.cop,2)}. x6 ${phFmt(r.x6,3)}.`;
+ $('ph-results').innerHTML=[
+  phMetric('COP',phFmt(r.cop,3)),phMetric('COP*',phFmt(r.copStar,3)),phMetric('Carnot',phFmt(r.copCarnot,3)),
+  phMetric('QC [kW]',phFmt(r.QC,2)),phMetric('W [kW]',phFmt(r.W,3)),phMetric('m [kg/h]',phFmt(r.m*3600,2)),
+  phMetric('qe [kJ/kg]',phFmt(r.qe,1)),phMetric('w [kJ/kg]',phFmt(r.w,1)),phMetric('x6',phFmt(r.x6,3)),
+  phMetric('T2,IS [°C]',phFmt(r.T2is-273.15,1)),phMetric('T2 [°C]',phFmt(r.T2-273.15,1)),phMetric('T2,W [°C]',phFmt(r.T2w-273.15,1)),
+  phMetric('p2/p1',phFmt(r.pr,2)),phMetric('Vs [m³/h]',phFmt(r.Vs*3600,0))
+ ].join('');
+ $('ph-balance').textContent=`Energibalance: QE + W + Qsuge = ${phFmt(r.balanceIn,3)} kW og QC + Qtab = ${phFmt(r.balanceOut,3)} kW. Qsuge er varmen optaget i sugeledningen, og Qtab er fQ·W. COP bruger akselarbejdet. COP* bruger kun den entalpi, kølemidlet optager i kompressoren.`;
+ const rows=result.points.map(pt=>`<tr><th scope="row">${pt.n} ${esc(pt.name)}</th><td>${phFmt(pt.T-273.15,1)}</td><td>${phBar(pt.P)}</td><td>${phFmt(pt.h,1)}</td><td>${phFmt(pt.s,3)}</td><td>${phFmt(pt.v,pt.v>=1?2:5)}</td><td>${phFmt(pt.x,3)}</td></tr>`).join('');
+ $('ph-states').innerHTML=`<caption class="subtle">Tilstandspunkter for vand efter IAPWS-IF97. Punkt 1 og 8 er ens, når der ikke er sugegaskøler.</caption><thead><tr><th>Punkt</th><th>t [°C]</th><th>p [bar]</th><th>h [kJ/kg]</th><th>s [kJ/kg·K]</th><th>v [m³/kg]</th><th>x</th></tr></thead><tbody>${rows}</tbody>`;
+}
+function drawPh(){
+ const input=readPh();
+ if(!input){$('ph-status').textContent='Udfyld alle felter med tal.';return;}
+ const result=Water.cycle(input);
+ if(!result.ok){
+  phCycle=null;
+  $('ph-status').textContent=result.error;
+  $('ph-results').innerHTML='';
+  $('ph-states').innerHTML='';
+  $('ph-balance').textContent='';
+  $('ph-caption').textContent='Kredsen kan ikke tegnes med de valgte værdier. Diagrammet kan stadig aflæses.';
+  if(!phView||phMode==='cycle')phView=phMode==='dome'?Water.frameDome():Water.frameWide();
+  paintPh();
+  return;
+ }
+ phCycle=result;
+ if(!phView)phView=phMode==='wide'?Water.frameWide():phMode==='cycle'?Water.frameCycle(result.points):Water.frameDome();
+ else if(phMode==='cycle')phView=Water.frameCycle(result.points);
+ $('ph-status').textContent=result.warnings.join(' ');
+ fillPh(result);
+ paintPh();
+}
+function phPointer(event){
+ if(!phView)return null;
+ const svg=$('ph-svg'),point=svg.createSVGPoint();
+ point.x=event.clientX;point.y=event.clientY;
+ const matrix=svg.getScreenCTM();
+ if(!matrix)return null;
+ const loc=point.matrixTransform(matrix.inverse());
+ const h=phView.hMin+(loc.x-PH.l)/(PH.w-PH.l-PH.r)*(phView.hMax-phView.hMin);
+ const l0=Math.log10(phView.pMin),l1=Math.log10(phView.pMax);
+ return {x:loc.x,y:loc.y,h,p:10**(l1-(loc.y-PH.t)/(PH.h-PH.t-PH.b)*(l1-l0))};
+}
+function phNearest(loc){
+ if(!phCycle)return null;
+ let best=null;
+ for(const pt of phCycle.points){
+  if(pt.n===8&&Math.abs(pt.h-phCycle.points[0].h)<1e-6)continue;
+  const dist=Math.hypot(phX(pt.h)-loc.x,phY(pt.P)-loc.y);
+  if(dist<=30&&(!best||dist<best.dist))best={dist,pt};
+ }
+ return best?best.pt:null;
+}
+function phDescribe(state,title){
+ return [`${title} · vand, IAPWS-IF97`,`t = ${phFmt(state.T-273.15,2)} °C`,`p = ${phBar(state.P)} bar (${phFmt(state.P*1000,3)} kPa)`,`h = ${phFmt(state.h,2)} kJ/kg`,`s = ${phFmt(state.s,4)} kJ/kg·K`,`v = ${phFmt(state.v,state.v>=1?3:6)} m³/kg`,`x = ${phFmt(state.x,4)}`,`fase = ${state.phase}`,`område = ${state.region}`].join('\n');
+}
+function phHover(event){
+ const loc=phPointer(event);
+ if(!loc)return;
+ const inside=loc.x>=PH.l&&loc.x<=PH.w-PH.r&&loc.y>=PH.t&&loc.y<=PH.h-PH.b;
+ const svg=$('ph-svg');
+ let cross=svg.querySelector('#ph-cross');
+ if(!inside){if(cross)cross.remove();return;}
+ if(!cross){cross=document.createElementNS('http://www.w3.org/2000/svg','g');cross.id='ph-cross';cross.setAttribute('class','ph-cross');svg.appendChild(cross);}
+ cross.innerHTML=`<line x1="${PH.l}" y1="${loc.y.toFixed(1)}" x2="${PH.w-PH.r}" y2="${loc.y.toFixed(1)}"></line><line x1="${loc.x.toFixed(1)}" y1="${PH.t}" x2="${loc.x.toFixed(1)}" y2="${PH.h-PH.b}"></line>`;
+ const near=phNearest(loc),state=near||Water.statePH(loc.p,loc.h);
+ $('ph-readout').textContent=state.ok?`${near?near.n+' '+near.name:'Markør'}: ${phFmt(state.T-273.15,1)} °C · ${phBar(state.P)} bar · h ${phFmt(state.h,1)} kJ/kg · s ${phFmt(state.s,3)} · v ${phFmt(state.v,state.v>=1?2:5)} m³/kg · x ${phFmt(state.x,3)} · ${state.phase}`:state.error;
+}
+function phCopy(event){
+ const loc=phPointer(event);
+ if(!loc||loc.x<PH.l||loc.x>PH.w-PH.r||loc.y<PH.t||loc.y>PH.h-PH.b)return;
+ const near=phNearest(loc),state=near||Water.statePH(loc.p,loc.h);
+ if(!state.ok){announce(state.error);return;}
+ copyText(phDescribe(state,near?`Punkt ${near.n} ${near.name}`:'Markør'),near?`Punkt ${near.n}`:'Tilstand');
+}
+function phZoom(factor){
+ if(!phView)return;
+ phView=Water.zoomView(phView,factor,(phView.hMin+phView.hMax)/2,Math.sqrt(phView.pMin*phView.pMax));
+ phMode='custom';
+ paintPh();
+}
+function bindPh(){
+ if(!$('view-ph'))return;
+ $('view-ph').addEventListener('click',()=>showDiagram(false));
+ $('view-formulas').addEventListener('click',openFormulas);
+ $('ph').addEventListener('input',event=>{if(event.target.matches('input'))drawPh();});
+ for(const id of ['ph-show-sat','ph-show-x','ph-show-t','ph-show-s','ph-show-v','ph-show-cycle'])$(id).addEventListener('change',paintPh);
+ $('ph-reset').addEventListener('click',()=>{
+  const d=Water.defaults,map={'ph-qe':d.QE,'ph-te':d.TE,'ph-tc':d.TC,'ph-tsh':d.dTSH,'ph-tsc':d.dTSC,'ph-eta':d.eta,'ph-fq':d.fQ,'ph-etav':d.etaVol,'ph-dte':d.dTevap,'ph-dts':d.dTsuc,'ph-tshs':d.dTSHsuc,'ph-dpc':d.dPcond,'ph-dtd':d.dTdis,'ph-dpl':d.dPliq};
+  for(const [id,value] of Object.entries(map))$(id).value=String(value);
+  drawPh();
+ });
+ $('ph-in').addEventListener('click',()=>phZoom(1/1.25));
+ $('ph-out').addEventListener('click',()=>phZoom(1.25));
+ $('ph-fit').addEventListener('click',()=>{phMode='cycle';if(phCycle)phView=Water.frameCycle(phCycle.points);drawPh();});
+ $('ph-wide').addEventListener('click',()=>{phMode='wide';phView=Water.frameWide();paintPh();});
+ $('ph-dome').addEventListener('click',()=>{phMode='dome';phView=Water.frameDome();paintPh();});
+ const svg=$('ph-svg');
+ svg.addEventListener('pointerdown',event=>{
+  if(event.button!==0)return;
+  phDrag={x:event.clientX,y:event.clientY,moved:false,view:phView};
+  try{svg.setPointerCapture(event.pointerId);}catch{}
+  $('ph-chart').classList.add('dragging');
+ });
+ svg.addEventListener('pointermove',event=>{
+  if(!phDrag){phHover(event);return;}
+  const dx=event.clientX-phDrag.x,dy=event.clientY-phDrag.y;
+  if(Math.hypot(dx,dy)>4)phDrag.moved=true;
+  if(!phDrag.moved||!phDrag.view)return;
+  const rect=svg.getBoundingClientRect();
+  const dh=-(dx/rect.width)*(phDrag.view.hMax-phDrag.view.hMin)*PH.w/(PH.w-PH.l-PH.r);
+  const dl=(dy/rect.height)*(Math.log10(phDrag.view.pMax)-Math.log10(phDrag.view.pMin))*PH.h/(PH.h-PH.t-PH.b);
+  phView=Water.panView(phDrag.view,dh,dl);
+  phMode='custom';
+  queuePhPaint();
+ });
+ svg.addEventListener('pointerup',event=>{
+  const click=phDrag&&!phDrag.moved;
+  phDrag=null;
+  $('ph-chart').classList.remove('dragging');
+  if(click)phCopy(event);
+ });
+ svg.addEventListener('pointerleave',()=>{$('ph-svg').querySelector('#ph-cross')?.remove();});
+ svg.addEventListener('dblclick',()=>{$('ph-fit').click();});
+ svg.addEventListener('wheel',event=>{event.preventDefault();const loc=phPointer(event);if(!loc)return;phView=Water.zoomView(phView,event.deltaY>0?1.12:1/1.12,loc.h,loc.p);phMode='custom';queuePhPaint();},{passive:false});
+ if('ResizeObserver' in window)new ResizeObserver(()=>{if(!$('ph').hidden)queuePhPaint();}).observe($('ph-chart'));
+}
+bindPh();
 $('catalog-count').textContent=`${formulaIds.size} opslag · ${db.catalogs.length} fagområder · kildehenvisninger på hvert kort`;
 applyTheme(readStorage('formelopslag.theme.v1','auto'));
 // Preserve a requested link while rendering the initial empty form.
