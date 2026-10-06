@@ -176,6 +176,7 @@ def test_web_export_is_offline_and_does_not_embed_presentation_metadata(tmp_path
     catalog["entries"] = catalog["entries"][:1]
     catalog["entries"][0]["pitfall"] = "</script><script>window.injected=true</script> __SCRIPT__"
     catalog["entries"][0]["explanation"] = "</script> Startstrøm $i(0)=U_s/R$"
+    catalog["entries"][0]["mathcad_metadata"]["function_symbols"] = {"i": "t"}
     target = export_catalogs([catalog], tmp_path / "index.html")
     html = target.read_text()
     payload = json.loads(html.split('<script id="database" type="application/json">')[1].split("</script>")[0])
@@ -188,6 +189,11 @@ def test_web_export_is_offline_and_does_not_embed_presentation_metadata(tmp_path
     assert "Startstrøm" in payload["search_text"][catalog["entries"][0]["id"]]
     assert '<script src=' not in html and 'PPmaker' not in html
     assert html.count('id="database"') == 1
+    exported = payload["catalogs"][0]["entries"][0]["mathcad"]
+    assert exported["formulas"][0]["xml"].startswith("<region")
+    assert exported["main_dimensions_checked"]
+    assert 'id="mathcad-dialog"' in html and 'function mcExport(' in html
+    assert json.loads((tmp_path / "mathcad-coverage.json").read_text())["blockers"] == []
 
 
 def test_standalone_import_and_validation_never_load_powerpoint():
@@ -210,7 +216,7 @@ def test_export_version_changes_with_ui_and_settings(tmp_path, monkeypatch):
     catalog["entries"] = catalog["entries"][:1]
     web = tmp_path / "web"
     web.mkdir()
-    for name in ("index.html", "app.css", "app.js"):
+    for name in ("index.html", "app.css", "app.js", "mathcad.js"):
         (web / name).write_bytes((build.WEB / name).read_bytes())
     monkeypatch.setattr(build, "WEB", web)
 

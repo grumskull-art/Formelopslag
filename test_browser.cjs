@@ -288,7 +288,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
    assert.equal(new URL(page.url()).hash,'');
    // Offline clipboard fallback exposes selectable text if browser permissions deny copying.
    await page.goto(deepLink);
-   await page.evaluate(()=>{document.execCommand=()=>false;});
+   await page.evaluate(()=>{document.execCommand=()=>false;Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('clipboard denied for fallback test');}}});});
    await page.locator('button[data-share]').click();assert(await page.locator('#copy-dialog').isVisible());assert.match(await page.locator('#copy-value').inputValue(),/method=MO04/);await page.locator('#copy-dialog button').click();
    await page.locator('button[data-formula]').click();assert(await page.locator('#copy-dialog').isVisible());assert.match(await page.locator('#copy-value').inputValue(),/P/);await page.locator('#copy-dialog button').click();
    await page.locator('button[data-latex]').click();assert(await page.locator('#copy-dialog').isVisible());assert.equal(await page.locator('#copy-value').inputValue(),await page.evaluate(()=>activeCatalog().entries.find(e=>e.id==='MO04').latex));await page.locator('#copy-dialog button').click();
@@ -309,6 +309,7 @@ const screenshots=fs.mkdtempSync(path.join(os.tmpdir(),'formelopslag-browser-'))
     await qa.route('**/*',route=>new URL(route.request().url()).origin===url.origin?route.continue():route.abort());
     await qa.goto(url.href);await contextQA(qa,'local-server');await live.close();
    }
+   await require('./tests/mathcad_browser.cjs')({browser,htmlPath,screenshots,cases});
    assert.deepEqual(errors,[]);assert.deepEqual(network,[]);
   const result={html_sha256:require('crypto').createHash('sha256').update(fs.readFileSync(htmlPath)).digest('hex'),browser:await browser.version(),method:'Real Chromium, offline file URL; intercepted HTML for hosted URL context',cases,all_codes_found:count,all_structured_routes_found:true,errors,external_requests:network,screenshots};
   fs.writeFileSync(reportPath,JSON.stringify(result,null,2));console.log(JSON.stringify(result));

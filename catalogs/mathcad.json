@@ -1,0 +1,599 @@
+{
+  "version": 1,
+  "bindings": {
+    "el": {
+      "dt": "Δt",
+      "ri": "r_i",
+      "Ukl": "U_kl",
+      "Itotal": "I_total",
+      "eta": "η",
+      "rho": "ρ",
+      "gamma": "γ",
+      "R1": "R_1",
+      "R2": "R_2",
+      "Rs": "R_k",
+      "Rt": "R_t",
+      "RT": "R_T",
+      "alpha": "α_t",
+      "tref": "t",
+      "dT": "ΔT",
+      "P_in": "P_ind",
+      "P_out": "P_ud",
+      "P_mech": "P_mek",
+      "P_loss": "P_tab",
+      "omega": "ω",
+      "n_rpm": "n",
+      "n_hz": "n",
+      "theta": "θ",
+      "dtheta": "Δθ",
+      "Hu": "H_u",
+      "volume": "V",
+      "Q1": "Q_1",
+      "Q2": "Q_2",
+      "Qk": "Q_k",
+      "epsilon": "ε",
+      "epsilon0": "ε_0",
+      "epsilonr": "ε_r",
+      "Ef": "E",
+      "Psi": "Ψ",
+      "Phi": "Φ",
+      "dPhi": "ΔΦ",
+      "Phi_t": "Φ",
+      "mu": "μ",
+      "mu0": "μ_0",
+      "mur": "μ_r",
+      "lm": "l",
+      "Fm": "F_m",
+      "Rm": "R_m",
+      "es": "e_s",
+      "dI": "ΔI",
+      "lactive": "l",
+      "I1": "I_1",
+      "I2": "I_2",
+      "Va": "V_a",
+      "branch_sources": "E_k",
+      "Iin": "I_ind",
+      "Iout": "I_andre,ud",
+      "q0": "q_0",
+      "q_t": "q",
+      "u0": "u_0",
+      "u_t": "u_C",
+      "Us": "U_s",
+      "I_d": "I_a",
+      "nplates": "n",
+      "tau": "τ",
+      "targetU": "u_m",
+      "i_t": "i",
+      "Wc": "W",
+      "U1": "U_1",
+      "i0": "i_0",
+      "i0_out": "i_ud,0"
+    },
+    "tm-heat": {
+      "p_gauge": "p_man",
+      "p_atm": "p_atm",
+      "rho": "ρ",
+      "p1": "p_1",
+      "p2": "p_2",
+      "V1": "V_1",
+      "V2": "V_2",
+      "T1": "T_1",
+      "T2": "T_2",
+      "partials": "p_i",
+      "dU": "ΔU",
+      "dV": "ΔV",
+      "p_path": "p",
+      "cv": "c_v",
+      "cp": "c_p",
+      "dT": "ΔT",
+      "kappa": "κ",
+      "poly_n": "n",
+      "cn": "c_n",
+      "dh": "Δh",
+      "dS": "ΔS",
+      "Qrev_path": "Q_rev",
+      "T_path": "T",
+      "Wout": "W_net",
+      "Qin": "Q_ind",
+      "eta": "η",
+      "TH": "T_H",
+      "TL": "T_L"
+    },
+    "tm-engine": {
+      "Pfuel": "P_tilf",
+      "mdot": "ṁ_b",
+      "hi": "h_i",
+      "Pi": "P_i",
+      "Pb": "P_b",
+      "pi": "p_i",
+      "Vs": "V_s",
+      "rpm": "n",
+      "diameter": "d",
+      "stroke": "s",
+      "torque": "M",
+      "eta_m": "η_m",
+      "eta_t": "η_t",
+      "eta_e": "η_oe",
+      "Ch": "C_h",
+      "cb": "c_b",
+      "ci": "c_i",
+      "Wi": "W_i",
+      "Wout": "A",
+      "dV": "ΔV",
+      "Qin": "Q_1",
+      "Qloss": "Q_2",
+      "eta_ideal": "η_0",
+      "kappa": "κ",
+      "cutoff": "φ",
+      "H_pct": "h",
+      "C_pct": "c",
+      "S_pct": "s",
+      "O_pct": "o",
+      "water_pct": "f",
+      "Lmin": "L_min",
+      "airflow": "ṁ_l",
+      "exhaustflow": "ṁ_RG",
+      "Ptl": "P_TL",
+      "cp_rg": "c_p,RG",
+      "dropT": "ΔT"
+    }
+  },
+  "unit_overrides": {
+    "el": {
+      "Hu": "MJ/kg"
+    },
+    "tm-engine": {
+      "Lmin": "1",
+      "H_pct": "1",
+      "C_pct": "1",
+      "S_pct": "1",
+      "O_pct": "1",
+      "water_pct": "1"
+    }
+  },
+  "entries": {
+    "G06": {"symbols": {"t": "tref"}},
+    "C22": {"symbols": {"forhold": {"label": "Dimensionsløst spændingsforhold i logaritmen", "unit": "1"}}},
+    "P05": {"definition_symbols": ["η_total"], "arrays": ["η_k"], "symbols": {"η_total": "eta", "k": {"label": "Ledindeks k: første og sidste indeks", "unit": "1", "type": "range"}}},
+    "M01": {"definition_symbols": ["W_ind"], "symbols": {"W_ind": "W"}},
+    "E06": {"symbols": {"ΔU_R": "U"}},
+    "E03": {"symbols": {"E": "E"}},
+    "P04": {"symbols": {"P_middel": "P"}},
+    "C26": {"symbols": {"i_ud": "i_t"}},
+    "VH01": {"symbols": {"p_abs": "p"}},
+    "VH28": {"symbols": {"η_C": "eta"}},
+    "W04": {
+      "symbols": {
+        "e": {"label": "Elementarladning e", "unit": "C"},
+        "Q": "Q",
+        "I": "I",
+        "Δt": "dt"
+      }
+    },
+    "I06": {
+      "symbols": {
+        "U_gren": "U",
+        "R_k": "R",
+        "I_k": "I"
+      }
+    },
+    "I04": {
+      "symbols": {
+        "I_middel": "I"
+      }
+    },
+    "N02": {
+      "vector_symbols": [
+        "I_ind",
+        "I_andre,ud",
+        "I_ud"
+      ],
+      "symbols": {
+        "I_x": "I",
+        "I_ud": "I"
+      }
+    },
+    "U07": {
+      "arrays": [
+        "E_k",
+        "R_k",
+        "I_k"
+      ],
+      "symbols": {
+        "E": "E",
+        "R": "R",
+        "I": "I",
+        "k": {
+          "label": "Grenindeks k: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        }
+      }
+    },
+    "E01": {
+      "symbols": {
+        "e_middel": "e",
+        "Φ_slut": "Phi",
+        "Φ_start": "Phi"
+      }
+    },
+    "E02": {
+      "symbols": {
+        "t": "t"
+      },
+      "function_symbols": {
+        "Φ": "t"
+      }
+    },
+    "E05": {
+      "symbols": {
+        "u_L": "U",
+        "i": "I",
+        "t": "t",
+        "e_s,middel": "es",
+        "Δt": "dt",
+        "ΔI": "dI"
+      },
+      "function_symbols": {
+        "i": "t"
+      }
+    },
+    "N01": {
+      "relation": true,
+      "arrays": [
+        "V_b"
+      ],
+      "index_aliases": {
+        "R_ab": {
+          "name": "R",
+          "indices": [
+            "a",
+            "b"
+          ]
+        },
+        "I_ind,a": {
+          "name": "I_ind",
+          "indices": [
+            "a"
+          ]
+        },
+        "V_a": {
+          "name": "V",
+          "indices": [
+            "a"
+          ]
+        }
+      },
+      "symbols": {
+        "V": "U",
+        "R": "R",
+        "I_ind": "I",
+        "I_k": "I",
+        "a": {
+          "label": "Knudeindeks a",
+          "unit": "1"
+        },
+        "b": {
+          "label": "Naboknuder b: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        }
+      }
+    },
+    "N03": {
+      "relation": true,
+      "arrays": [
+        "ΔV_k"
+      ],
+      "symbols": {
+        "n": {"label": "Antal knuder n i det sammenhængende net", "unit": "1"},
+        "ΔV": "U",
+        "k": {
+          "label": "Sløjfeled k: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        },
+        "E": "E",
+        "I": "I",
+        "R": "R"
+      }
+    },
+    "R05": {
+      "symbols": {
+        "α_20": "alpha"
+      }
+    },
+    "R06": {
+      "symbols": {
+        "α_20": "alpha"
+      }
+    },
+    "R07": {
+      "arrays": [
+        "R_k"
+      ],
+      "symbols": {
+        "R_s": "R",
+        "R": "R",
+        "n": {
+          "label": "Antal modstande n",
+          "unit": "1"
+        }
+      }
+    },
+    "R08": {
+      "arrays": [
+        "R_k"
+      ],
+      "symbols": {
+        "R_p": "R",
+        "R": "R",
+        "n": {
+          "label": "Antal modstande n",
+          "unit": "1"
+        }
+      }
+    },
+    "P08": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "M06": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "W05": {
+      "variant_units": [
+        {
+          "H_u": "MJ/kg"
+        },
+        {
+          "H_u": "MJ/m^3"
+        }
+      ],
+      "note": "Massevejen bruger MJ/kg; volumenvejen bruger MJ/m³. Brug en brændværdi for samme brændsel og volumenreference."
+    },
+    "F02": {
+      "symbols": {
+        "Q_k": "Qk"
+      }
+    },
+    "F06": {
+      "symbols": {
+        "Ψ": "Psi"
+      }
+    },
+    "B05": {
+      "symbols": {
+        "F_m": "Fm"
+      }
+    },
+    "B06": {
+      "arrays": [
+        "N_k",
+        "I_k"
+      ],
+      "symbols": {
+        "N": "N",
+        "I": "I",
+        "k": {
+          "label": "Viklingsindeks k: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        }
+      }
+    },
+    "B07": {
+      "arrays": [
+        "R_m,k"
+      ],
+      "index_aliases": {
+        "R_m,k": {
+          "name": "R_m",
+          "indices": [
+            "k"
+          ]
+        }
+      },
+      "symbols": {
+        "R_m,total": "Rm",
+        "k": {
+          "label": "Kernedel k: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        }
+      }
+    },
+    "C41": {
+      "main_latex": "i_0=\\dfrac{U_s-u_0}{R}",
+      "note": "Startværdien i(0) eksporteres som navnet i₀, så den kan defineres uden at omdefinere funktionen i(t)."
+    },
+    "C42": {
+      "main_latex": "i_0=\\dfrac{U_s}{R}",
+      "note": "Startværdien i(0) eksporteres som navnet i₀."
+    },
+    "C43": {
+      "main_latex": "i_{ud,0}=\\dfrac{u_0}{R}",
+      "note": "Startværdien i_ud(0) eksporteres som navnet i_ud,0."
+    },
+    "VH02": {
+      "symbols": {
+        "R": {
+          "label": "Molær gaskonstant R",
+          "unit": "J/(mol*K)"
+        }
+      }
+    },
+    "VH05": {
+      "symbols": {
+        "R": {
+          "label": "Molær gaskonstant R",
+          "unit": "J/(mol*K)"
+        }
+      }
+    },
+    "C25": {"constants": ["e"]},
+    "VH07": {
+      "index_aliases": {"p_i": {"name": "p_del", "indices": ["i"]}},
+      "note": "Partialtryk pᵢ indtastes i vektoren p_del, så totaltrykket p får sit eget navn.",
+      "symbols": {
+        "p_del": "partials",
+        "i": {
+          "label": "Partialtryk i: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        }
+      }
+    },
+    "VH09": {
+      "function_symbols": {
+        "p": "V"
+      }
+    },
+    "VH20": {
+      "symbols": {
+        "R": {
+          "label": "Molær gaskonstant R",
+          "unit": "J/(mol*K)"
+        }
+      }
+    },
+    "VH21": {
+      "symbols": {
+        "Q_n": "Q"
+      }
+    },
+    "VH22": {
+      "main_latex": "\\Delta S=\\int_0^1\\frac{\\frac{\\mathrm{d}Q_{rev}}{\\mathrm{d}\\xi}}{T(\\xi)}\\,d\\xi",
+      "function_symbols": {
+        "Q_rev": "ξ",
+        "T": "ξ"
+      },
+      "symbols": {
+        "ξ": {
+          "label": "Dimensionsløs procesparameter ξ fra 0 til 1",
+          "unit": "1"
+        }
+      },
+      "note": "Procesintegralet fra tilstand 1 til 2 eksporteres ækvivalent som ∫₀¹ Q′rev(ξ)/T(ξ) dξ. Angiv kumulativ reversibel varme Qrev(ξ) og absolut temperatur T(ξ) langs samme proces."
+    },
+    "VH26": {
+      "main_latex": "W_{net}=\\int_0^1 p(\\xi)\\frac{\\mathrm{d}V}{\\mathrm{d}\\xi}\\,d\\xi",
+      "function_symbols": {
+        "p": "ξ",
+        "V": "ξ"
+      },
+      "symbols": {
+        "p": "p",
+        "V": "V",
+        "ξ": {
+          "label": "Dimensionsløs cyklusparameter ξ fra 0 til 1",
+          "unit": "1"
+        }
+      },
+      "note": "Det lukkede kurveintegral eksporteres ækvivalent som ∫₀¹ p(ξ)V′(ξ) dξ. p(ξ) og V(ξ) skal beskrive hele cyklussen i den valgte omløbsretning og slutte i starttilstanden; et enkelt p(V) med ens grænser ville give forkert nul."
+    },
+    "MO03": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "MO04": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "MO06": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "MO07": {
+      "numeric_inputs": {
+        "n": "rpm"
+      }
+    },
+    "MO13": {
+      "coefficient_units": {
+        "3600": "kJ/kWh"
+      },
+      "note": "Den dokumenterede omregningsfaktor eksporteres som 3600 kJ/kWh; c_b i kg/kWh og h_i i kJ/kg."
+    },
+    "MO20": {
+      "coefficient_units": {
+        "1200": "kJ/kg",
+        "337": "kJ/kg",
+        "93": "kJ/kg",
+        "126": "kJ/kg",
+        "25": "kJ/kg"
+      },
+      "note": "Elementandelene indtastes som tal 0–100, fx 11 for 11 masse-%. Empiriske koefficienter mærkes kJ/kg pr. procentpoint efter MOB:167."
+    },
+    "I07": {
+      "arrays": [
+        "G_k",
+        "G_j"
+      ],
+      "symbols": {
+        "G": "G",
+        "j": {
+          "label": "Grenindeks j: første og sidste indeks",
+          "unit": "1",
+          "type": "range"
+        },
+        "k": {
+          "label": "Den ønskede gren k",
+          "unit": "1"
+        }
+      }
+    },
+    "G04": {
+      "symbols": {
+        "d": {
+          "label": "Ledningsdiameter d [m]",
+          "unit": "m"
+        }
+      }
+    },
+    "P06": {
+      "symbols": {
+        "R_ledning": "R"
+      }
+    },
+    "P07": {
+      "symbols": {
+        "W_ud": "W",
+        "W_ind": "W"
+      }
+    },
+    "M05": {
+      "symbols": {
+        "z": {
+          "label": "Antal fulde omdrejninger z",
+          "unit": "1"
+        }
+      }
+    },
+    "F04": {
+      "symbols": {
+        "k": {
+          "label": "Coulombfaktor k = 1/(4πε)",
+          "unit": "N*m^2/C^2"
+        }
+      }
+    },
+    "C11": {
+      "symbols": {
+        "C_1": "C"
+      }
+    },
+    "C30": {
+      "symbols": {
+        "u": "u_t",
+        "q": "Q"
+      }
+    }
+  }
+}

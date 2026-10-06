@@ -773,6 +773,7 @@ dialog button {
   float:right;
 }
 @media print {
+  #mathcad-dialog {display:none!important;}
   :root {
     color-scheme:light;
     --bg:#fff;
@@ -822,3 +823,19 @@ dialog button {
     font-size:16pt;
   }
 }
+
+#mathcad-dialog {width:min(720px,calc(100vw - 32px));max-height:90vh;overflow:auto;box-sizing:border-box;}
+.discovery-item {display:flex;flex-direction:column;gap:8px;min-width:0;}
+.discovery-item .discovery-card {width:100%;flex:1;}
+.discovery-item .card-actions {margin:0;}
+#mathcad-form {display:grid;gap:12px;min-width:0;}
+#mathcad-form h2 {margin:0;}
+#mathcad-form select,#mathcad-form input[type="text"],#mathcad-form textarea {width:100%;min-width:0;box-sizing:border-box;}
+#mathcad-preview {max-width:100%;overflow:auto;}
+.mathcad-input {display:grid;gap:6px;}
+.mathcad-input label {overflow-wrap:anywhere;}
+.mathcad-input input {font:inherit;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--ink);}
+.mathcad-input small {line-height:1.5;}
+.mathcad-actions {display:flex;gap:10px;flex-wrap:wrap;}
+#mathcad-workflow-items {display:grid;gap:10px;}
+#mathcad-workflow-items label {overflow-wrap:anywhere;}
