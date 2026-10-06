@@ -114,4 +114,6 @@ document.addEventListener('click',event=>{const b=event.target.closest('button')
 $('mathcad-formula').addEventListener('change',()=>{mcChooseWorkflow();mcRefresh();});
 $('mathcad-mode').addEventListener('change',mcRefresh);$('mathcad-workflow-items').addEventListener('change',mcRefresh);
 $('mathcad-close').addEventListener('click',()=>{mcRemember();$('mathcad-dialog').close();});
-$('mathcad-form').addEventListener('submit',event=>{event.preventDefault();try{const xml=mcExport();mcRemember();$('mathcad-dialog').close();copyText(xml,'Mathcad');}catch(error){$('mathcad-error').textContent=error.message;}});
+function mcCopy(){try{const xml=mcExport();mcRemember();$('mathcad-dialog').close();copyText(xml,'Mathcad');}catch(error){$('mathcad-error').textContent=error.message;}}
+$('mathcad-copy').addEventListener('click',mcCopy);
+$('mathcad-form').addEventListener('submit',event=>{event.preventDefault();mcCopy();});

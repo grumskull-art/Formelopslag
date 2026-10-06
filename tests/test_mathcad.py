@@ -93,6 +93,18 @@ def test_literals_array_indices_relations_and_function_definitions(catalogs):
     assert all(len(validate_xml(f["xml"]).find(f".//{{{ML}}}define")) == 2 for f in formulas)
 
 
+def test_partial_pressure_vector_does_not_overwrite_total_pressure(catalogs):
+    formula = compile_entry(entry(catalogs, "VH07"))["formulas"][0]
+    assert formula["output"] == "p" and formula["output_type"] == "scalar"
+    assert [(i["name"], i["type"]) for i in formula["inputs"]] == [("p_del", "vector"), ("i", "range")]
+    assert formula["inputs"][0]["quantity"] == "partials"
+    xml = validate_xml(formula["xml"])
+    define = xml.find(f".//{{{ML}}}define")
+    assert define[0].text == "p"
+    array = xml.find(f".//{{{ML}}}indexer/../{{{ML}}}id")
+    assert array.find(f"{{{XAML}}}Span/{{{SUB}}}Subscript").text == "del"
+
+
 @pytest.mark.parametrize("source, expected", [
     (r"-2^2", -4), (r"(-2)^2", 4), (r"2^{-3}", .125),
     (r"\frac{2}{\frac{3}{4}}", 8/3), (r"\frac{2-3}{4+5}", -1/9),

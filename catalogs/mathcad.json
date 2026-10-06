@@ -435,10 +435,10 @@
       }
     },
     "VH07": {
-      "arrays": [
-        "p_i"
-      ],
+      "index_aliases": {"p_i": {"name": "p_del", "indices": ["i"]}},
+      "note": "Partialtryk pᵢ indtastes i vektoren p_del, så totaltrykket p får sit eget navn.",
       "symbols": {
+        "p_del": "partials",
         "i": {
           "label": "Partialtryk i: første og sidste indeks",
           "unit": "1",

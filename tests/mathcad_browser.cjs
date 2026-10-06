@@ -8,11 +8,14 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
   await page.goto(pathToFileURL(htmlPath).href);
   const entries=await page.evaluate(()=>db.catalogs.flatMap(c=>c.entries.map(e=>({catalog:c.id,id:e.id,xml:e.mathcad.formulas[0].xml}))));
   async function open(catalog,id){await page.evaluate(({catalog,id})=>openEntry(catalog,id),{catalog,id});}
-  for(const entry of entries){await open(entry.catalog,entry.id);await page.locator(`[data-mathcad="${entry.id}"]`).click();assert.equal(await page.evaluate(()=>window.__mathcadCopied),entry.xml,entry.id);}
-  cases.push('Mathcad: primary XML copied from all '+entries.length+' configured entries');
+  for(const entry of entries){
+   await open(entry.catalog,entry.id);await page.locator(`[data-mathcad="${entry.id}"]`).click();assert.equal(await page.evaluate(()=>window.__mathcadCopied),entry.xml,entry.id);
+   await options(entry.catalog,entry.id,'formula');await page.evaluate(()=>{window.__mathcadCopied=null;});assert.equal(await copy(),entry.xml,'dialog: '+entry.id);
+  }
+  cases.push('Mathcad: primary XML copied directly and through options from all '+entries.length+' configured entries');
   async function options(catalog,id,mode='inputs'){await open(catalog,id);await page.locator(`#results [data-mathcad-options="${id}"]`).click();await page.selectOption('#mathcad-mode',mode);}
   async function fill(values){for(const [name,value] of Object.entries(values))await page.locator(`[data-mc-input="${name}"]`).fill(String(value));}
-  async function copy(){await page.locator('#mathcad-form button[type="submit"]').click();assert(await page.locator('#mathcad-dialog').isHidden(),await page.locator('#mathcad-error').innerText());return page.evaluate(()=>window.__mathcadCopied);}
+  async function copy(){await page.locator('#mathcad-copy').click();assert(await page.locator('#mathcad-dialog').isHidden(),await page.locator('#mathcad-error').innerText());return page.evaluate(()=>window.__mathcadCopied);}
   async function summary(xml){return page.evaluate(xml=>{
    const d=new DOMParser().parseFromString(xml,'application/xml');if(d.querySelector('parsererror'))throw Error('clipboard XML did not parse');
    const ml='http://schemas.mathsoft.com/math50',ws='http://schemas.mathsoft.com/worksheet50';
@@ -24,12 +27,27 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
     matrixValues:[...d.getElementsByTagNameNS(ml,'matrix')].map(n=>[...n.children].map(c=>c.textContent)),
     matrices:[...d.getElementsByTagNameNS(ml,'matrix')].map(n=>({rows:n.getAttribute('rows'),cols:n.getAttribute('cols')}))};
   },xml);}
+  const inputExports=await page.evaluate(()=>{
+   let count=0;
+   for(const entry of db.catalogs.flatMap(c=>c.entries))for(const formula of entry.mathcad.formulas){
+    mcOpen(entry.id);$('mathcad-formula').value=formula.id;$('mathcad-mode').value='inputs';mcRefresh();
+    for(const info of mcInputInfos([mcSelected()])){
+     const input=[...$('mathcad-inputs').querySelectorAll('[data-mc-input]')].find(i=>i.dataset.mcInput===info.name);
+     input.value=info.type==='range'?'1;2':info.type==='vector'?'1;2':info.type==='matrix'?'1;2\n3;4':'1';
+    }
+    mcParse(mcExport());$('mathcad-dialog').close();count++;
+   }
+   mcDrafts.clear();$('mathcad-inputs').replaceChildren();return count;
+  });
+  assert.equal(inputExports,await page.evaluate(()=>db.catalogs.reduce((n,c)=>n+c.entries.reduce((m,e)=>m+e.mathcad.formulas.length,0),0)));
+  cases.push('Mathcad options: input exports from all '+inputExports+' formula choices');
   await options('el','R09');assert.deepEqual(await page.locator('#mathcad-inputs input').evaluateAll(els=>els.map(i=>i.value)),['','','']);
-  await page.locator('#mathcad-form button[type="submit"]').click();assert.match(await page.locator('#mathcad-error').innerText(),/Indtast/);
-  await fill({E:'<script>',U_kl:10,I:1});await page.locator('#mathcad-form button[type="submit"]').click();assert.match(await page.locator('#mathcad-error').innerText(),/endeligt tal/);
+  await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/Indtast/);
+  await fill({E:'<script>',U_kl:10,I:1});await page.locator('#mathcad-copy').click();assert.match(await page.locator('#mathcad-error').innerText(),/endeligt tal/);
   await fill({E:'12,4',U_kl:'11,2',I:6});const reference=await summary(await copy());assert.equal(reference.root,'worksheet');assert.equal(reference.regions,5);assert.deepEqual(reference.left,['E','Ukl','I','ri']);assert.equal(reference.right[0],'12.4V');assert(reference.labels.some(n=>n.text==='Ω'&&n.label==='UNIT'));assert(reference.labels.every(n=>n.contextual===null));
   await options('el','R09');await fill({E:12,U_kl:10,I:1});await copy();
   await options('el','R07');await fill({R:'200;160;140',n:3});const arrays=await summary(await copy());assert.equal(arrays.left[0],'ORIGIN');assert.deepEqual(arrays.matrices,[{rows:'3',cols:'1'}]);
+  await options('tm-heat','VH07');await fill({p_del:'200000;300000',i:'1;2'});const pressure=await summary(await copy());assert.deepEqual(pressure.left,['ORIGIN','pdel','i','p']);assert.equal(pressure.matrices.length,1);
   await options('el','P05','formula');await page.selectOption('#mathcad-formula',await page.locator('#mathcad-formula option').filter({hasText:'Faglig bemærkning'}).first().getAttribute('value'));await page.selectOption('#mathcad-mode','inputs');await fill({'η':'0,9;0,8',k:'1;2'});const product=await copy();assert(product.includes('<product'));assert((await summary(product)).matrices.length===1);
   await options('el','U07','workflow');await page.locator('#mathcad-workflow-items label').filter({hasText:/I_k/}).locator('input').check();await fill({E:'12;0',R:'6;12',k:'1;2'});const sequence=await summary(await copy());assert(sequence.left.includes('Va'));assert.equal(sequence.left.at(-1),'Ik');
   await options('el','N01');await fill({V:'12;0',R:'6;8\n12;24',I_ind:'1;0',a:1,b:'1;2'});const matrix=await summary(await copy());assert(matrix.matrices.some(m=>m.rows==='2'&&m.cols==='2'));assert(matrix.matrixValues.some(values=>JSON.stringify(values)===JSON.stringify(['6','12','8','24'])));
@@ -47,10 +65,29 @@ module.exports=async function({browser,htmlPath,screenshots,cases}){
   await page.locator('#results [data-mathcad="R09"]').click();const legacy=await page.evaluate(()=>window.__legacyCopy);assert.equal(legacy.text,entries.find(e=>e.id==='R09').xml);assert.deepEqual(legacy.types,['text/plain']);assert(legacy.prevented);
   assert(await page.evaluate(()=>{const data=new DataTransfer(),event=new ClipboardEvent('copy',{clipboardData:data,cancelable:true});document.dispatchEvent(event);return !event.defaultPrevented&&!data.types.length;}));
   await page.evaluate(()=>{document.execCommand=()=>{throw Error('copy blocked');};});await page.locator('#results [data-mathcad="R09"]').click();assert(await page.locator('#copy-dialog').isVisible());assert.equal(await page.locator('#copy-value').inputValue(),legacy.text);assert(await page.locator('#copy-value').evaluate(i=>i.selectionStart===0&&i.selectionEnd===i.value.length));await page.locator('#copy-dialog button').click();
+  await options('el','R09','formula');await page.locator('#mathcad-copy').click();assert(await page.locator('#mathcad-dialog').isHidden());assert(await page.locator('#copy-dialog').isVisible());assert.equal(await page.locator('#copy-value').inputValue(),legacy.text);assert(await page.locator('#copy-value').evaluate(i=>i.selectionStart===0&&i.selectionEnd===i.value.length));await page.locator('#copy-dialog button').click();
   assert(await page.evaluate(()=>{const event=new ClipboardEvent('copy',{clipboardData:new DataTransfer(),cancelable:true});document.dispatchEvent(event);return !event.defaultPrevented;}));
   await page.setViewportSize({width:390,height:844});await options('el','R09');await page.screenshot({path:path.join(screenshots,'mathcad-mobile.png'),fullPage:true});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-  await page.setViewportSize({width:320,height:720});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert(await page.locator('#mathcad-form button[type="submit"]').isVisible());await page.locator('#mathcad-close').click();
+  await page.setViewportSize({width:320,height:720});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert(await page.locator('#mathcad-copy').isVisible());await page.locator('#mathcad-close').click();
   cases.push('Mathcad: search/saved/deep links, text/plain legacy cleanup, Ctrl+C fallback and mobile 320/390px offline');
+  const nativeContext=await browser.newContext({permissions:['clipboard-read','clipboard-write'],offline:true});
+  try{
+   for(const legacyMode of [false,true])for(const mode of ['formula','inputs']){
+    const native=await nativeContext.newPage();
+    native.on('pageerror',e=>errors.push(e.message));native.on('console',e=>{if(e.type()==='error')errors.push(e.text());});native.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+    await native.addInitScript(()=>{document.addEventListener('submit',event=>{if(event.target.id==='mathcad-form'){event.preventDefault();event.stopImmediatePropagation();}},true);});
+    await native.goto(pathToFileURL(htmlPath).href+'#catalog=el&seek=ri&method=R09:0');
+    await native.evaluate(async legacyMode=>{await navigator.clipboard.writeText('sentinel');if(legacyMode)navigator.clipboard.writeText=async()=>{throw Error('denied');};},legacyMode);
+    await native.locator('#results [data-mathcad-options="R09"]').click();await native.selectOption('#mathcad-mode',mode);
+    if(mode==='inputs')for(const [name,value] of Object.entries({E:'12',U_kl:'10',I:'1'}))await native.locator(`[data-mc-input="${name}"]`).fill(value);
+    assert.equal(await native.locator('#mathcad-copy').getAttribute('type'),'button');await native.locator('#mathcad-copy').click();assert(await native.locator('#mathcad-dialog').isHidden());
+    await native.locator('#action-status').filter({hasText:'Mathcad kopieret.'}).waitFor();
+    const copied=await native.evaluate(()=>navigator.clipboard.readText());
+    if(mode==='formula')assert.equal(copied,entries.find(e=>e.id==='R09').xml);else{const parsed=await summary(copied);assert.equal(parsed.regions,5);assert.deepEqual(parsed.left,['E','Ukl','I','ri']);}
+    await native.close();
+   }
+   cases.push('Mathcad options: real Chromium clipboard and real legacy copy for formula/inputs, with form submissions blocked');
+  }finally{await nativeContext.close();}
   assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
  }finally{await context.close();}
 };

@@ -6,6 +6,7 @@ Ctrl+V. “Mathcad-valg” vælger en alternativ beregningsvej, egne inputdefini
 et udvalg af opslagets beregningsformler eller det eksisterende regneeksempel.
 Formelvælgeren indeholder også matematik fra omregninger, bemærkninger og forklaringer.
 De samme handlinger findes i søgeresultater, gemte opslag og direkte links.
+Dialogens kopiknap udfører kopieringen direkte ved klik, uden formularindsendelse.
 Den genererede `index.html` indeholder eksportdata og hele brugerfladen offline.
 
 ## Input og beregningsforløb
@@ -23,6 +24,7 @@ en regression med en ikke-symmetrisk matrix kontrollerer rækkefølgen.
 En indekssekvens indtastes som `første;sidste` og eksporteres som et Mathcad-range.
 Tal som R₁ er navneindeks, medmindre opslagets eksplicitte metadata angiver array.
 Rₖ under en sum og R_ab i knudeligningen er derimod array-/matrixindeks.
+VH07 bruger vektoren p_del til partialtryk, så summens totaltryk p har sit eget navn.
 
 Et funktionsinput er et taludtryk i den dimensionsløse parameter x. Dialogen
 angiver parameterens normalisering og funktionsværdiernes enhed: fx x=t/s og
@@ -115,6 +117,9 @@ Chromium-testen kopierer hver hovedformel i offline-HTML og undersøger XML,
 inputvalidering, arbejdsrækkefølge, avancerede input, søgeresultater/gemte opslag,
 direkte links, navigator.clipboard, text/plain-copy-event og lytteroprydning samt
 markeret Ctrl+C-fallback. Desktop og mobil 320/390 px kontrolleres.
+Begge kopiknapper kontrolleres for alle 176 opslag; alle 569 formelvalg kan
+eksporteres med input. Dialogen testes desuden med Chromiums faktiske udklipsholder,
+både moderne API og ægte legacy-copy, mens formularindsendelse er blokeret.
 
 Native-indsættelse er endnu ikke kørt i dette miljø, hvor Prime ikke findes.
 Prøvepakken indeholder referenceforløbet med forventet 2 Ω og repræsentanter
