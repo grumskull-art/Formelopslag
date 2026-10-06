@@ -1,5 +1,6 @@
 {
   "project_root": ".",
+  "mathcad_metadata": "catalogs/mathcad.json",
   "feedback_email": "Grumskull@gmail.com",
   "source_base_url": "https://github.com/grumskull-art/Formelopslag/blob/main/",
   "catalogs": [

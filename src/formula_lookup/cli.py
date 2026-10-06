@@ -9,6 +9,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from .build import export_catalogs, validate_catalogs
+from .mathcad import attach_metadata
 
 
 class PreviewHandler(SimpleHTTPRequestHandler):
@@ -45,6 +46,11 @@ def load_catalogs(config):
                 if source.get("sha256") and hashlib.sha256(path.read_bytes()).hexdigest() != source["sha256"]:
                     raise ValueError("Kildens kontrolsum har ændret sig: " + source["id"])
             catalogs.append(catalog)
+    if settings.get("mathcad_metadata"):
+        metadata_path = (root / settings["mathcad_metadata"]).resolve()
+        if not metadata_path.is_relative_to(root):
+            raise ValueError("Mathcad-metadata skal ligge i projektmappen.")
+        attach_metadata(catalogs, json.loads(metadata_path.read_text(encoding="utf-8")))
     validate_catalogs(catalogs)
     return catalogs, settings
 

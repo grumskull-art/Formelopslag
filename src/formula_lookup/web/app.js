@@ -262,7 +262,7 @@ const discoveryIndex=db.catalogs.flatMap(c=>[
  ...Object.entries(c.unavailable_targets||{}).map(([key,gap])=>({catalog:c,seek:key,gap,text:[c.topic,c.quantities[key],gap].join(' ')}))
 ]);
 function announce(message){clearTimeout(noticeTimer);$('action-status').textContent=message;noticeTimer=setTimeout(()=>{$('action-status').textContent='';},4500);}
-function cardActions(entry,method){return `<div class="card-actions"><button type="button" data-save="${esc(entry.id)}" aria-pressed="${savedEntries.has(entry.id)}" aria-label="Gem ${esc(entry.id)}">${savedEntries.has(entry.id)?'Gemt':'Gem opslag'}</button><button type="button" data-share="${esc(method)}">Kopiér link</button><button type="button" data-formula="${esc(entry.latex)}">Kopiér som tekst</button><button type="button" data-latex="${esc(entry.latex)}">Kopiér LaTeX</button></div>`;}
+function cardActions(entry,method){return `<div class="card-actions"><button type="button" data-save="${esc(entry.id)}" aria-pressed="${savedEntries.has(entry.id)}" aria-label="Gem ${esc(entry.id)}">${savedEntries.has(entry.id)?'Gemt':'Gem opslag'}</button><button type="button" data-share="${esc(method)}">Kopiér link</button><button type="button" data-mathcad="${esc(entry.id)}">Kopiér til Mathcad</button><button type="button" data-mathcad-options="${esc(entry.id)}">Mathcad-valg</button><button type="button" data-formula="${esc(entry.latex)}">Kopiér som tekst</button><button type="button" data-latex="${esc(entry.latex)}">Kopiér LaTeX</button></div>`;}
 function renderDiscovery(){
  const query=$('global-search').value.trim();
  $('saved-count').textContent=savedEntries.size;
@@ -273,7 +273,7 @@ function renderDiscovery(){
  const rank=item=>normalize(item.entry?.id)===normalize(query)?3:matchesQuantity(item,item.seek)?2:item.entry?.lookup.given_sets.flat().some(k=>matchesQuantity(item,k))?1:0;
  found.sort((a,b)=>rank(b)-rank(a));
  $('discovery-status').textContent=found.length?`${found.length} ${found.length===1?'resultat':'resultater'} på tværs af fag · viser ${Math.min(discoveryLimit,found.length)}`:savedOnly&&!savedEntries.size?'Du har ingen gemte opslag endnu. Åbn en formel og vælg “Gem opslag”.':'Ingen resultater. Prøv en størrelse, et emne eller en formelkode; fx strøm eller Carnot.';
- $('discovery-results').innerHTML=found.slice(0,discoveryLimit).map(item=>`<button type="button" class="discovery-card" data-catalog="${esc(item.catalog.id)}" data-entry="${esc(item.entry?.id||'')}" data-target="${esc(item.seek)}"><span>${esc(item.catalog.discipline+' · '+item.catalog.topic)}${item.gap?' · Kildehul':''}</span><strong>${esc(item.entry?item.entry.id+' · '+item.entry.seek:item.catalog.quantities[item.seek])}</strong><span>${esc(item.gap?'Kildegrundlag mangler – se afgrænsningen':item.entry.given)}</span></button>`).join('');
+ $('discovery-results').innerHTML=found.slice(0,discoveryLimit).map(item=>`<div class="discovery-item"><button type="button" class="discovery-card" data-catalog="${esc(item.catalog.id)}" data-entry="${esc(item.entry?.id||'')}" data-target="${esc(item.seek)}"><span>${esc(item.catalog.discipline+' · '+item.catalog.topic)}${item.gap?' · Kildehul':''}</span><strong>${esc(item.entry?item.entry.id+' · '+item.entry.seek:item.catalog.quantities[item.seek])}</strong><span>${esc(item.gap?'Kildegrundlag mangler – se afgrænsningen':item.entry.given)}</span></button>${item.entry?`<div class="card-actions"><button type="button" data-mathcad="${esc(item.entry.id)}">Kopiér til Mathcad</button><button type="button" data-mathcad-options="${esc(item.entry.id)}">Mathcad-valg</button></div>`:''}</div>`).join('');
  $('show-more').hidden=found.length<=discoveryLimit;
 }
 function openCatalog(catalogId){
@@ -315,9 +315,12 @@ function applyHash(){
  }finally{restoring=false;}syncUrl();
 }
 async function copyText(text,label){
- try{if(navigator.clipboard&&location.protocol!=='file:'){await navigator.clipboard.writeText(text);announce(label+' kopieret.');return;}}catch{}
+ try{if(navigator.clipboard){await navigator.clipboard.writeText(text);announce(label+' kopieret.');return;}}catch{}
  const input=document.createElement('textarea');input.value=text;input.setAttribute('aria-label',label);input.style.cssText='position:fixed;left:0;top:0;opacity:0';document.body.append(input);
- const previous=document.activeElement;input.focus();input.select();let copied=false;try{copied=document.execCommand('copy');}catch{}input.remove();previous?.focus({preventScroll:true});
+ const previous=document.activeElement;input.focus();input.select();let copied=false;
+ const handler=event=>{if(event.clipboardData){event.clipboardData.setData('text/plain',text);event.preventDefault();copied=true;}};
+ document.addEventListener('copy',handler);
+ try{copied=document.execCommand('copy')||copied;}catch{}finally{document.removeEventListener('copy',handler);input.remove();previous?.focus({preventScroll:true});}
  if(copied)announce(label+' kopieret.');else{$('copy-label').textContent=label;$('copy-value').value=text;$('copy-dialog').showModal();$('copy-value').focus();$('copy-value').select();}
 }
 function resetChoices(all=false,quiet=false){

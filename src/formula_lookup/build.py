@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .catalog import validate_catalog, validate_catalog_sources
 from .math_render import MATH_STYLE, formula_png, math_blocks, markup_search_text, math_search_text
+from .mathcad import compile_entry
 
 WEB = Path(__file__).parent / "web"
 
@@ -19,6 +20,9 @@ def validate_catalogs(catalogs):
     for catalog in catalogs:
         validate_catalog(catalog)
         validate_catalog_sources(catalog)
+        for entry in catalog["entries"]:
+            if entry.get("mathcad_metadata"):
+                compile_entry(entry)
         ids.extend(e["id"] for e in catalog["entries"])
     if len(set(ids)) != len(ids):
         raise ValueError("Formelkoder skal være unikke på tværs af fag.")
@@ -29,6 +33,8 @@ def validate_catalogs(catalogs):
 def export_catalogs(catalogs, output, settings=None, cache=None):
     from PIL import Image
     validate_catalogs(catalogs)
+    from .mathcad_report import reports
+    coverage, coverage_csv, probes = reports(catalogs)
     catalogs = copy.deepcopy(catalogs)
     for catalog in catalogs:
         catalog.setdefault("notes", [])
@@ -36,12 +42,16 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
             source.setdefault("pages", len(source.get("slides", [])))
             source.pop("slides", None)  # Only citations belong in the public app.
         for entry in catalog["entries"]:
+            entry["mathcad"] = compile_entry(entry)
+            # The inventory is written separately; the offline UI needs only XML.
+            entry["mathcad"].pop("coverage")
+            entry.pop("mathcad_metadata", None)
             for field in ("page", "card_slide_id", "index_slide_id"):
                 entry.pop(field, None)
     payload = {"catalogs": catalogs, "math_style": MATH_STYLE, "math_assets": {}, "search_text": {}}
     payload["data_hash"] = hashlib.sha256(json.dumps(catalogs, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
     settings = settings or {}
-    version_content = b"".join(WEB.joinpath(name).read_bytes() for name in ("index.html", "app.css", "app.js"))
+    version_content = b"".join(WEB.joinpath(name).read_bytes() for name in ("index.html", "app.css", "app.js", "mathcad.js"))
     version_content += json.dumps(settings, ensure_ascii=False, sort_keys=True).encode()
     version_content += payload["data_hash"].encode()
     payload["cheatsheet_version"] = hashlib.sha256(version_content).hexdigest()[:12]
@@ -68,8 +78,12 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
     html = WEB.joinpath("index.html").read_text(encoding="utf-8")
     # Replace the JSON last so catalog text cannot become a template instruction.
     html = html.replace("__STYLES__", WEB.joinpath("app.css").read_text(encoding="utf-8"))
-    html = html.replace("__SCRIPT__", WEB.joinpath("app.js").read_text(encoding="utf-8"))
+    script = WEB.joinpath("app.js").read_text(encoding="utf-8") + "\n" + WEB.joinpath("mathcad.js").read_text(encoding="utf-8")
+    html = html.replace("__SCRIPT__", script)
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(html.replace("__DATABASE__", serialized), encoding="utf-8")
+    output.with_name("mathcad-coverage.json").write_text(json.dumps(coverage, ensure_ascii=False, indent=2), encoding="utf-8")
+    output.with_name("mathcad-coverage.csv").write_text(coverage_csv, encoding="utf-8")
+    output.with_name("mathcad-probes.html").write_text(probes, encoding="utf-8")
     return output
