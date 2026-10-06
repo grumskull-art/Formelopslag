@@ -680,12 +680,12 @@
       "formula": "E_k=0",
       "export_formula": "E_k=0",
       "status": "supported-structured",
-      "nodes": "define,index,number,variable",
+      "nodes": "define,index,number,operator,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "a76113ce1003150ef35e6c0b9660b85be82176b2ef47151780970586cd6cef1e"
+      "xml_sha256": "74c44772bc245a1396fc100b51b4bbd242c7b5d130ac4047826772c53c82fdf4"
     },
     {
       "catalog": "el",
@@ -1520,12 +1520,12 @@
       "formula": "I=0",
       "export_formula": "I=0",
       "status": "supported-structured",
-      "nodes": "define,number,variable",
+      "nodes": "define,number,operator,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "7d7bad2cb00b3e53ac0fb3ac3612c7a5bdb33bd5ca77851752d006238187215c"
+      "xml_sha256": "09be96addec1e41d45323f1603a9927fcb44c7ab326c3927b8403d7247090247"
     },
     {
       "catalog": "el",
@@ -1690,7 +1690,7 @@
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "6ac2050315be86bac67f4975e9b4bca86ced0f0007e16c8deb4eaf25fac4351e"
+      "xml_sha256": "b1b02886b3eaef9df478be5fb3f625186f1eef8e6d568fda9349e5370febc391"
     },
     {
       "catalog": "el",
@@ -2300,12 +2300,12 @@
       "formula": "M[\\mathrm{N}\\cdot\\mathrm{m}]\\approx9550\\dfrac{P[\\mathrm{kW}]}{n[\\mathrm{rpm}]}",
       "export_formula": "M[\\mathrm{N}\\cdot\\mathrm{m}]\\approx9550\\dfrac{P[\\mathrm{kW}]}{n[\\mathrm{rpm}]}",
       "status": "supported-structured",
-      "nodes": "number,operator,relation,unit,variable",
+      "nodes": "eval,number,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "28e7fbb27d1503e7ed59e1a0a7ffda5e2c43170a7367f5efffae81679d9964c1"
+      "xml_sha256": "9f1169b08d49a98d4c4bee1162df22f017ca1e94af9d740a8e4a6de145f912b2"
     },
     {
       "catalog": "el",
@@ -3500,12 +3500,12 @@
       "formula": "\\mu\\approx\\mu_0",
       "export_formula": "\\mu\\approx\\mu_0",
       "status": "supported-structured",
-      "nodes": "define,variable",
+      "nodes": "eval,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "acf84f2f9cb30778861bcadae80cd0d4428f1eb7aafff04c97a2d64bb0625dcf"
+      "xml_sha256": "44077b4ddfba1a911c51223c88c794f477459c42731e819ff303014966e02f94"
     },
     {
       "catalog": "el",
@@ -3515,12 +3515,12 @@
       "formula": "B\\approx2\\cdot10^{-7}\\,\\dfrac{\\mathrm{H}}{\\mathrm{m}}\\dfrac{I}{a}",
       "export_formula": "B\\approx2\\cdot10^{-7}\\,\\dfrac{\\mathrm{H}}{\\mathrm{m}}\\dfrac{I}{a}",
       "status": "supported-structured",
-      "nodes": "define,number,operator,unit,variable",
+      "nodes": "eval,number,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "80b0261646c54d89db47aa0f29ebd6adee454d88a89c6e08696016e3fb9c1970"
+      "xml_sha256": "6b539b6da74c61a4eddfe8f01aa936b0df7ad8e3bae105dd73b0bfe255b72229"
     },
     {
       "catalog": "el",
@@ -3800,12 +3800,12 @@
       "formula": "\\mu_r\\approx1",
       "export_formula": "\\mu_r\\approx1",
       "status": "supported-structured",
-      "nodes": "define,number,variable",
+      "nodes": "eval,number,override",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "46007925d276c22fd256702e811af820ae7c4b373710d39a601a5fdc595aa2e9"
+      "xml_sha256": "33e1145fd2598d7652a3050994bb49ecd381bcaaa9262c05b778b35851d2116b"
     },
     {
       "catalog": "el",
@@ -4130,12 +4130,12 @@
       "formula": "|F|\\approx2\\cdot10^{-7}\\,\\dfrac{\\mathrm{H}}{\\mathrm{m}}\\dfrac{|I_1I_2|l}{a}",
       "export_formula": "|F|\\approx2\\cdot10^{-7}\\,\\dfrac{\\mathrm{H}}{\\mathrm{m}}\\dfrac{|I_1I_2|l}{a}",
       "status": "supported-structured",
-      "nodes": "define,number,operator,unit,variable",
+      "nodes": "eval,number,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "179170d6831e15bd70648aa81e80e99a0f0f97d90594a0d04053fa4262891316"
+      "xml_sha256": "b3cbe3cdc27ea6f943fe0447e5e0a9db87e2a82f6f6eb872dab268cb4ffaedca"
     },
     {
       "catalog": "el",
@@ -4430,12 +4430,12 @@
       "formula": "\\varepsilon=\\varepsilon_0\\varepsilon_r\\,[\\mathrm{F}/\\mathrm{m}]",
       "export_formula": "\\varepsilon=\\varepsilon_0\\varepsilon_r\\,[\\mathrm{F}/\\mathrm{m}]",
       "status": "supported-structured",
-      "nodes": "operator,relation,unit,variable",
+      "nodes": "operator,relation,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "1b2a709054a51adc60089c962f2d5a4c9641c724aa7ffd54745f8ac179413227"
+      "xml_sha256": "dfaeee1cbcbfcd0c93d8de123683b3a91cab61812a465aa7c04b1b4c034a9cd7"
     },
     {
       "catalog": "el",
@@ -4685,12 +4685,12 @@
       "formula": "\\varepsilon_r\\,[1]",
       "export_formula": "\\varepsilon_r\\,[1]",
       "status": "supported-structured",
-      "nodes": "number,operator,variable",
+      "nodes": "eval,number,override,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "1b47fe0946c31d0eca30d691013a447859cc7dca520eb5f02a64be176c1cefad"
+      "xml_sha256": "9cabf57b7cdb396196e2ac32f64d17d46be882085dc36ac60e9b58b8ee00dcb9"
     },
     {
       "catalog": "el",
@@ -4745,12 +4745,12 @@
       "formula": "n\\,[1]",
       "export_formula": "n\\,[1]",
       "status": "supported-structured",
-      "nodes": "number,operator,variable",
+      "nodes": "eval,number,override,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "53612fd12c3533c0eb5f76fbdec838a28ac6e8d80e4699f8cfe2c9c1071a2401"
+      "xml_sha256": "364870227f03d4287d77a33f72497331e10f8aaf3f2d8297ec00dd1329e84657"
     },
     {
       "catalog": "el",
@@ -4760,12 +4760,12 @@
       "formula": "A\\,[\\mathrm{m}^2]",
       "export_formula": "A\\,[\\mathrm{m}^2]",
       "status": "supported-structured",
-      "nodes": "number,operator,unit,variable",
+      "nodes": "eval,number,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "3935ad20b0932cd914b8b1a515b403a6935e05025c953efd74fba2fdb9cd190a"
+      "xml_sha256": "8e37788a689726eebb8c6c2821c5c03768b6a797286847608a7bd825cbd70462"
     },
     {
       "catalog": "el",
@@ -4775,12 +4775,12 @@
       "formula": "a\\,[\\mathrm{m}]",
       "export_formula": "a\\,[\\mathrm{m}]",
       "status": "supported-structured",
-      "nodes": "operator,unit,variable",
+      "nodes": "eval,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "61d9ebe463e97086f0bf3cc318534271add3bda699eb93835aa3a2652d8b002c"
+      "xml_sha256": "190706a271c762be2cae8c742ae958150cd1ff60803e6e5239231afba93f40fa"
     },
     {
       "catalog": "el",
@@ -4820,12 +4820,12 @@
       "formula": "n\\,[1]",
       "export_formula": "n\\,[1]",
       "status": "supported-structured",
-      "nodes": "number,operator,variable",
+      "nodes": "eval,number,override,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "67472ee70c4929af0e52cbf0f394c408c7c2c9371d609fa22ec0cef96670f1fd"
+      "xml_sha256": "c6de6f2a33b14babe729fdf76c95c0907eb4539c6945c622619e3282454b7928"
     },
     {
       "catalog": "el",
@@ -5240,12 +5240,12 @@
       "formula": "e^{-1}\\approx0{,}3679",
       "export_formula": "e^{-1}\\approx0{,}3679",
       "status": "supported-structured",
-      "nodes": "constant,number,operator,relation",
+      "nodes": "constant,eval,number,operator,override,placeholder",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "0fa8c475c6225caca209e70a56129c4bccc18d79905be867220425d8a115f5ad"
+      "xml_sha256": "0252fc18e6d3bdb2fb7a788e9be87d806bfab861e01e7c59115c52e578621187"
     },
     {
       "catalog": "el",
@@ -5345,12 +5345,12 @@
       "formula": "u_0=0",
       "export_formula": "u_0=0",
       "status": "supported-structured",
-      "nodes": "define,number,variable",
+      "nodes": "define,number,operator,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "f45c75d171a2157a132ad48bc0c5186fd0e0e1058ee6bc33f9a49235a7533e97"
+      "xml_sha256": "1c021cd62277b1dd702e7562b0ed44ad6262281070b822e02316ad82e37fb156"
     },
     {
       "catalog": "el",
@@ -5375,12 +5375,12 @@
       "formula": "RC\\,[\\mathrm{s}]",
       "export_formula": "RC\\,[\\mathrm{s}]",
       "status": "supported-structured",
-      "nodes": "operator,unit,variable",
+      "nodes": "eval,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "a90ea06574f2fcdf31daa389a972dae92eabfbc02c926034b9154d47bedb2196"
+      "xml_sha256": "c03e2e142d01c28db9b89a6cb4e9bd7eb6b12c14f892575f93572fb574a34dbc"
     },
     {
       "catalog": "el",
@@ -5390,12 +5390,12 @@
       "formula": "t/(RC)\\,[1]",
       "export_formula": "t/(RC)\\,[1]",
       "status": "supported-structured",
-      "nodes": "number,operator,parens,variable",
+      "nodes": "eval,number,operator,override,parens,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "ca0e42b265dbf7d47ffdc90f5a3d44529bb067e8b5ba90bdfd872591e8edf077"
+      "xml_sha256": "15f7b3d32394037bf82b79de8c85448e33bb77541d978f713eff02d6a32b8583"
     },
     {
       "catalog": "el",
@@ -5630,12 +5630,12 @@
       "formula": "\\ln(\\mathrm{forhold})\\,[1]",
       "export_formula": "\\ln(\\mathrm{forhold})\\,[1]",
       "status": "supported-structured",
-      "nodes": "call,number,operator,parens,variable",
+      "nodes": "call,eval,number,override,parens,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "2e75d2cc9b3478a93d5360aaca5b34a7b2976555dc06f99549e234a61877f2a3"
+      "xml_sha256": "aa4eb9b26b4f7efef458d6c1a4db607293723bc0048c1939a618036caf69ef7f"
     },
     {
       "catalog": "el",
@@ -5780,12 +5780,12 @@
       "formula": "u_C(\\tau)=u_0/e",
       "export_formula": "u_C(\\tau)=u_0/e",
       "status": "supported-structured",
-      "nodes": "call,operator,relation,variable",
+      "nodes": "call,constant,operator,relation,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "0e65fa291cee439d3e6f4c1b23397406775ec8e9ae1ea91716a6388ee1832517"
+      "xml_sha256": "7fc87c867faebeb3f41870ab9e77ab2777a8b771def05ada0702024dbb8162ec"
     },
     {
       "catalog": "el",
@@ -5810,12 +5810,12 @@
       "formula": "RC\\,[\\mathrm{s}]",
       "export_formula": "RC\\,[\\mathrm{s}]",
       "status": "supported-structured",
-      "nodes": "operator,unit,variable",
+      "nodes": "eval,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "c1eb91e503b40be9e43937785770fe8883554bac1e680cb11b8a49f8490e607a"
+      "xml_sha256": "6c888a8f51b05e4b53475cf5e019b25488523777948a85fcf373edeb5bf425a3"
     },
     {
       "catalog": "el",
@@ -5825,12 +5825,12 @@
       "formula": "t/(RC)\\,[1]",
       "export_formula": "t/(RC)\\,[1]",
       "status": "supported-structured",
-      "nodes": "number,operator,parens,variable",
+      "nodes": "eval,number,operator,override,parens,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "6f24c369cc22e929f0b55cacd7add70d593424ab106fa40a27408cd7962fc20a"
+      "xml_sha256": "9bc3cb0eb54e257157d31bd9d986efd95a3ff942051210709ef3d470ee7b6e7c"
     },
     {
       "catalog": "el",
@@ -6005,12 +6005,12 @@
       "formula": "\\ln(u_m/u_0)\\,[1]",
       "export_formula": "\\ln(u_m/u_0)\\,[1]",
       "status": "supported-structured",
-      "nodes": "call,number,operator,parens,variable",
+      "nodes": "call,eval,number,operator,override,parens,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "1273e6179002c2a476ea768bbdc9d5d160492b79fcb1c869a8fc3f9b9164fa1e"
+      "xml_sha256": "41437e2a99e17426148334bbecaaafa87a30314052e68586f6e3dc9bb034b494"
     },
     {
       "catalog": "el",
@@ -6665,12 +6665,12 @@
       "formula": "A\\,[\\mathrm{m}^2]",
       "export_formula": "A\\,[\\mathrm{m}^2]",
       "status": "supported-structured",
-      "nodes": "number,operator,unit,variable",
+      "nodes": "eval,number,operator,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "e3a50e21cdc7d66788d4e0d53437d2e2defb95f32023ec2015237b522c72740a"
+      "xml_sha256": "e227193a09713444675450e94e26d7ec7abbe57a32a97e27fbe4e1495d990077"
     },
     {
       "catalog": "el",
@@ -6710,12 +6710,12 @@
       "formula": "a\\,[\\mathrm{m}]",
       "export_formula": "a\\,[\\mathrm{m}]",
       "status": "supported-structured",
-      "nodes": "operator,unit,variable",
+      "nodes": "eval,override,unit,variable",
       "dimensions_checked": false,
       "export_numerically_checked": false,
       "source_example_arithmetic_checked": false,
       "native_tested": false,
-      "xml_sha256": "00dd0597184647819d9a9ebd9d72254231713631a05f7195ba00c9125164a258"
+      "xml_sha256": "c2b7e2c8032b83a1e2fd6aa908298dea6801404537924d2c55979aac0ae30c9f"
     },
     {
       "catalog": "el",

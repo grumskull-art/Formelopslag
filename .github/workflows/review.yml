@@ -18,6 +18,15 @@ jobs:
     name: Validate and preview
     runs-on: ubuntu-latest
     steps:
+      - name: Require develop for main pull requests
+        if: github.event_name == 'pull_request'
+        env:
+          PR_HEAD: ${{ github.head_ref }}
+        run: |
+          if [ "$PR_HEAD" != develop ]; then
+            echo 'Pull requests to main must originate from develop.' >&2
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:

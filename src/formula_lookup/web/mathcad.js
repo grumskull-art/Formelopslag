@@ -55,12 +55,13 @@ function mcDraftKey(info){return JSON.stringify([info.name,info.unit,info.type,i
 function mcRemember(){if(!mcEntry)return;const values=mcDrafts.get(mcEntry.id)||new Map();document.querySelectorAll('#mathcad-inputs [data-mc-input]').forEach(i=>values.set(i.dataset.mcDraft,i.value));mcDrafts.set(mcEntry.id,values);}
 function mcRefresh(){
  mcRemember();$('mathcad-error').textContent='';const mode=$('mathcad-mode').value,selected=mcSelected();
+ $('mathcad-note').textContent=[mcEntry.mathcad.note,selected.note].filter(Boolean).join(' ');$('mathcad-note').hidden=!$('mathcad-note').textContent;
  $('mathcad-preview').innerHTML=mathImage(selected.latex,22);
  $('mathcad-workflow').hidden=mode!=='workflow';$('mathcad-input-help').hidden=!['inputs','workflow'].includes(mode);
  if(!['inputs','workflow'].includes(mode)){$('mathcad-inputs').replaceChildren();return;}
  try{
   const forms=mode==='workflow'?mcOrder(mcWorkflow()):[selected],infos=mcInputInfos(forms),values=mcDrafts.get(mcEntry.id);
-  $('mathcad-inputs').innerHTML=infos.map((i,n)=>{const hint=i.type==='function'?`Udtryk i x, hvor x = ${i.argument}/(${i.argument_unit}). Resultatets talværdi i ${i.unit}. Brug *, /, ^, pi, e, sin, cos, tan, ln, log, exp eller sqrt.`:i.type==='vector'?'Værdier adskilles med semikolon. Første element har indeks 1.':i.type==='matrix'?'Semikolon mellem kolonner; ny linje mellem rækker. Indeks starter ved 1.':i.type==='range'?'Første og sidste heltalsindeks adskilles med semikolon.':'';
+  $('mathcad-inputs').innerHTML=infos.map((i,n)=>{const hint=i.type==='function'?`Udtryk i x, hvor x = ${i.argument}/(${i.argument_unit}). Resultatets talværdi i ${i.unit}. Brug *, /, ^, pi, e, sin, cos, tan, ln, log, exp eller sqrt.`:i.type==='vector'?'Værdier adskilles med semikolon. Første element har indeks 1.':i.type==='matrix'?'Semikolon mellem kolonner; ny linje mellem rækker. Indeks starter ved 1.':i.type==='range'?'Første og sidste heltalsindeks fra 1 adskilles med semikolon.':i.type==='index'?'Heltalsindeks fra 1.':'';
    return `<div class="mathcad-input"><label for="mc-input-${n}">${esc(i.label.replace(/\s*\[[^\]]+\]/g,''))} · ${esc(i.name)} [${esc(i.unit)}]</label><${i.type==='matrix'?'textarea':'input'} id="mc-input-${n}" data-mc-input="${esc(i.name)}" ${i.type==='matrix'?'':'type="text"'} ${i.type==='scalar'?'inputmode="decimal"':''} autocomplete="off" aria-describedby="mc-hint-${n}">${i.type==='matrix'?'</textarea>':''}<small id="mc-hint-${n}" class="subtle">${esc(hint)}</small></div>`;
   }).join('');
   $('mathcad-inputs').querySelectorAll('[data-mc-input]').forEach(i=>{i.dataset.mcDraft=mcDraftKey(infos.find(info=>info.name===i.dataset.mcInput));i.value=values?.get(i.dataset.mcDraft)||'';});
@@ -87,8 +88,10 @@ function mcFill(info,value){
   const argument=d.getElementsByTagNameNS(mcNS,'boundVars')[0].firstElementChild.cloneNode(true);
   const unit=mcParse(info.argument_unit_xml).documentElement;
   const x=info.argument_unit==='1'?argument:mcOp('div',argument,unit.cloneNode(true));node=mcExpression(value,x);
+ }else if(info.type==='index'){
+  const index=Number(value.trim().replace(',','.'));if(!Number.isSafeInteger(index)||index<1)throw Error('Indeks skal være et heltal fra 1.');node=mcNumber(index);
  }else if(info.type==='range'){
-  const values=value.split(';').map(s=>{const v=Number(s.trim().replace(',','.'));if(!s.trim()||!Number.isSafeInteger(v)||v<0)throw Error('Indeks skal være ikke-negative heltal.');return v;});
+  const values=value.split(';').map(s=>{const v=Number(s.trim().replace(',','.'));if(!s.trim()||!Number.isSafeInteger(v)||v<1)throw Error('Indeks skal være heltal fra 1.');return v;});
   if(values.length!==2||values[1]<values[0]||values[1]-values[0]>10000)throw Error('Angiv første;sidste indeks med højst 10000 led.');node=mcNode('range',values.map(mcNumber));
   // Ranges are mathematical sequences and must not be multiplied by a unit.
   placeholder.parentNode.replaceWith(node);return new XMLSerializer().serializeToString(d.documentElement);
@@ -105,7 +108,7 @@ function mcExport(){
  if(mode==='formula')return selected.xml;
  if(mode==='example'){if(!mcEntry.mathcad.example_xml)throw Error('Opslaget har ikke et regneeksempel.');return mcEntry.mathcad.example_xml;}
  const forms=mcOrder(mode==='workflow'?mcWorkflow():[selected]),infos=mcInputInfos(forms),xmls=[];
- if(infos.some(i=>['vector','matrix'].includes(i.type)))xmls.push(mcEntry.mathcad.origin_xml);
+ if(infos.some(i=>['vector','matrix','index','range'].includes(i.type))||forms.some(f=>['vector','matrix'].includes(f.output_type)))xmls.push(mcEntry.mathcad.origin_xml);
  for(const info of infos){const input=[...$('mathcad-inputs').querySelectorAll('[data-mc-input]')].find(i=>i.dataset.mcInput===info.name);xmls.push(mcFill(info,input?.value||''));}
  xmls.push(...forms.map(f=>f.xml));for(const f of forms)if(f.evaluation)xmls.push(f.evaluation);
  return mcJoin(xmls);

@@ -33,6 +33,9 @@ tal, x, konstanterne pi/π og e, +, -, *, /, ^, parenteser, sqrt, ln, log, exp, 
 JavaScript, LaTeX, implicit multiplikation eller vilkårlige funktionskald udføres.
 Definitionerne placeres før de formler, der bruger dem. Forløb med en cirkulær
 afhængighed, dobbelte definitioner eller modstridende enheder afvises.
+Arrayindeks og indekssekvenser skal være heltal fra 1. Indeks på en definitions
+venstreside og ubundne tidspunkter i afledte medtages som nødvendige input.
+Definitioner med en ukendt outputenhed evalueres med Mathcads standardenhed.
 
 ## Matematisk fortolkning
 
@@ -44,6 +47,12 @@ der tilføjes ingen namespace med regex og ingen strukturel tekst eller ekstra `
 Unit-id'er har altid `labels="UNIT"`, uden `label-is-contextual`.
 
 En kæde som G=1/R=I/U bliver to alternative definitioner, som kan vælges separat.
+Tilnærmelser med ≈ evalueres som beregningsudtryk eller referenceværdier;
+de bliver ikke til eksakte ligheder eller definitioner. Dialogen viser en note
+ved disse valg. Kildens afrundede facit erstatter ikke beregningsudtrykket.
+Enhedsannotationer som `RC\,[s]` angiver resultatets enhed. De dividerer ikke
+udtrykket med enheden; notation som `R[Ω]` er derimod den numeriske værdi i Ω.
+Euler-konstanten e i C25 mærkes særskilt fra spændingen e i andre opslag.
 Knude- og sløjfeligninger forbliver relationer. |I|=… definerer den positive
 størrelse I; Mathcad får et redigerbart navn på venstresiden og absval på de
 relevante højresider. Startstrøm i(0) eksporteres som i₀, med en note i dialogen.

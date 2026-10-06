@@ -105,6 +105,73 @@ def test_partial_pressure_vector_does_not_overwrite_total_pressure(catalogs):
     assert array.find(f"{{{XAML}}}Span/{{{SUB}}}Subscript").text == "del"
 
 
+def test_indexed_definition_collects_selector_and_preserves_zero_units(catalogs):
+    f = next(f for f in compile_entry(entry(catalogs, "U07"))["formulas"] if f["latex"] == "E_k=0")
+    assert [(i["name"], i["type"]) for i in f["inputs"]] == [("k", "range")]
+    assert f["evaluation"] and '<indexer' in f["evaluation"]
+    assert validate_xml(f["xml"]).find(f".//{{{ML}}}id[@labels='UNIT']").text == "V"
+
+
+@pytest.mark.parametrize("code, name", [("I07", "k"), ("N01", "a")])
+def test_array_selectors_are_typed_indices(catalogs, code, name):
+    f = next(f for f in compile_entry(entry(catalogs, code))["formulas"] if any(i["name"] == name for i in f["inputs"]))
+    assert next(i for i in f["inputs"] if i["name"] == name)["type"] == "index"
+
+
+@pytest.mark.parametrize("code", ["E05", "C13", "C21"])
+def test_scalar_derivative_collects_unbound_time(catalogs, code):
+    formulas = compile_entry(entry(catalogs, code))["formulas"]
+    derivatives = [f for f in formulas if '<derivative' in f["xml"] and f["output_type"] == "scalar"]
+    assert derivatives
+    assert all(any(i["name"] == "t" and i["type"] == "scalar" for i in f["inputs"]) for f in derivatives)
+
+
+@pytest.mark.parametrize("code, output", [("W04", "N_e"), ("I07", "I_k"), ("U05", "ΔU_i")])
+def test_unknown_output_units_still_get_an_evaluation(catalogs, code, output):
+    f = next(f for f in compile_entry(entry(catalogs, code))["formulas"] if f["output"] == output)
+    root = validate_xml(f["evaluation"])
+    assert root.find(f".//{{{ML}}}eval/{{{ML}}}unitOverride/{{{ML}}}placeholder") is not None
+
+
+def test_euler_constant_in_division_is_entry_local(catalogs):
+    f = next(f for f in compile_entry(entry(catalogs, "C25"))["formulas"] if '/e' in f["latex"])
+    assert 'e' not in {i["name"] for i in f["inputs"]}
+    assert validate_xml(f["xml"]).find(f".//{{{ML}}}id[@labels='CONSTANT']").text == "e"
+    voltage = compile_entry(entry(catalogs, "E02"))["formulas"][0]
+    assert validate_xml(voltage["xml"]).find(f".//{{{ML}}}function/{{{ML}}}id").get('labels') == 'VARIABLE'
+
+
+def test_trailing_unit_annotation_keeps_equation_dimensions(catalogs):
+    f = next(f for f in compile_entry(entry(catalogs, "C05"))["formulas"] if r'\,[' in f["latex"])
+    assert '<div' not in f["xml"]
+    assert check_formula(f["xml"], entry(catalogs, "C05")["mathcad_metadata"]["symbols"]).value == 1
+    formula = compile_formula(r'RC\,[\mathrm{s}]', {"symbols": {}}, 'conversion')[0]
+    assert formula.kind == 'eval'
+    assert formula.children[1].children[0] == unit_expression('s')
+
+
+def test_milliohm_conversion_has_a_single_prefixed_unit(catalogs):
+    f = next(f for f in compile_entry(entry(catalogs, "G05"))["formulas"] if f["field"] == 'conversion')
+    root = validate_xml(f["xml"])
+    assert [n.text for n in root.findall(f".//{{{ML}}}id[@labels='UNIT']")] == ['Ω', 'mΩ']
+    assert check_formula(f["xml"], entry(catalogs, "G05")["mathcad_metadata"]["symbols"], {'R': 2}).value == 1
+
+
+@pytest.mark.parametrize("code", ['B04', 'B13', 'C19', 'P08', 'K04'])
+def test_approximations_are_evaluated_without_false_exact_equalities(catalogs, code):
+    formulas = [f for f in compile_entry(entry(catalogs, code))["formulas"] if r'\approx' in f["latex"] and f["field"] != 'example']
+    assert formulas
+    for f in formulas:
+        root = validate_xml(f["xml"])
+        assert root.find(f".//{{{ML}}}eval") is not None
+        assert root.find(f".//{{{ML}}}define") is None
+        assert root.find(f".//{{{ML}}}equal") is None
+        assert f["note"]
+    if code == 'C19':
+        root = validate_xml(next(f["xml"] for f in formulas if f["field"] == 'steps'))
+        assert evaluate(root.find(f".//{{{ML}}}eval"), {}).value == pytest.approx(math.exp(-1))
+
+
 @pytest.mark.parametrize("source, expected", [
     (r"-2^2", -4), (r"(-2)^2", 4), (r"2^{-3}", .125),
     (r"\frac{2}{\frac{3}{4}}", 8/3), (r"\frac{2-3}{4+5}", -1/9),

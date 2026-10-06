@@ -79,6 +79,9 @@ def tokens(source):
             match = re.match(r"\\(?:[A-Za-z]+|.)", source[i:])
             token = match[0]
             i += len(token)
+            if token in (r"\,", r"\;", r"\ ") and source[i:].lstrip().startswith("["):
+                result.append(r"\annotation")
+                continue
             if token not in (r"\left", r"\right", r"\,", r"\!", r"\;", r"\quad", r"\qquad", r"\ "):
                 result.append(token)
             continue
@@ -151,7 +154,13 @@ class Parser:
         if self.abs_depth:
             stops.add("|")
         while self.peek() not in stops:
-            if self.peek() in ("*", r"\cdot", r"\times", "/", r"\div"):
+            if self.peek() == r"\annotation":
+                self.take(); self.take("[")
+                unit = self.relation(); self.take("]")
+                if any(n.kind in ("variable", "call", "relation") for n in walk(unit)):
+                    raise ExportError("Enhedsannotation skal indeholde en enhed.")
+                node = Node("annotation", children=(node, unit))
+            elif self.peek() in ("*", r"\cdot", r"\times", "/", r"\div"):
                 token = self.take()
                 rhs = self.unary()
                 tag = "div" if token in ("/", r"\div") else "crossProduct" if token == r"\times" and node.kind == rhs.kind == "vector" else "mult"
@@ -262,7 +271,7 @@ class Parser:
             return replace(node, value="Δ" + node.value)
         if token in (r"\mathrm", r"\mathit", r"\mathbf"):
             raw = self.raw_group()
-            if raw in ("M", "k") and self.peek() == r"\Omega":
+            if raw in ("M", "k", "m") and self.peek() == r"\Omega":
                 self.take()
                 return Node("unit", raw + "Ω")
             if raw == "d":
@@ -369,7 +378,7 @@ class Parser:
         return Node("integral", children=(body, bound, lower, upper))
 
 
-UNIT_NAMES = set("V kV A Ah Ω kΩ MΩ ohm W J N kN mN μN s min m mm cm km kg g mol Pa kPa MPa K C μC nC F H S mS T mT Wb rad rpm Hz hr L kW kJ MJ kWh mA mH ms μF nF pF mWb °C Δ°C deg %".split())
+UNIT_NAMES = set("V kV A Ah Ω kΩ MΩ mΩ ohm W J N kN mN μN s min m mm cm km kg g mol Pa kPa MPa K C μC nC F H S mS T mT Wb rad rpm Hz hr L kW kJ MJ kWh mA mH ms μF nF pF mWb °C Δ°C deg %".split())
 UNIT_ALIASES = {"ohm": "Ω", "degC": "°C", "delta_degC": "Δ°C", "uF": "μF", "h": "hr"}
 
 
@@ -406,6 +415,10 @@ def unit_expression(source):
 def resolve(node, metadata):
     """Apply explicit catalog semantics, not a global letter-to-unit heuristic."""
     node = replace(node, children=tuple(resolve(n, metadata) for n in node.children))
+    if node.kind == "annotation":
+        return node.children[0]
+    if node.kind == "variable" and key(node) in metadata.get("constants", []):
+        return replace(node, kind="constant")
     if (node.kind == "operator" and node.value == "div"
             and node.children[0] == variable("ΔT")
             and node.children[1] == Node("unit", "°C")
@@ -588,8 +601,20 @@ def compile_formula(source, metadata, purpose="main"):
     if len(alternatives) > 1:
         return [n for s in alternatives for n in compile_formula(s, metadata, purpose)]
     node = Parser(source).parse()
+    annotation = node.children[1] if node.kind == "annotation" else None
     semantic_meta = metadata if purpose == "main" else {k: v for k, v in metadata.items() if k not in ("numeric_inputs", "coefficient_units")}
     node = resolve(node, semantic_meta)
+    if annotation is not None:
+        return [Node("eval", children=(node, Node("override", children=(annotation,))))]
+    if node.kind == "approx" and purpose != "example":
+        lhs, rhs = node.children
+        target = lhs.children[0] if lhs.kind == "operator" and lhs.value in ("absval", "div") else lhs
+        info = metadata.get("symbols", {}).get(key(target)) if target.kind == "variable" else None
+        value = rhs if info else lhs
+        unit = unit_expression(info["unit"]) if info else Node("placeholder")
+        if info and lhs.kind == "operator" and lhs.value == "div" and all(n.kind not in ("variable", "call") for n in walk(lhs.children[1])):
+            value = op("scale", rhs, lhs.children[1])
+        return [Node("eval", children=(value, Node("override", children=(unit,))))]
     parts = equal_parts(node)
     if len(parts) > 1 and parts[0].kind == "variable" and key(parts[0]) in metadata.get("definition_symbols", []):
         return [definition(parts[0], rhs) for rhs in parts[1:]]
@@ -716,7 +741,7 @@ def free_inputs(node, symbols):
         elif n.kind == "index":
             add(key(n.children[0]), "matrix" if len(n.children) > 2 else "vector")
             for index in n.children[1:]:
-                visit(index, bound)
+                visit_index(index, bound)
         elif n.kind == "call":
             if n.value not in FUNCTIONS:
                 argument = key(n.children[0]) if n.children[0].kind == "variable" else None
@@ -729,12 +754,16 @@ def free_inputs(node, symbols):
             if lhs.kind == "function":
                 for argument in lhs.children:
                     add(key(argument))  # Needed for an optional numerical evaluation.
+            elif lhs.kind == "index":
+                for index in lhs.children[1:]:
+                    visit_index(index, bound)
         elif n.kind == "derivative":
             body, arg = n.children
             if body.kind == "variable":
                 add(key(body), "function", key(arg))
             else:
                 visit(body, (*bound, key(arg)))
+            visit(arg, bound)
         elif n.kind in ("sum", "integral"):
             body, arg, lower, upper = n.children
             visit(body, (*bound, key(arg)))
@@ -750,6 +779,13 @@ def free_inputs(node, symbols):
         else:
             for child in n.children:
                 visit(child, bound)
+    def visit_index(index, bound):
+        if index.kind == "variable" and key(index) not in bound:
+            name = key(index)
+            add(name, "range" if symbols.get(name, {}).get("type") == "range" else "index")
+        elif index.kind != "variable":
+            visit(index, bound)
+
     visit(node)
     return list(result.values())
 
@@ -777,6 +813,12 @@ def compile_entry(entry):
     for field, index, source in blocks(entry):
         export_source = meta.get("main_latex", source) if field == "main" else source
         nodes = compile_formula(export_source, meta, field)
+        for position, node in enumerate(nodes):
+            if node.kind == "define" and node.children[1] == number(0):
+                lhs = node.children[0]
+                name = key(lhs.children[0]) if lhs.kind == "index" else key(lhs) if lhs.kind == "variable" else lhs.value
+                if name in meta["symbols"] and meta["symbols"][name]["unit"] != "1":
+                    nodes[position] = replace(node, children=(lhs, op("scale", number(0), unit_expression(meta["symbols"][name]["unit"]))))
         if field == "example":
             for node in nodes:
                 if node.kind == "define":
@@ -820,13 +862,15 @@ def compile_entry(entry):
                 from .mathcad_check import check_formula
                 check_formula(serialize([node], entry["id"]), local_symbols)
             evaluation = None
-            if lhs is not None and output_name in local_symbols:
+            if lhs is not None:
                 value = Node("call", lhs.value, lhs.children) if lhs.kind == "function" else lhs
-                evaluation = serialize([Node("eval", children=(value, Node("override", children=(unit_expression(local_symbols[output_name]["unit"]),))))], entry["id"] + "_eval")
+                unit = unit_expression(local_symbols[output_name]["unit"]) if output_name in local_symbols else Node("placeholder")
+                evaluation = serialize([Node("eval", children=(value, Node("override", children=(unit,))))], entry["id"] + "_eval")
             formulas.append({"id": f"{field}-{index}-{variant}", "field": field, "latex": source,
                              "label": {"main": "Hovedformel", "steps": "Beregningsformel", "example": "Kildebaseret regneeksempel", "conversion": "Enhedsomregning", "pitfall": "Faglig bemærkning", "explanation": "Forklaring"}[field] + (f" · vej {variant+1}" if len(nodes) > 1 else ""),
                              "xml": serialize([node], entry["id"] + "_" + field + str(index) + "_" + str(variant)),
-                             "inputs": inputs, "evaluation": evaluation, "output": output_name, "output_type": output_type})
+                             "inputs": inputs, "evaluation": evaluation, "output": output_name, "output_type": output_type,
+                             "note": "Kilden bruger ≈. Eksporten evaluerer udtrykket eller tilnærmelsen uden en eksakt definition eller lighed." if r"\approx" in source and field != "example" else ""})
     return {"formulas": formulas, "coverage": coverage, "note": meta.get("note", ""), "native_tested": False,
             "main_dimensions_checked": True,
             "example_xml": serialize(example_nodes, entry["id"] + "_example") if example_nodes else None,
