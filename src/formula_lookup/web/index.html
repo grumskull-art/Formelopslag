@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="da"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Kildebaserede formler til elektroteknik, varmelære og motorlære, samt et interaktivt log(p)-h-diagram for vand. Find beregningsvejen, se enheder, forudsætninger og eksempler. Fungerer offline.">
+<meta name="description" content="Kildebaserede formler til elektroteknik, varmelære og motorlære, samt diagrammer og simulationer. Find beregningsvejen, se enheder, forudsætninger og eksempler. Fungerer offline.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23076d66'/%3E%3Ctext x='16' y='24' text-anchor='middle' fill='white' font-size='26' font-family='serif'%3E%C6%92%3C/text%3E%3C/svg%3E">
 <meta name="color-scheme" content="light dark"><title>Formelopslag · EL og TM</title><style>__STYLES__</style></head>
 <body data-view="formulas"><a class="skip-link" href="#workspace">Gå til formelopslag</a><main>
 <header class="topbar"><a class="brand" href="#" aria-label="Formelopslag, start"><span class="brand-mark" aria-hidden="true">ƒ</span> Formelopslag</a><div class="header-actions"><button id="theme-toggle" type="button" aria-label="Skift farvetema">Tema: automatisk</button><details class="feedback"><summary id="feedback-summary">Feedback</summary><div class="feedback-panel"><label for="feedback-type" id="feedback-type-label">Type</label><select id="feedback-type"></select><a id="feedback-link" href="mailto:">Åbn mail</a><p class="subtle" id="feedback-help"></p></div></details></div></header>
-<nav class="view-switch" aria-label="Værktøjer"><button type="button" id="view-formulas" aria-pressed="true">Formler</button><button type="button" id="view-ph" aria-pressed="false">log(p)-h · vand</button></nav>
+<nav class="view-switch" aria-label="Værktøjer"><button type="button" id="view-formulas" aria-pressed="true">Formler</button><button type="button" id="view-diagrams" aria-pressed="false">Diagrammer</button></nav>
 <section class="hero"><p class="eyebrow">EL / TM · MASKINMESTER</p><h1>Find den rigtige formel.</h1><p class="hero-copy">Fra det, du har opgivet, til den beregningsvej du kan bruge.<br>Kilder, enheder og forudsætninger følger med.</p><p class="catalog-count" id="catalog-count"></p></section>
 <section class="discovery" aria-label="Søg på tværs af fag"><label for="global-search">Søg i hele formelsamlingen</label><div class="search-row"><input id="global-search" type="search" placeholder="Fx strøm, Carnot, drejningsmoment eller MO04" autocomplete="off" aria-describedby="discovery-status"><button id="saved-toggle" type="button" aria-pressed="false">Gemte <span id="saved-count">0</span></button></div><p id="discovery-status" class="subtle" role="status" aria-live="polite">Søg efter en størrelse, et emne eller en formelkode.</p><div id="discovery-results" class="discovery-results"></div><button id="show-more" type="button" hidden>Vis flere opslag</button></section>
 <nav id="topic-shortcuts" class="topic-shortcuts" aria-label="Vælg fagområde"></nav>
@@ -19,7 +19,16 @@
 <details id="topic-notes" hidden><summary>Faglige noter og kildehuller</summary><div id="notes"></div></details>
 <details id="register-section" hidden><summary>Konstanter og materialer fra undervisningen</summary><div id="registers" class="table-scroll"></div></details>
 <details class="scope-details"><summary>Kildegrundlag og afgrænsning</summary><p id="scope"></p><p>Et match viser en mulig beregningsvej. Kontrollér altid fysisk model, fortegn og enheder. Kildehuller markeres udtrykkeligt.</p></details></section>
+<section id="diagram-list" class="tool-panel" tabindex="-1" hidden>
+<div class="ph-intro"><p class="eyebrow">DIAGRAMMER OG SIMULATIONER</p><h1>Vælg et værktøj</h1><p class="hero-copy">Vælg diagrammet eller simulationen. Værdierne indtaster du på næste side, og figuren følger med det samme.</p></div>
+<div class="tool-list">
+<button type="button" class="tool-card" data-tool="ph"><strong>log(p)-h · vand</strong><span>Køleteknik. Dampkuppel og et-trins tør ekspansion for vand.</span></button>
+<button type="button" class="tool-card" data-tool="gas"><strong>Idealgas</strong><span>Beholder med partikler. Tryk, volumen, temperatur og stofmængde.</span></button>
+<button type="button" class="tool-card" data-tool="motor"><strong>Otto og Diesel</strong><span>Motorlære. V–p og s,T for den ideelle kreds.</span></button>
+</div>
+</section>
 <section id="ph" class="ph-tool" tabindex="-1" hidden>
+<button type="button" class="tool-back" data-tool-back>Tilbage til diagrammer</button>
 <div class="ph-intro"><p class="eyebrow">VAND · H₂O · IAPWS-IF97</p><h1>log(p)-h for vand</h1><p class="hero-copy">Et-trins tør ekspansion. Kredsen, tilstandspunkterne og nøgletallene følger med, så snart du ændrer en værdi.</p></div>
 <div class="ph-grid">
 <div class="ph-side">
@@ -78,6 +87,64 @@
 <p>Akselarbejdet pr. kg er w = (h<sub>2s</sub> − h<sub>1</sub>) / η<sub>is</sub>, og h<sub>2</sub> = h<sub>1</sub> + w·(1 − f<sub>Q</sub>). COP = Q<sub>E</sub> / W<sub>aksel</sub>. COP* = Q<sub>E</sub> / (m·(h<sub>2</sub> − h<sub>1</sub>)), altså uden at regne kompressorens varmetab med i den varme, kølemidlet optager. Carnot = T<sub>E</sub> / (T<sub>C</sub> − T<sub>E</sub>) med begge temperaturer i kelvin.</p>
 <p>Tallene er IAPWS-IF97, område 1, 2 og 4, op til 350 °C. Område 3 omkring det kritiske punkt er ikke med. Diagrammet er ikke undervisningens damptabel og udfylder ikke det kildehul.</p>
 </details>
+</section>
+<section id="gas" class="ph-tool" tabindex="-1" hidden>
+<button type="button" class="tool-back" data-tool-back>Tilbage til diagrammer</button>
+<div class="ph-intro"><p class="eyebrow">VARMELÆRE · IDEALGAS</p><h1>Idealgas</h1><p class="hero-copy">Pump gas ind, varm eller køl, og træk væggen. Trykket er p = nRT/V.</p></div>
+<div class="ph-grid">
+<div class="ph-side">
+<fieldset class="ph-fields"><legend>Gas</legend>
+<p class="gas-n">Stofmængde <strong id="gas-n">2 mol</strong></p>
+<div class="gas-pumps"><button type="button" id="gas-sub10">−10 mol</button><button type="button" id="gas-sub1">−1 mol</button><button type="button" id="gas-add1">+1 mol</button><button type="button" id="gas-add10">+10 mol</button></div>
+</fieldset>
+<fieldset class="ph-fields"><legend>Temperatur</legend>
+<label>T [K]<input id="gas-t" type="number" value="300" min="1" max="2000" step="any" inputmode="decimal" autocomplete="off"></label>
+<p class="subtle" id="gas-c">27 °C</p>
+<input id="gas-t-range" type="range" min="50" max="800" value="300" aria-label="Temperatur">
+</fieldset>
+<label class="ph-qe">Volumen [m³]<input id="gas-v" type="number" value="0.05" min="0.01" max="0.2" step="any" inputmode="decimal" autocomplete="off"></label>
+<label class="ph-qe">Hold fast<select id="gas-hold"><option value="none">Ingen</option><option value="pressure">Tryk</option><option value="volume">Volumen</option><option value="temperature">Temperatur</option></select></label>
+<button type="button" id="gas-reset">Nulstil</button>
+</div>
+<div class="ph-stage">
+<div class="gas-stage" id="gas-stage"><canvas id="gas-canvas"></canvas><button type="button" id="gas-wall" aria-label="Træk væggen for at ændre volumen"></button></div>
+<p id="gas-readout" class="ph-readout"></p>
+<div id="gas-metrics" class="ph-metrics"></div>
+<p id="gas-status" class="note" role="status"></p>
+<p class="subtle">Trykket er p = nRT/V med R = 8,314 J/(mol·K). Enhederne er Pa, m³, mol og K. Partiklerne er et billede af tilstanden, ikke Avogadros tal. Et glimt ved væggen viser et stød og ændrer ikke tallet.</p>
+</div>
+</div>
+</section>
+<section id="motor" class="ph-tool" tabindex="-1" hidden>
+<button type="button" class="tool-back" data-tool-back>Tilbage til diagrammer</button>
+<div class="ph-intro"><p class="eyebrow">MOTORLÆRE · IDEEL KREDS</p><h1>Otto og Diesel</h1><p class="hero-copy">V–p og s,T for den samme kreds. Entropien er forskellen fra punkt 1, regnet pr. mol.</p></div>
+<div class="ph-grid">
+<div class="ph-side">
+<div class="ph-zoom" role="group" aria-label="Kreds"><button type="button" id="motor-otto" aria-pressed="true">Otto</button><button type="button" id="motor-diesel" aria-pressed="false">Diesel</button></div>
+<fieldset class="ph-fields"><legend>Start</legend>
+<label>p₁ [Pa]<input id="motor-p1" type="number" value="100000" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>V₁ [m³]<input id="motor-v1" type="number" value="0.0005" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>T₁ [K]<input id="motor-t1" type="number" value="300" step="any" inputmode="decimal" autocomplete="off"></label>
+</fieldset>
+<fieldset class="ph-fields"><legend>Kreds</legend>
+<label>r [1]<input id="motor-r" type="number" value="10" step="any" inputmode="decimal" autocomplete="off"></label>
+<label>κ [1]<input id="motor-k" type="number" value="1.4" step="any" inputmode="decimal" autocomplete="off"></label>
+<label id="motor-phi-field" hidden>φ [1]<input id="motor-phi" type="number" value="2" step="any" inputmode="decimal" autocomplete="off"></label>
+<label id="motor-t3-field">T₃ [K]<input id="motor-t3" type="number" value="1800" step="any" inputmode="decimal" autocomplete="off"></label>
+</fieldset>
+<button type="button" id="motor-reset">Nulstil</button>
+</div>
+<div class="ph-stage">
+<p id="motor-status" class="note" role="status"></p>
+<div class="motor-charts">
+<figure><figcaption>V–p</figcaption><div class="motor-chart"><svg id="motor-pv" role="img" aria-label="V–p-diagram"></svg></div></figure>
+<figure><figcaption>s,T</figcaption><div class="motor-chart"><svg id="motor-st" role="img" aria-label="s,T-diagram"></svg></div></figure>
+</div>
+<div id="motor-metrics" class="ph-metrics"></div>
+<div class="table-scroll"><table class="ph-table" id="motor-states"></table></div>
+<p class="subtle">Ideel Otto og Diesel med konstante varmekapaciteter. Arbejde leveret af gassen er positivt, modsat varmelærens arbejde på systemet. Virkningsgraden er den ideelle og er ikke bremsevirkningsgraden. Entropien er pr. mol, fordi massen ikke er en indtastning.</p>
+</div>
+</div>
 </section>
 <footer><span>Formelopslag · fungerer også offline</span><span class="subtle version" id="version"></span></footer><p id="action-status" class="action-status" role="status" aria-live="polite"></p>
 <dialog id="copy-dialog"><form method="dialog"><label id="copy-label" for="copy-value">Kopiér tekst</label><p class="subtle">Markér teksten og kopiér med Ctrl+C eller browserens kopieringsmenu.</p><textarea id="copy-value" readonly></textarea><button>Luk</button></form></dialog>

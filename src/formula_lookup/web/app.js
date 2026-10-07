@@ -298,8 +298,9 @@ function routeHash(method=$('method').value){
 }
 function syncUrl(){if(restoring)return;try{history.replaceState(null,'',location.pathname+location.search+routeHash());}catch{/* Offline previews can restrict history access. */}updateFeedbackLink();}
 function applyHash(){
- if((location.hash||'')==='#ph'){showDiagram(true);return;}
- if(document.body.dataset.view==='ph')showFormulas();
+ const toolHash={ '#diagrammer':'list','#ph':'ph','#gas':'gas','#motor':'motor' };
+ if(Object.hasOwn(toolHash,location.hash||'')){setTool(toolHash[location.hash],{fromHash:true});return;}
+ if(document.body.dataset.view!=='formulas')setTool('formulas',{fromHash:true});
  const params=new URLSearchParams(location.hash.slice(1)),catalog=db.catalogs.find(c=>c.id===params.get('catalog'));
  if(!catalog){const invalid=!!location.hash;resetChoices(true,true);if(invalid)announce('Linket indeholder ikke et kendt fagområde. Vælg et opslag.');return;}
  restoring=true;
@@ -356,37 +357,46 @@ $('reset').addEventListener('click',()=>resetChoices());
 $('print').addEventListener('click',()=>{if(!$('results').querySelector('article'))announce('Vælg et opslag før udskrivning.');else window.print();});
 $('theme-toggle').addEventListener('click',()=>{const order=['auto','light','dark'],theme=order[(order.indexOf($('theme-toggle').dataset.theme)+1)%3];applyTheme(theme);writeStorage('formelopslag.theme.v1',theme);});
 document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();showFormulas();resetChoices(true);window.scrollTo(0,0);});
-document.querySelector('.skip-link').addEventListener('click',event=>{event.preventDefault();const target=document.body.dataset.view==='ph'?$('ph'):$('workspace');target.focus();target.scrollIntoView({block:'start'});});
+document.querySelector('.skip-link').addEventListener('click',event=>{event.preventDefault();const view=document.body.dataset.view;const target=view==='ph'?$('ph'):view==='gas'?$('gas'):view==='motor'?$('motor'):view==='list'?$('diagram-list'):$('workspace');target.focus();target.scrollIntoView({block:'start'});});
 window.addEventListener('hashchange',applyHash);
 window.addEventListener('popstate',applyHash);
 window.addEventListener('storage',event=>{if(event.key===storageKey){const incoming=readStorage(storageKey,[]);savedEntries.clear();if(Array.isArray(incoming))incoming.filter(id=>formulaIds.has(id)).forEach(id=>savedEntries.add(id));document.querySelectorAll('button[data-save]').forEach(button=>{const saved=savedEntries.has(button.dataset.save);button.textContent=saved?'Gemt':'Gem opslag';button.setAttribute('aria-pressed',String(saved));});renderDiscovery();}});
-document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.target.closest('input,textarea,select,[contenteditable]')){event.preventDefault();if(document.body.dataset.view==='ph')$('ph-te').focus();else $('global-search').focus();}});
+document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!event.target.closest('input,textarea,select,[contenteditable]')){event.preventDefault();const view=document.body.dataset.view;if(view==='ph')$('ph-te').focus();else if(view==='gas')$('gas-t').focus();else if(view==='motor')$('motor-r').focus();else $('global-search').focus();}});
 const PH={w:1000,h:640,l:96,r:16,t:12,b:50};
 let phView=null,phCycle=null,phMode='dome',phLines=null,phKey='',phDrag=null;
-function showFormulas(){
- document.body.dataset.view='formulas';
- if($('ph'))$('ph').hidden=true;
- $('view-formulas').setAttribute('aria-pressed','true');
- $('view-ph').setAttribute('aria-pressed','false');
+const toolMeta={
+ list:{hash:'#diagrammer',section:'diagram-list',skip:'Gå til diagrammer'},
+ ph:{hash:'#ph',section:'ph',skip:'Gå til diagrammet'},
+ gas:{hash:'#gas',section:'gas',skip:'Gå til simulationen'},
+ motor:{hash:'#motor',section:'motor',skip:'Gå til diagrammet'}
+};
+function setTool(view,options={}){
+ if(view==='ph'&&typeof Water==='undefined'){announce('log(p)-h-værktøjet findes ikke i denne fil.');return;}
+ if(view==='gas'&&typeof Gas==='undefined'){announce('Idealgas-simulationen findes ikke i denne fil.');return;}
+ if(view==='motor'&&typeof Motor==='undefined'){announce('Otto- og Diesel-diagrammet findes ikke i denne fil.');return;}
+ document.body.dataset.view=view==='list'?'list':view;
+ for(const item of Object.values(toolMeta)){const el=$(item.section);if(el)el.hidden=item.section!==(toolMeta[view]&&toolMeta[view].section);}
+ $('view-formulas').setAttribute('aria-pressed',String(view==='formulas'));
+ $('view-diagrams').setAttribute('aria-pressed',String(view!=='formulas'));
  const skip=document.querySelector('.skip-link');
- skip.setAttribute('href','#workspace');
- skip.textContent='Gå til formelopslag';
+ if(view==='formulas'){skip.setAttribute('href','#workspace');skip.textContent='Gå til formelopslag';}
+ else{skip.setAttribute('href',toolMeta[view].hash);skip.textContent=toolMeta[view].skip;}
+ if(view!=='gas'&&typeof Gas!=='undefined')Gas.stop();
+ if(!options.fromHash){
+  const hash=view==='formulas'?(currentCatalogId?routeHash():''):toolMeta[view].hash;
+  if((location.hash||'')!==hash)history.replaceState(null,'',location.pathname+location.search+hash);
+ }
+ if(view==='ph')drawPh();
+ if(view==='gas')paintGas(true);
+ if(view==='motor')paintMotor();
+ if(!options.fromHash){
+  if(view==='formulas')window.scrollTo(0,0);
+  else{const target=$(toolMeta[view].section);target.scrollIntoView({block:'start'});target.focus({preventScroll:true});}
+ }
 }
-function showDiagram(fromHash){
- if(typeof Water==='undefined'){announce('log(p)-h-værktøjet findes ikke i denne fil.');return;}
- document.body.dataset.view='ph';
- $('ph').hidden=false;
- $('view-formulas').setAttribute('aria-pressed','false');
- $('view-ph').setAttribute('aria-pressed','true');
- const skip=document.querySelector('.skip-link');
- skip.setAttribute('href','#ph');
- skip.textContent='Gå til diagrammet';
- if(!fromHash&&location.hash!=='#ph')history.replaceState(null,'',location.pathname+location.search+'#ph');
- drawPh();
- if(!fromHash)$('ph').scrollIntoView({block:'start'});
-}
+function showFormulas(){setTool('formulas',{fromHash:true});}
 function openFormulas(){
- showFormulas();
+ setTool('formulas',{fromHash:true});
  const hash=currentCatalogId?routeHash():'';
  if((location.hash||'')!==hash)history.replaceState(null,'',location.pathname+location.search+hash);
  window.scrollTo(0,0);
@@ -677,10 +687,79 @@ function phZoom(factor){
  phMode='custom';
  paintPh();
 }
+let gasState={n:2,T:300,V:0.05},gasHold='none',motorKind='otto';
+function toolNum(id){const raw=$(id).value.trim();if(!raw)return NaN;return Number(raw.replace(',','.'));}
+function toolFmt(value,digits){return Number.isFinite(value)?value.toLocaleString('da-DK',{maximumFractionDigits:digits,minimumFractionDigits:digits}):'–';}
+function toolField(value,digits){return Number.isFinite(value)?String(Math.round(value*10**digits)/10**digits):'';}
+function paintGas(start){
+ if(typeof Gas==='undefined'||!$('gas')||$('gas').hidden){if(typeof Gas!=='undefined')Gas.stop();return;}
+ const next=Gas.adjust(gasState,{},gasHold);
+ gasState={n:next.n,T:next.T,V:next.V};
+ $('gas-n').textContent=toolFmt(gasState.n,gasState.n>=10?0:0)+' mol';
+ if(document.activeElement!==$('gas-t'))$('gas-t').value=toolField(gasState.T,2);
+ if(document.activeElement!==$('gas-t-range'))$('gas-t-range').value=String(Math.min(800,Math.max(50,gasState.T)));
+ $('gas-c').textContent=toolFmt(gasState.T-273.15,1)+' °C';
+ if(document.activeElement!==$('gas-v'))$('gas-v').value=toolField(gasState.V,4);
+ $('gas-hold').value=gasHold;
+ $('gas-wall').disabled=gasHold==='volume';
+ $('gas-t').disabled=gasHold==='temperature';
+ $('gas-t-range').disabled=gasHold==='temperature';
+ $('gas-v').disabled=gasHold==='volume';
+ const p=next.p;
+ $('gas-readout').textContent=p>0?`${toolFmt(p,0)} Pa · ${toolFmt(p/1e5,3)} bar`:'0 Pa';
+ $('gas-metrics').innerHTML=[['p',toolFmt(p,0)+' Pa'],['V',toolFmt(gasState.V,4)+' m³'],['T',toolFmt(gasState.T,1)+' K'],['n',toolFmt(gasState.n,0)+' mol']].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');
+ $('gas-status').textContent=next.note||'';
+ if(start)Gas.start(gasState);else Gas.sync(gasState);
+}
+function gasChange(change){
+ if(typeof Gas==='undefined')return;
+ const next=Gas.adjust(gasState,change,gasHold);
+ if(!next.ok){$('gas-status').textContent=next.error;return;}
+ gasState={n:next.n,T:next.T,V:next.V};
+ paintGas(false);
+ $('gas-status').textContent=next.note||'';
+}
+let motorDrag=null;
+function motorRead(){
+ const input={p1:toolNum('motor-p1'),V1:toolNum('motor-v1'),T1:toolNum('motor-t1'),r:toolNum('motor-r'),kappa:toolNum('motor-k')};
+ if(motorKind==='diesel')input.phi=toolNum('motor-phi');else input.T3=toolNum('motor-t3');
+ return input;
+}
+function motorPath(svg,path,xOf,yOf,box){
+ const pts=path.map(point=>`${xOf(point).toFixed(1)},${yOf(point).toFixed(1)}`).join(' ');
+ return `<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.5"></polyline>`+(box||'');
+}
+function paintMotor(){
+ if(typeof Motor==='undefined'||!$('motor')||$('motor').hidden)return;
+ $('motor-otto').setAttribute('aria-pressed',String(motorKind==='otto'));
+ $('motor-diesel').setAttribute('aria-pressed',String(motorKind==='diesel'));
+ $('motor-phi-field').hidden=motorKind!=='diesel';
+ $('motor-t3-field').hidden=motorKind!=='otto';
+ const result=motorKind==='diesel'?Motor.diesel(motorRead()):Motor.otto(motorRead());
+ if(!result.ok){$('motor-status').textContent=result.error;$('motor-pv').textContent='';$('motor-st').textContent='';$('motor-metrics').innerHTML='';$('motor-states').innerHTML='';return;}
+ $('motor-status').textContent='';
+ function chartCall(xKey,yMap,xlabel,ylabel){
+  const xs=result.path.map(point=>point[xKey]),ys=result.path.map(yMap);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(0,...ys),maxY=Math.max(...ys);
+  const x0=minX-(maxX-minX||1)*0.08,x1=maxX+(maxX-minX||1)*0.12,y0=minY-(Math.abs(maxY-minY)||1)*0.06,y1=maxY+(maxY-minY||1)*0.12;
+  const X=v=>64+(v-x0)/(x1-x0)*520,Y=v=>16+(y1-v)/(y1-y0)*262;
+  const poly=result.path.map(point=>`${X(point[xKey]).toFixed(1)},${Y(yMap(point)).toFixed(1)}`).join(' ');
+  const marks=result.points.map(point=>`<g class="ph-marker"><circle cx="${X(point[xKey]).toFixed(1)}" cy="${Y(yMap(point)).toFixed(1)}" r="4"></circle><text x="${(X(point[xKey])+8).toFixed(1)}" y="${(Y(yMap(point))-8).toFixed(1)}">${point.n}</text></g>`).join('');
+  return `<rect width="600" height="320" fill="transparent"></rect><line x1="64" y1="278" x2="584" y2="278" stroke="currentColor" stroke-width="1.2"></line><line x1="64" y1="16" x2="64" y2="278" stroke="currentColor" stroke-width="1.2"></line><text x="324" y="308" text-anchor="middle" font-size="15" fill="currentColor">${xlabel}</text><text transform="translate(18 168) rotate(-90)" text-anchor="middle" font-size="15" fill="currentColor">${ylabel}</text><polyline points="${poly}" fill="none" stroke="var(--accent)" stroke-width="2.5"></polyline>${marks}`;
+ }
+ $('motor-pv').setAttribute('viewBox','0 0 600 320');
+ $('motor-st').setAttribute('viewBox','0 0 600 320');
+ $('motor-pv').innerHTML=chartCall('V',point=>point.p/1e5,'V [m³]','p [bar]');
+ $('motor-st').innerHTML=chartCall('s',point=>point.T,'s − s₁ [J/(mol·K)]','T [K]');
+ $('motor-metrics').innerHTML=[[ 'η₀', toolFmt(result.eta*100,2)+' %' ],[ 'W', toolFmt(result.W,0)+' J/mol' ],[ 'Qind', toolFmt(result.Qin,0)+' J/mol' ]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');
+ $('motor-states').innerHTML=`<caption class="subtle">Hjørner for den ideelle ${motorKind==='otto'?'Otto':'Diesel'}-kreds.</caption><thead><tr><th>Punkt</th><th>p [bar]</th><th>V [m³]</th><th>T [°C]</th><th>s−s₁ [J/(mol·K)]</th></tr></thead><tbody>${result.points.map(point=>`<tr><td>${point.n} ${point.name}</td><td>${toolFmt(point.p/1e5,3)}</td><td>${toolFmt(point.V,6)}</td><td>${toolFmt(point.T-273.15,1)}</td><td>${toolFmt(point.s,2)}</td></tr>`).join('')}</tbody>`;
+}
 function bindPh(){
- if(!$('view-ph'))return;
- $('view-ph').addEventListener('click',()=>showDiagram(false));
+ if(!$('ph'))return;
  $('view-formulas').addEventListener('click',openFormulas);
+ $('view-diagrams').addEventListener('click',()=>setTool('list'));
+ document.querySelectorAll('[data-tool]').forEach(button=>button.addEventListener('click',()=>setTool(button.dataset.tool)));
+ document.querySelectorAll('[data-tool-back]').forEach(button=>button.addEventListener('click',()=>setTool('list')));
  $('ph').addEventListener('input',event=>{if(event.target.matches('input'))drawPh();});
  for(const id of ['ph-show-sat','ph-show-x','ph-show-t','ph-show-s','ph-show-v','ph-show-cycle'])$(id).addEventListener('change',paintPh);
  $('ph-reset').addEventListener('click',()=>{
@@ -721,7 +800,35 @@ function bindPh(){
  svg.addEventListener('pointerleave',()=>{$('ph-svg').querySelector('#ph-cross')?.remove();});
  svg.addEventListener('dblclick',()=>{$('ph-fit').click();});
  svg.addEventListener('wheel',event=>{event.preventDefault();const loc=phPointer(event);if(!loc)return;phView=Water.zoomView(phView,event.deltaY>0?1.12:1/1.12,loc.h,loc.p);phMode='custom';queuePhPaint();},{passive:false});
- if('ResizeObserver' in window)new ResizeObserver(()=>{if(!$('ph').hidden)queuePhPaint();}).observe($('ph-chart'));
+ if('ResizeObserver' in window){
+  new ResizeObserver(()=>{if(!$('ph').hidden)queuePhPaint();}).observe($('ph-chart'));
+  if($('gas-stage'))new ResizeObserver(()=>{if(!$('gas').hidden)paintGas(false);}).observe($('gas-stage'));
+ }
+ for(const [id,step] of [['gas-add1',1],['gas-add10',10],['gas-sub1',-1],['gas-sub10',-10]])$(id).addEventListener('click',()=>gasChange({n:gasState.n+step}));
+ $('gas-t').addEventListener('input',()=>gasChange({T:toolNum('gas-t')}));
+ $('gas-t').addEventListener('blur',()=>paintGas(false));
+ $('gas-t-range').addEventListener('input',()=>gasChange({T:toolNum('gas-t-range')}));
+ $('gas-t-range').addEventListener('change',()=>paintGas(false));
+ $('gas-v').addEventListener('input',()=>gasChange({V:toolNum('gas-v')}));
+ $('gas-v').addEventListener('blur',()=>paintGas(false));
+ $('gas-hold').addEventListener('change',()=>{gasHold=$('gas-hold').value;paintGas(false);});
+ $('gas-reset').addEventListener('click',()=>{gasState={n:2,T:300,V:0.05};gasHold='none';paintGas(false);});
+ const wall=$('gas-wall');
+ wall.addEventListener('pointerdown',event=>{
+  if(wall.disabled||event.button!==0)return;
+  motorDrag={x:event.clientX,V:gasState.V};
+  try{wall.setPointerCapture(event.pointerId);}catch{}
+ });
+ wall.addEventListener('pointermove',event=>{
+  if(!motorDrag||motorDrag.V==null)return;
+  const track=Math.max(40,$('gas-stage').getBoundingClientRect().width-92);
+  gasChange({V:motorDrag.V+(event.clientX-motorDrag.x)/track*(Gas.VMAX-Gas.VMIN)});
+ });
+ wall.addEventListener('pointerup',()=>{motorDrag=null;});
+ $('motor').addEventListener('input',event=>{if(event.target.matches('input'))paintMotor();});
+ $('motor-otto').addEventListener('click',()=>{motorKind='otto';const d=Motor.defaults.otto;$('motor-r').value=d.r;$('motor-k').value=d.kappa;paintMotor();});
+ $('motor-diesel').addEventListener('click',()=>{motorKind='diesel';const d=Motor.defaults.diesel;$('motor-r').value=d.r;$('motor-k').value=d.kappa;$('motor-phi').value=d.phi;paintMotor();});
+ $('motor-reset').addEventListener('click',()=>{const d=Motor.defaults[motorKind];$('motor-p1').value=d.p1;$('motor-v1').value=d.V1;$('motor-t1').value=d.T1;$('motor-r').value=d.r;$('motor-k').value=d.kappa;if(d.T3)$('motor-t3').value=d.T3;if(d.phi)$('motor-phi').value=d.phi;paintMotor();});
 }
 bindPh();
 $('catalog-count').textContent=`${formulaIds.size} opslag · ${db.catalogs.length} fagområder · kildehenvisninger på hvert kort`;

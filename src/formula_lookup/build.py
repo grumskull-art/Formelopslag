@@ -69,7 +69,7 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
     payload = {"catalogs": catalogs, "math_style": MATH_STYLE, "math_assets": {}, "search_text": {}}
     payload["data_hash"] = hashlib.sha256(json.dumps(catalogs, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
     settings = settings or {}
-    version_content = _web_bytes(("index.html", "app.css", "app.js", "mathcad.js", "water.js"))
+    version_content = _web_bytes(("index.html", "app.css", "app.js", "mathcad.js", "water.js", "gas.js", "motor.js"))
     version_content += json.dumps(settings, ensure_ascii=False, sort_keys=True).encode()
     version_content += payload["data_hash"].encode()
     payload["cheatsheet_version"] = hashlib.sha256(version_content).hexdigest()[:12]
@@ -96,7 +96,7 @@ def export_catalogs(catalogs, output, settings=None, cache=None):
     html = WEB.joinpath("index.html").read_text(encoding="utf-8")
     # Replace the JSON last so catalog text cannot become a template instruction.
     html = html.replace("__STYLES__", WEB.joinpath("app.css").read_text(encoding="utf-8"))
-    html = html.replace("__SCRIPT__", _web_text(("water.js", "app.js", "mathcad.js")))
+    html = html.replace("__SCRIPT__", _web_text(("gas.js", "motor.js", "water.js", "app.js", "mathcad.js")))
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(html.replace("__DATABASE__", serialized), encoding="utf-8")

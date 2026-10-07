@@ -791,7 +791,7 @@ dialog button {
     padding:0;
     max-width:none;
   }
-  .topbar,.view-switch,.hero,.discovery,.topic-shortcuts,.workspace-title,.controls,.links,#known,#filter-options,.result-header,.card-actions,.choose-method,.action-status,.skip-link,footer,.workspace>details,.ph-side,.ph-toolbar,.ph-readout {
+  .topbar,.view-switch,.hero,.discovery,.topic-shortcuts,.workspace-title,.controls,.links,#known,#filter-options,.result-header,.card-actions,.choose-method,.action-status,.skip-link,footer,.workspace>details,.ph-side,.ph-toolbar,.ph-readout,.tool-back,.tool-list {
     display:none!important;
   }
   .workspace {
@@ -842,12 +842,30 @@ dialog button {
 .mathcad-actions {display:flex;gap:10px;flex-wrap:wrap;}
 #mathcad-workflow-items {display:grid;gap:10px;}
 #mathcad-workflow-items label {overflow-wrap:anywhere;}
-body[data-view=ph] .hero,body[data-view=ph] .discovery,body[data-view=ph] .topic-shortcuts,body[data-view=ph] #workspace{display:none!important}
+body:not([data-view=formulas]) .hero,body:not([data-view=formulas]) .discovery,body:not([data-view=formulas]) .topic-shortcuts,body:not([data-view=formulas]) #workspace{display:none!important}
+.tool-list{display:grid;gap:10px;margin:0 0 24px}
+.tool-card{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;padding:16px 18px;min-height:72px}
+.tool-card span{color:var(--muted);font-weight:500;font-size:14px}
+.tool-back{margin-top:16px}
+.gas-n{margin:0}
+.gas-pumps{display:flex;flex-wrap:wrap;gap:8px}
+.gas-pumps button{flex:1 1 calc(50% - 8px)}
+#gas-t-range{width:100%;min-height:44px}
+.gas-stage{position:relative;height:min(420px,62vh);min-height:280px;background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;touch-action:none}
+.gas-stage canvas{display:block;width:100%;height:100%}
+#gas-wall{position:absolute;width:28px;padding:0;border-radius:8px;background:var(--accent);color:transparent;touch-action:none}
+#gas-wall[disabled]{opacity:.35;cursor:default}
+.motor-charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.motor-charts figure{margin:0}
+.motor-charts figcaption{font-weight:750;margin-bottom:6px}
+.motor-chart{height:320px;background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.motor-chart svg{display:block;width:100%;height:100%}
 .view-switch{display:flex;flex-wrap:wrap;gap:8px;padding:16px 0 0}
 .ph-tool{margin:0 0 12px}
 .ph-intro{padding:28px 0 12px}
 .ph-intro h1{margin-bottom:8px}
 .ph-grid{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:18px;align-items:start}
+.ph-side,.ph-stage,.motor-charts,.motor-chart,.table-scroll{min-width:0}
 .ph-qe{display:block;font-size:14px;margin-bottom:12px}
 .ph-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;border:1px solid var(--border);border-radius:12px;padding:12px 12px 14px;margin:0 0 12px}
 .ph-fields legend{font-weight:750;padding:0 4px}
@@ -888,10 +906,13 @@ body[data-view=ph] .hero,body[data-view=ph] .discovery,body[data-view=ph] .topic
 .ph-marker text{fill:var(--ink);font-size:14px;font-weight:750;font-family:system-ui,sans-serif}
 .ph-cross{stroke:var(--accent);stroke-width:1;opacity:.4;pointer-events:none}
 @media(max-width:800px){
- .ph-grid{grid-template-columns:1fr}
+ .ph-grid{grid-template-columns:minmax(0,1fr)}
  .ph-stage{order:-1}
  .ph-chart{height:min(520px,70vh);min-height:300px}
  .ph-zoom button{flex:1 1 auto}
+ .motor-charts{grid-template-columns:1fr}
+ .motor-chart{height:260px}
+ #motor-states th,#motor-states td{padding:7px 6px}
 }
 @media(max-width:420px){
  .ph-fields{grid-template-columns:1fr}
